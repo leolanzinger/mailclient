@@ -14,7 +14,7 @@ import javax.mail.Message;
 *   operation of mails using GMailSender.java class
 */
 
-public class ReceiveMailTask extends AsyncTask {
+public class ReceiveMailTask extends AsyncTask <Object, Object, Message>{
 
     private ProgressDialog statusDialog;
     private Activity sendMailActivity;
@@ -36,7 +36,8 @@ public class ReceiveMailTask extends AsyncTask {
     *   Execute task to receive email and print logs
     */
     @Override
-    protected Object doInBackground(Object... args) {
+    protected Message doInBackground(Object... args) {
+        Message msg_ret = null;
         try {
             Log.i("ReceiveMailTask", "About to instantiate GMailSender...");
             publishProgress("Processing input....");
@@ -45,7 +46,8 @@ public class ReceiveMailTask extends AsyncTask {
             try {
                 Message[] msg = reader.readMail();
 //                msg.length - 1 is the index for last received email
-                Log.i("read", msg[msg.length - 1].getSubject().toString());
+                Log.i("read", msg[msg.length - 1].getSubject());
+                msg_ret = msg[msg.length - 1];
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -55,7 +57,7 @@ public class ReceiveMailTask extends AsyncTask {
             publishProgress(e.getMessage());
             Log.e("ReceiveMailTask", e.getMessage(), e);
         }
-        return null;
+        return msg_ret;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class ReceiveMailTask extends AsyncTask {
     }
 
     @Override
-    public void onPostExecute(Object result) {
+    public void onPostExecute(Message result) {
         statusDialog.dismiss();
     }
 
