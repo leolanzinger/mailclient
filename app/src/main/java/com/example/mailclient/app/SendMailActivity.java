@@ -1,7 +1,11 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,8 +15,6 @@ import android.widget.Button;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.mail.Message;
-
 /*
 *   Send and receive emails activity.
 *   Async tasks are used because Android doesn't
@@ -20,6 +22,10 @@ import javax.mail.Message;
 */
 
 public class SendMailActivity extends Activity {
+
+    private static final int SELECT_PICTURE = 1;
+    private String selectedImagePath="NoAttach";
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,6 +37,7 @@ public class SendMailActivity extends Activity {
         */
         final Button send = (Button) this.findViewById(R.id.button1);
         final Button receive = (Button) this.findViewById(R.id.button2);
+        final Button attach = (Button) this.findViewById(R.id.button3);
 
         /*
         *   Add listener to "send email" button and call
@@ -43,14 +50,15 @@ public class SendMailActivity extends Activity {
 
                 String fromEmail = "leonardo.lanzinger@gmail.com";
                 String fromPassword = "leothebassist";
-                String toEmails = "michelon.giulio@gmail.com";
+                String toEmails = "matteolever@me.com";
                 List<String> toEmailList = Arrays.asList(toEmails
                         .split("\\s*,\\s*"));
                 Log.i("SendMailActivity", "To List: " + toEmailList);
                 String emailSubject = "lesbicone";
                 String emailBody = "kasabian";
-                new SendMailTask(SendMailActivity.this).execute(fromEmail,
-                        fromPassword, toEmailList, emailSubject, emailBody);
+
+                new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
+
             }
         });
 
@@ -65,8 +73,31 @@ public class SendMailActivity extends Activity {
                 new ReceiveMailTask(SendMailActivity.this).execute(account_email, account_password);
             }
         });
+
+        attach.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                // in onCreate or any event where your want the user to
+                // select a file
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,
+                        "Select Picture"), SELECT_PICTURE);
+
+            }
+        });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+                Log.d("URI VAL", "selectedImageUri = " + selectedImageUri.toString());
+                selectedImagePath = getPath(selectedImageUri);
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -88,4 +119,19 @@ public class SendMailActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    public String getPath(Uri uri) {
+        String[] projection = {  MediaStore.MediaColumns.DATA};
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if(cursor != null) {
+            //HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
+            //THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+            String filePath = cursor.getString(columnIndex);
+            cursor.close();
+            return filePath;
+        }
+        else
+            return uri.getPath();               // FOR OI/ASTRO/Dropbox etc
+    }
 }
