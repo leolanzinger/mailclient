@@ -75,7 +75,7 @@ public class GMailSender {
         }
         emailMessage.setSubject(emailSubject);
 
-        //qua bisogna aggiugnere l'attachment con il percorso "fileName"
+        //Da gestire i multiple attachment, si può fare un array di fileName da buttar dentro quando crei il multipart in un ciclo
 
         // create the message part
         MimeBodyPart messageBodyPart = new MimeBodyPart();
