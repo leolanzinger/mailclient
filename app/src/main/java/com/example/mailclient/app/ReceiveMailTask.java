@@ -69,6 +69,7 @@ public class ReceiveMailTask extends AsyncTask <Object, Object, Message>{
     @Override
     public void onPostExecute(Message result) {
         statusDialog.dismiss();
+        super.onPostExecute(result);
     }
 
 }

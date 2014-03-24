@@ -2,6 +2,7 @@ package com.example.mailclient.app;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -70,20 +71,21 @@ public class SendMailActivity extends Activity {
                 String account_password = "leothebassist";
                 ReceiveMailTask receive_task = new ReceiveMailTask(SendMailActivity.this);
                 receive_task.execute(account_email, account_password);
-                try {
-                    Message msg_ret = receive_task.get();
-                    Log.i("mail", msg_ret.getSubject().toString());
-                    received_mail.setText(msg_ret.getSubject().toString());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    Message msg_ret = receive_task.get();
+//                    Log.i("mail", msg_ret.getSubject().toString());
+////                    received_mail.setText(msg_ret.getSubject().toString());
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+//                } catch (MessagingException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
     }
+
 
 
     @Override
