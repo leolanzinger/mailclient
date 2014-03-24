@@ -11,9 +11,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
+import android.widget.TextView;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import javax.mail.Message;
+import javax.mail.MessagingException;
 
 /*
 *   Send and receive emails activity.
@@ -38,6 +41,7 @@ public class SendMailActivity extends Activity {
         final Button send = (Button) this.findViewById(R.id.button1);
         final Button receive = (Button) this.findViewById(R.id.button2);
         final Button attach = (Button) this.findViewById(R.id.button3);
+        final TextView received_mail = (TextView) this.findViewById(R.id.received_mail);
 
         /*
         *   Add listener to "send email" button and call
@@ -70,7 +74,19 @@ public class SendMailActivity extends Activity {
             public void onClick(View v) {
                 String account_email = "leonardo.lanzinger@gmail.com";
                 String account_password = "leothebassist";
-                new ReceiveMailTask(SendMailActivity.this).execute(account_email, account_password);
+                ReceiveMailTask receive_task = new ReceiveMailTask(SendMailActivity.this);
+                receive_task.execute(account_email, account_password);
+                try {
+                    Message msg_ret = receive_task.get();
+                    Log.i("mail", msg_ret.getSubject().toString());
+                    received_mail.setText(msg_ret.getSubject().toString());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
