@@ -6,8 +6,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
@@ -73,15 +77,21 @@ public class GMailSender {
 
         //qua bisogna aggiugnere l'attachment con il percorso "fileName"
 
-        MimeBodyPart textPart = new MimeBodyPart();
-        textPart.setContent(emailBody, "text/html");
-
+        // create the message part
         MimeBodyPart messageBodyPart = new MimeBodyPart();
-        messageBodyPart.attachFile(fileName);
-
-        MimeMultipart multipart = new MimeMultipart("mixed");
-        multipart.addBodyPart(textPart);
-
+        //fill message and add it
+        messageBodyPart.setText(emailBody);
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(messageBodyPart);
+        // Part two is attachment
+        messageBodyPart = new MimeBodyPart();
+        DataSource source =
+                new FileDataSource(fileName);
+        messageBodyPart.setDataHandler(
+                new DataHandler(source));
+        messageBodyPart.setFileName(fileName);
+        multipart.addBodyPart(messageBodyPart);
+        // Put parts in message
         emailMessage.setContent(multipart);
 
        // for a html email
