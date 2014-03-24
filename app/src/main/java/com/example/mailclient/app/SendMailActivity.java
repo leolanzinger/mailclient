@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -41,6 +42,12 @@ public class SendMailActivity extends Activity {
         final Button attach = (Button) this.findViewById(R.id.button3);
         final TextView received_mail = (TextView) this.findViewById(R.id.received_mail);
 
+        final EditText fromEmailText = (EditText) this.findViewById(R.id.editText1);
+        final EditText passwordEmail = (EditText) this.findViewById(R.id.editText2);
+        final EditText toEmailText = (EditText) this.findViewById(R.id.editText3);
+        final EditText subjectEmailText = (EditText) this.findViewById(R.id.editText4);
+        final EditText bodyEmailText = (EditText) this.findViewById(R.id.editText5);
+
         /*
         *   Add listener to "send email" button and call
         *   async task to perform send mail tasks
@@ -50,14 +57,14 @@ public class SendMailActivity extends Activity {
             public void onClick(View v) {
                 Log.i("SendMailActivity", "Send Button Clicked.");
 
-                String fromEmail = "leonardo.lanzinger@gmail.com";
-                String fromPassword = "leothebassist";
-                String toEmails = "matteolever@me.com";
+                String fromEmail = fromEmailText.getText().toString();
+                String fromPassword = passwordEmail.getText().toString();
+                String toEmails = toEmailText.getText().toString();
                 List<String> toEmailList = Arrays.asList(toEmails
                         .split("\\s*,\\s*"));
                 Log.i("SendMailActivity", "To List: " + toEmailList);
-                String emailSubject = "lesbicone";
-                String emailBody = "kasabian";
+                String emailSubject = subjectEmailText.getText().toString();
+                String emailBody = bodyEmailText.getText().toString();
 
                 new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
 
