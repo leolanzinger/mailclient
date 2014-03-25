@@ -3,6 +3,7 @@ package com.example.mailclient.app;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -37,7 +38,8 @@ public class GMailSender {
     List<String> toEmailList;
     String emailSubject;
     String emailBody;
-    String fileName= "NoAttach";
+    ArrayList<String> fileName = new ArrayList<String>();
+    ;
 
     Properties emailProperties;
     Session mailSession;
@@ -57,7 +59,8 @@ public class GMailSender {
         Log.i("GMailSender", "Mail server properties set.");
     }
 
-    public GMailSender(String fromEmail, String fromPassword, List<String> toEmailList, String emailSubject, String emailBody, String fileName) {
+    public GMailSender(String fromEmail, String fromPassword, List<String> toEmailList, String emailSubject, String emailBody, ArrayList<String> fileName) {
+
         this.fromEmail = fromEmail;
         this.fromPassword = fromPassword;
         this.toEmailList = toEmailList;
@@ -95,15 +98,20 @@ public class GMailSender {
         messageBodyPart.setText(emailBody);
         Multipart multipart = new MimeMultipart();
         multipart.addBodyPart(messageBodyPart);
-        // Part two is attachment, check if there is one
 
-        if (fileName!="NoAttach") {
-            Log.i("Check",fileName);
-            messageBodyPart = new MimeBodyPart();
-            DataSource source = new FileDataSource(fileName);
-            messageBodyPart.setDataHandler(new DataHandler(source));
-            messageBodyPart.setFileName(fileName);
-            multipart.addBodyPart(messageBodyPart);
+        // Part two is attachment, check if there is one, and handle the multiple ones
+
+        if (fileName.isEmpty()) {
+        }
+        else{
+            for (int i = 0; i < fileName.size(); i++) {
+                messageBodyPart = new MimeBodyPart();
+                Log.i("ImageSent","Immagini in invio: "+ fileName.get(i));
+                DataSource source = new FileDataSource(fileName.get(i));
+                messageBodyPart.setDataHandler(new DataHandler(source));
+                messageBodyPart.setFileName(fileName.get(i));
+                multipart.addBodyPart(messageBodyPart);
+            }
         }
 
         // Put parts in message

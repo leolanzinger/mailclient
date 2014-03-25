@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,7 +27,7 @@ import java.util.List;
 public class SendMailActivity extends Activity {
 
     private static final int SELECT_PICTURE = 1;
-    private String selectedImagePath ="NoAttach";
+    ArrayList<String> selectedImagePath;
 
 
     @Override
@@ -47,7 +48,7 @@ public class SendMailActivity extends Activity {
         final EditText toEmailText = (EditText) this.findViewById(R.id.editText3);
         final EditText subjectEmailText = (EditText) this.findViewById(R.id.editText4);
         final EditText bodyEmailText = (EditText) this.findViewById(R.id.editText5);
-
+        selectedImagePath = new ArrayList<String>();
         /*
         *   Add listener to "send email" button and call
         *   async task to perform send mail tasks
@@ -78,9 +79,9 @@ public class SendMailActivity extends Activity {
 //                String emailSubject = subjectEmailText.getText().toString();
 //                String emailBody = bodyEmailText.getText().toString();
 
-                Log.i("Check","stampiamo il path " + selectedImagePath);
 
-                if (selectedImagePath.equals("NoAttach")){
+                Log.i("Check", "stampiamo la size della lista: "+ selectedImagePath.size());
+                if (selectedImagePath.size()==0){
                     new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody);
                 }
                 else {
@@ -132,7 +133,7 @@ public class SendMailActivity extends Activity {
             if (requestCode == SELECT_PICTURE) {
                 Uri selectedImageUri = data.getData();
                 Log.d("URI VAL", "selectedImageUri = " + selectedImageUri.toString());
-                selectedImagePath = getPath(selectedImageUri);
+                selectedImagePath.add(getPath(selectedImageUri));
             }
         }
     }
