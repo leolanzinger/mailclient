@@ -87,6 +87,7 @@ public class SendMailActivity extends Activity {
                 else {
                     new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
                 }
+                selectedImagePath=new ArrayList<String>();
             }
         });
 

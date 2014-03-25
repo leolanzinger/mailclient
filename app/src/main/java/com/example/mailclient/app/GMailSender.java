@@ -2,6 +2,7 @@ package com.example.mailclient.app;
 
 import android.util.Log;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,6 @@ public class GMailSender {
     String emailSubject;
     String emailBody;
     ArrayList<String> fileName = new ArrayList<String>();
-    ;
 
     Properties emailProperties;
     Session mailSession;
@@ -90,8 +90,6 @@ public class GMailSender {
         }
         emailMessage.setSubject(emailSubject);
 
-        //Da gestire i multiple attachment, si può fare un array di fileName da buttar dentro quando crei il multipart in un ciclo
-
         // create the message part
         MimeBodyPart messageBodyPart = new MimeBodyPart();
         //fill message and add it
@@ -109,16 +107,14 @@ public class GMailSender {
                 Log.i("ImageSent","Immagini in invio: "+ fileName.get(i));
                 DataSource source = new FileDataSource(fileName.get(i));
                 messageBodyPart.setDataHandler(new DataHandler(source));
-                messageBodyPart.setFileName(fileName.get(i));
+                String name = new File(fileName.get(i)).getName();
+                messageBodyPart.setFileName(name);
                 multipart.addBodyPart(messageBodyPart);
             }
         }
 
         // Put parts in message
         emailMessage.setContent(multipart);
-
-        // for a html email
-        // emailMessage.setText(emailBody);// for a text email
         Log.i("GMailSender", "Email Message created.");
         return emailMessage;
     }
