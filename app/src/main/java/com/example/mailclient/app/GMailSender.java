@@ -37,14 +37,27 @@ public class GMailSender {
     List<String> toEmailList;
     String emailSubject;
     String emailBody;
-    String fileName;
+    String fileName= "NoAttach";
 
     Properties emailProperties;
     Session mailSession;
     MimeMessage emailMessage;
 
-    public GMailSender(String fromEmail, String fromPassword,
-                       List<String> toEmailList, String emailSubject, String emailBody, String fileName) {
+    public GMailSender(String fromEmail, String fromPassword, List<String> toEmailList, String emailSubject, String emailBody) {
+        this.fromEmail = fromEmail;
+        this.fromPassword = fromPassword;
+        this.toEmailList = toEmailList;
+        this.emailSubject = emailSubject;
+        this.emailBody = emailBody;
+
+        emailProperties = System.getProperties();
+        emailProperties.put("mail.smtp.port", emailPort);
+        emailProperties.put("mail.smtp.auth", smtpAuth);
+        emailProperties.put("mail.smtp.starttls.enable", starttls);
+        Log.i("GMailSender", "Mail server properties set.");
+    }
+
+    public GMailSender(String fromEmail, String fromPassword, List<String> toEmailList, String emailSubject, String emailBody, String fileName) {
         this.fromEmail = fromEmail;
         this.fromPassword = fromPassword;
         this.toEmailList = toEmailList;
@@ -61,8 +74,7 @@ public class GMailSender {
 
 
 
-    public MimeMessage createEmailMessage() throws AddressException,
-            MessagingException, IOException {
+    public MimeMessage createEmailMessage() throws AddressException, MessagingException, IOException {
 
         mailSession = Session.getDefaultInstance(emailProperties, null);
         emailMessage = new MimeMessage(mailSession);
@@ -83,18 +95,21 @@ public class GMailSender {
         messageBodyPart.setText(emailBody);
         Multipart multipart = new MimeMultipart();
         multipart.addBodyPart(messageBodyPart);
-        // Part two is attachment
-        messageBodyPart = new MimeBodyPart();
-        DataSource source =
-                new FileDataSource(fileName);
-        messageBodyPart.setDataHandler(
-                new DataHandler(source));
-        messageBodyPart.setFileName(fileName);
-        multipart.addBodyPart(messageBodyPart);
+        // Part two is attachment, check if there is one
+
+        if (fileName!="NoAttach") {
+            Log.i("Check",fileName);
+            messageBodyPart = new MimeBodyPart();
+            DataSource source = new FileDataSource(fileName);
+            messageBodyPart.setDataHandler(new DataHandler(source));
+            messageBodyPart.setFileName(fileName);
+            multipart.addBodyPart(messageBodyPart);
+        }
+
         // Put parts in message
         emailMessage.setContent(multipart);
 
-       // for a html email
+        // for a html email
         // emailMessage.setText(emailBody);// for a text email
         Log.i("GMailSender", "Email Message created.");
         return emailMessage;

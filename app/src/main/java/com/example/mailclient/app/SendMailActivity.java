@@ -26,7 +26,7 @@ import java.util.List;
 public class SendMailActivity extends Activity {
 
     private static final int SELECT_PICTURE = 1;
-    private String selectedImagePath="NoAttach";
+    private String selectedImagePath ="NoAttach";
 
 
     @Override
@@ -57,17 +57,35 @@ public class SendMailActivity extends Activity {
             public void onClick(View v) {
                 Log.i("SendMailActivity", "Send Button Clicked.");
 
-                String fromEmail = fromEmailText.getText().toString();
-                String fromPassword = passwordEmail.getText().toString();
-                String toEmails = toEmailText.getText().toString();
+                //Scegliere se usare dati già hardcodati o da editare negli edittext
+
+                String fromEmail = "leonardo.lanzinger@gmail.com";
+                String fromPassword = "leothebassist";
+                String toEmails = "matteolever@me.com";
                 List<String> toEmailList = Arrays.asList(toEmails
                         .split("\\s*,\\s*"));
                 Log.i("SendMailActivity", "To List: " + toEmailList);
-                String emailSubject = subjectEmailText.getText().toString();
-                String emailBody = bodyEmailText.getText().toString();
+                String emailSubject = "soggettodiprova";
+                String emailBody = "parapatutiti";
 
-                new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
 
+//                String fromEmail = fromEmailText.getText().toString();
+//                String fromPassword = passwordEmail.getText().toString();
+//                String toEmails = toEmailText.getText().toString();
+//                List<String> toEmailList = Arrays.asList(toEmails
+//                        .split("\\s*,\\s*"));
+//                Log.i("SendMailActivity", "To List: " + toEmailList);
+//                String emailSubject = subjectEmailText.getText().toString();
+//                String emailBody = bodyEmailText.getText().toString();
+
+                Log.i("Check","stampiamo il path " + selectedImagePath);
+
+                if (selectedImagePath.equals("NoAttach")){
+                    new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody);
+                }
+                else {
+                    new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
+                }
             }
         });
 
@@ -102,8 +120,7 @@ public class SendMailActivity extends Activity {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,
-                        "Select Picture"), SELECT_PICTURE);
+                startActivityForResult(Intent.createChooser(intent,"Select Picture"), SELECT_PICTURE);
 
             }
         });
