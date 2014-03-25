@@ -118,9 +118,9 @@ public class SendMailActivity extends Activity {
                 // in onCreate or any event where your want the user to
                 // select a file
                 Intent intent = new Intent();
-                intent.setType("image/*");
+                intent.setType("*/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Picture"), SELECT_PICTURE);
+                startActivityForResult(Intent.createChooser(intent,"Select Document"), SELECT_PICTURE);
 
             }
         });
