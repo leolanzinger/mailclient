@@ -3,11 +3,18 @@ package com.example.mailclient.app;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.text.Spanned;
 import android.util.Log;
 
 import java.util.List;
 
+import javax.activation.DataHandler;
+import javax.mail.BodyPart;
+import javax.mail.Flags;
 import javax.mail.Message;
+import javax.mail.Multipart;
+
+import static android.text.Html.fromHtml;
 
 /*
 *   Async Task to perform retrieving
@@ -44,10 +51,24 @@ public class ReceiveMailTask extends AsyncTask <Object, Object, Message>{
             GMailReader reader = new GMailReader(args[0].toString(),
                     args[1].toString());
             try {
-                Message[] msg = reader.readMail();
-//                msg.length - 1 is the index for last received email
-                Log.i("read", msg[msg.length - 1].getSubject());
-                msg_ret = msg[msg.length - 1];
+                Message[] msg = reader.readNewMail();
+                for (int i=0; i < msg.length; i++) {
+                    String msg_subject = msg[i].getSubject();
+                    Log.i("new mail", msg_subject);
+                    Multipart multipart = (Multipart) msg[i].getContent();
+                    String msg_content = new String();
+                    for (int j = 0; j < multipart.getCount(); j++) {
+                        BodyPart bodyPart = multipart.getBodyPart(j);
+                        String disposition = bodyPart.getDisposition();
+                        if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) { // BodyPart.ATTACHMENT doesn't work for gmail
+                            DataHandler handler = bodyPart.getDataHandler();
+                        } else {
+                            msg_content = bodyPart.getContent().toString();
+                        }
+                    }
+                    Log.i("new mail", msg_content);
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -55,7 +76,7 @@ public class ReceiveMailTask extends AsyncTask <Object, Object, Message>{
             Log.i("ReceiveMailTask", "Mail Received.");
         } catch (Exception e) {
             publishProgress(e.getMessage());
-            Log.e("ReceiveMailTask", e.getMessage(), e);
+//            Log.e("ReceiveMailTask", e.getMessage(), e);
         }
         return msg_ret;
     }

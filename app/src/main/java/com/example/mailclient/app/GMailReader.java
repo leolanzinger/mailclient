@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.util.*;
 import javax.mail.*;
+import javax.mail.search.FlagTerm;
 
 /*
 *  GMailSender Java class to receive emails using imap
@@ -45,21 +46,15 @@ public class GMailReader extends javax.mail.Authenticator {
         }
     }
 
-    public synchronized Message[] readMail() throws Exception {
+    public synchronized Message[] readNewMail() throws Exception {
         try {
             Folder folder = store.getFolder("Inbox");
-            folder.open(Folder.READ_ONLY);
-
-        /* TODO to rework
-        Message[] msgs = folder.getMessages(1, 10);
-        FetchProfile fp = new FetchProfile();
-        fp.add(FetchProfile.Item.ENVELOPE);
-        folder.fetch(msgs, fp);
-        */
-            Message[] msgs = folder.getMessages();
-            return msgs;
+            folder.open(Folder.READ_WRITE);
+            Message[] new_msgs = folder.search(new FlagTerm(new Flags(Flags.Flag.SEEN), false));
+            folder.setFlags(new_msgs, new Flags(Flags.Flag.SEEN), true);
+            return new_msgs;
         } catch (Exception e) {
-            Log.e("readMail", e.getMessage(), e);
+//            Log.e("readMail", e.getMessage(), e);
             return null;
         }
     }
