@@ -70,23 +70,4 @@ public class GMailReader extends javax.mail.Authenticator {
             return null;
         }
     }
-
-//    public synchronized ArrayList<Message> readOldMail() throws Exception {
-//        try {
-//            Folder folder = store.getFolder("Inbox");
-//            folder.open(Folder.READ_WRITE);
-//            Message[] all_msgs = folder.search(new FlagTerm(new Flags(Flags.Flag.SEEN), true));
-//            int all_msgs_length = all_msgs.length;
-//            int messageBoxSize = SendMailActivity.messageBox.size();
-//            for (int i=1; i < all_msgs_length; i++) {
-//                if (all_msgs[all_msgs_length - i] == SendMailActivity.messageBox.get(messageBoxSize - 1)) {
-//                    i = all_msgs_length;
-//                } else {
-//                    SendMailActivity.messageBox.add(all_msgs[all_msgs_length - i]);
-//                }
-//            }
-//        } catch (Exception e) {
-////            Log.e("readMail", e.getMessage(), e);
-//        }
-//    }
 }

@@ -52,8 +52,6 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//            publishProgress("Email Received.");
-//            Log.i("ReceiveMailTask", "Mail Received.");
         } catch (Exception e) {
             publishProgress(e.getMessage());
         }
@@ -63,9 +61,6 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
             try {
                 email.setSubject(msg[i].getSubject());
                 email.setDate(msg[i].getSentDate());
-//                email.setFrom(msg[i].getFrom());
-//                email.setTo(msg[i].getAllRecipients());
-//                list.add(msg[i].getSubject());
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
@@ -85,6 +80,7 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
 
         MainActivity.adapter.addAll(result);
         MainActivity.adapter.notifyDataSetChanged();
+        MainActivity.save(result);
         statusDialog.dismiss();
         super.onPostExecute(result);
     }

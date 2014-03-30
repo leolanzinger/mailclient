@@ -6,6 +6,9 @@ import java.util.Date;
 /**
  * Created by Leo on 30/03/14.
  */
+/*
+ *  Java Class that implements an email object to store email contents
+ */
 public class Email implements Serializable {
 
     String subject;
