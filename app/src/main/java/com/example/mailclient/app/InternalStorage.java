@@ -11,9 +11,13 @@ import java.io.ObjectOutputStream;
 /**
  * Created by Leo on 30/03/14.
  */
+
+/*
+ *  Java Class that provides two methods to store and retrieve data from internal storage
+ */
 public final class InternalStorage {
 
-    private InternalStorage() {}
+    InternalStorage() {}
 
     public static void writeObject(Context context, String key, Object object) throws IOException {
         FileOutputStream fos = context.openFileOutput(key, Context.MODE_APPEND);

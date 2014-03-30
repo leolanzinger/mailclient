@@ -1,6 +1,7 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -16,18 +18,35 @@ public class MainActivity extends Activity {
 
     ArrayList<Email> emailList;
     static EmailAdapter adapter;
+    static InternalStorage storer;
+    static String KEY = "mailClient";
+
+    public static Context baseContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        baseContext = getBaseContext();
+
+        storer = new InternalStorage();
         emailList  = new ArrayList<Email>();
 
         ListView listView = (ListView) findViewById(R.id.listView);
 
         adapter = new EmailAdapter(this, R.id.subject, emailList);
         listView.setAdapter(adapter);
+
+        try {
+            ArrayList<Email> cachedEntries = (ArrayList<Email>) InternalStorage.readObject(this, KEY);
+            adapter.addAll(cachedEntries);
+            adapter.notifyDataSetChanged();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -61,5 +80,13 @@ public class MainActivity extends Activity {
         String account_password = "leothebassist";
         ReceiveMailTask receive_task = new ReceiveMailTask(MainActivity.this);
         receive_task.execute(account_email, account_password);
+    }
+
+    public static void save(ArrayList<Email> result) {
+        try {
+            storer.writeObject(baseContext, KEY, result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
