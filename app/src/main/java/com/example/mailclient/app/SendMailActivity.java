@@ -100,8 +100,8 @@ public class SendMailActivity extends Activity {
         */
         receive.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                String account_email = "leonardo.lanzinger@gmail.com";
-                String account_password = "leothebassist";
+                String account_email = "mailclientandroid@gmail.com";
+                String account_password = "android2014t";
                 ReceiveMailTask receive_task = new ReceiveMailTask(SendMailActivity.this);
                 receive_task.execute(account_email, account_password);
             }

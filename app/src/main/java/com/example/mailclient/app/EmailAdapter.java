@@ -12,6 +12,10 @@ import java.util.ArrayList;
 /**
  * Created by Leo on 30/03/14.
  */
+
+/*
+ *  Custom adapter that displays two TextView in each row
+ */
 public class EmailAdapter extends ArrayAdapter<Email> {
 
     private Context context;

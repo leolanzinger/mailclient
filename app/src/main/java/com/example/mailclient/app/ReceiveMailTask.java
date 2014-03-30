@@ -55,8 +55,17 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
         } catch (Exception e) {
             publishProgress(e.getMessage());
         }
+
+        /*
+         *  We don't want a plain Message[] array without content
+         *  so let's parse each Message into an ArrayList<Email>
+         *  and fill the content (currently only subject and date).
+         *
+         *  NB: without calling explicitly getSubject() and getDate()
+         *  the Message object would be empty.
+         */
         ArrayList<Email> list = new ArrayList<Email> ();
-        for (int i=0; i<msg.length; i++) {
+        for (int i=0; i < msg.length; i++) {
             Email email = new Email();
             try {
                 email.setSubject(msg[i].getSubject());
@@ -78,9 +87,13 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
     @Override
     public void onPostExecute(ArrayList<Email> result) {
 
-        MainActivity.adapter.addAll(result);
-        MainActivity.adapter.notifyDataSetChanged();
-        MainActivity.save(result);
+        /*
+         *  Notify adapter of the retrieved mails
+         *  and store them into cache
+         */
+        MailClient.adapter.addAll(result);
+        MailClient.adapter.notifyDataSetChanged();
+        MailClient.save(result);
         statusDialog.dismiss();
         super.onPostExecute(result);
     }
