@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.mail.Message;
+
 /*
 *   Send and receive emails activity.
 *   Async tasks are used because Android doesn't
@@ -28,6 +30,7 @@ public class SendMailActivity extends Activity {
 
     private static final int SELECT_PICTURE = 1;
     ArrayList<String> selectedImagePath;
+    public static ArrayList<Message> messageBox;
 
 
     @Override
@@ -101,17 +104,6 @@ public class SendMailActivity extends Activity {
                 String account_password = "leothebassist";
                 ReceiveMailTask receive_task = new ReceiveMailTask(SendMailActivity.this);
                 receive_task.execute(account_email, account_password);
-//                try {
-//                    Message msg_ret = receive_task.get();
-//                    Log.i("mail", msg_ret.getSubject().toString());
-////                    received_mail.setText(msg_ret.getSubject().toString());
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                } catch (ExecutionException e) {
-//                    e.printStackTrace();
-//                } catch (MessagingException e) {
-//                    e.printStackTrace();
-//                }
             }
         });
 
