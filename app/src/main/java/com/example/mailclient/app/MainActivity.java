@@ -14,15 +14,19 @@ import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
-    public static ArrayAdapter<String> adapter;
+    ArrayList<Email> emailList;
+    static EmailAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final ListView listView = (ListView) findViewById(R.id.listView);
-        ArrayList<String> messages_subject = new ArrayList<String> ();
-        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, messages_subject);
+
+        emailList  = new ArrayList<Email>();
+
+        ListView listView = (ListView) findViewById(R.id.listView);
+
+        adapter = new EmailAdapter(this, R.id.subject, emailList);
         listView.setAdapter(adapter);
     }
 

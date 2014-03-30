@@ -17,7 +17,7 @@ import static android.text.Html.fromHtml;
 *   operation of mails using GMailSender.java class
 */
 
-public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<String>> {
+public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>> {
 
     private ProgressDialog statusDialog;
     private Activity sendMailActivity;
@@ -39,7 +39,7 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<String>
     *   Execute task to receive email and print logs
     */
     @Override
-    protected ArrayList<String> doInBackground(Object... args) {
+    protected ArrayList<Email> doInBackground(Object... args) {
         Message[] msg = null;
         try {
             Log.i("ReceiveMailTask", "About to instantiate GMailSender...");
@@ -57,13 +57,19 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<String>
         } catch (Exception e) {
             publishProgress(e.getMessage());
         }
-        ArrayList<String> list = new ArrayList<String> ();
+        ArrayList<Email> list = new ArrayList<Email> ();
         for (int i=0; i<msg.length; i++) {
+            Email email = new Email();
             try {
-                list.add(msg[i].getSubject());
+                email.setSubject(msg[i].getSubject());
+                email.setDate(msg[i].getSentDate());
+//                email.setFrom(msg[i].getFrom());
+//                email.setTo(msg[i].getAllRecipients());
+//                list.add(msg[i].getSubject());
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
+            list.add(email);
         }
         return list;
     }
@@ -75,7 +81,7 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<String>
     }
 
     @Override
-    public void onPostExecute(ArrayList<String> result) {
+    public void onPostExecute(ArrayList<Email> result) {
 
         MainActivity.adapter.addAll(result);
         MainActivity.adapter.notifyDataSetChanged();
