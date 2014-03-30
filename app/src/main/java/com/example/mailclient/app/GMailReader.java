@@ -46,6 +46,7 @@ public class GMailReader extends javax.mail.Authenticator {
         }
     }
 
+    // reads new mails
     public synchronized Message[] readNewMail() throws Exception {
         try {
             Folder folder = store.getFolder("Inbox");
@@ -54,8 +55,38 @@ public class GMailReader extends javax.mail.Authenticator {
             folder.setFlags(new_msgs, new Flags(Flags.Flag.SEEN), true);
             return new_msgs;
         } catch (Exception e) {
-//            Log.e("readMail", e.getMessage(), e);
             return null;
         }
     }
+
+    // reads last 20 mails
+    public synchronized Message[] readLastMails() throws Exception {
+        try {
+            Folder folder = store.getFolder("Inbox");
+            folder.open(Folder.READ_WRITE);
+            Message[] all_msgs = folder.getMessages(folder.getMessageCount() - 21 , folder.getMessageCount() - 1);
+            return all_msgs;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+//    public synchronized ArrayList<Message> readOldMail() throws Exception {
+//        try {
+//            Folder folder = store.getFolder("Inbox");
+//            folder.open(Folder.READ_WRITE);
+//            Message[] all_msgs = folder.search(new FlagTerm(new Flags(Flags.Flag.SEEN), true));
+//            int all_msgs_length = all_msgs.length;
+//            int messageBoxSize = SendMailActivity.messageBox.size();
+//            for (int i=1; i < all_msgs_length; i++) {
+//                if (all_msgs[all_msgs_length - i] == SendMailActivity.messageBox.get(messageBoxSize - 1)) {
+//                    i = all_msgs_length;
+//                } else {
+//                    SendMailActivity.messageBox.add(all_msgs[all_msgs_length - i]);
+//                }
+//            }
+//        } catch (Exception e) {
+////            Log.e("readMail", e.getMessage(), e);
+//        }
+//    }
 }

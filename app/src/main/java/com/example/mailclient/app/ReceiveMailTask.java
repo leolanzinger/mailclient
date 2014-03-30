@@ -3,16 +3,12 @@ package com.example.mailclient.app;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.text.Spanned;
 import android.util.Log;
 
-import java.util.List;
+import java.util.ArrayList;
 
-import javax.activation.DataHandler;
-import javax.mail.BodyPart;
-import javax.mail.Flags;
 import javax.mail.Message;
-import javax.mail.Multipart;
+import javax.mail.MessagingException;
 
 import static android.text.Html.fromHtml;
 
@@ -21,7 +17,7 @@ import static android.text.Html.fromHtml;
 *   operation of mails using GMailSender.java class
 */
 
-public class ReceiveMailTask extends AsyncTask <Object, Object, Message>{
+public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<String>> {
 
     private ProgressDialog statusDialog;
     private Activity sendMailActivity;
@@ -43,42 +39,33 @@ public class ReceiveMailTask extends AsyncTask <Object, Object, Message>{
     *   Execute task to receive email and print logs
     */
     @Override
-    protected Message doInBackground(Object... args) {
-        Message msg_ret = null;
+    protected ArrayList<String> doInBackground(Object... args) {
+        Message[] msg = null;
         try {
             Log.i("ReceiveMailTask", "About to instantiate GMailSender...");
             publishProgress("Processing input....");
             GMailReader reader = new GMailReader(args[0].toString(),
                     args[1].toString());
             try {
-                Message[] msg = reader.readNewMail();
-                for (int i=0; i < msg.length; i++) {
-                    String msg_subject = msg[i].getSubject();
-                    Log.i("new mail", msg_subject);
-                    Multipart multipart = (Multipart) msg[i].getContent();
-                    String msg_content = new String();
-                    for (int j = 0; j < multipart.getCount(); j++) {
-                        BodyPart bodyPart = multipart.getBodyPart(j);
-                        String disposition = bodyPart.getDisposition();
-                        if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) { // BodyPart.ATTACHMENT doesn't work for gmail
-                            DataHandler handler = bodyPart.getDataHandler();
-                        } else {
-                            msg_content = bodyPart.getContent().toString();
-                        }
-                    }
-                    Log.i("new mail", msg_content);
-                }
-
+//                msg = reader.readNewMail();
+                msg = reader.readLastMails();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            publishProgress("Email Received.");
-            Log.i("ReceiveMailTask", "Mail Received.");
+//            publishProgress("Email Received.");
+//            Log.i("ReceiveMailTask", "Mail Received.");
         } catch (Exception e) {
             publishProgress(e.getMessage());
-//            Log.e("ReceiveMailTask", e.getMessage(), e);
         }
-        return msg_ret;
+        ArrayList<String> list = new ArrayList<String> ();
+        for (int i=0; i<msg.length; i++) {
+            try {
+                list.add(msg[i].getSubject());
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        }
+        return list;
     }
 
     @Override
@@ -88,7 +75,10 @@ public class ReceiveMailTask extends AsyncTask <Object, Object, Message>{
     }
 
     @Override
-    public void onPostExecute(Message result) {
+    public void onPostExecute(ArrayList<String> result) {
+
+        MainActivity.adapter.addAll(result);
+        MainActivity.adapter.notifyDataSetChanged();
         statusDialog.dismiss();
         super.onPostExecute(result);
     }
