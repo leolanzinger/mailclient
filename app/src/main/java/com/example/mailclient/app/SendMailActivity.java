@@ -131,7 +131,6 @@ public class SendMailActivity extends Activity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 

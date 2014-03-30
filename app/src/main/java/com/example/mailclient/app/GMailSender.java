@@ -75,8 +75,6 @@ public class GMailSender {
         Log.i("GMailSender", "Mail server properties set.");
     }
 
-
-
     public MimeMessage createEmailMessage() throws AddressException, MessagingException, IOException {
 
         mailSession = Session.getDefaultInstance(emailProperties, null);
