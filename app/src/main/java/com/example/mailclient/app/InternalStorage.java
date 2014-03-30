@@ -20,7 +20,7 @@ public final class InternalStorage {
     InternalStorage() {}
 
     public static void writeObject(Context context, String key, Object object) throws IOException {
-        FileOutputStream fos = context.openFileOutput(key, Context.MODE_APPEND);
+        FileOutputStream fos = context.openFileOutput(key, Context.MODE_PRIVATE);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(object);
         oos.close();

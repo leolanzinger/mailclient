@@ -47,8 +47,8 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
             GMailReader reader = new GMailReader(args[0].toString(),
                     args[1].toString());
             try {
-//                msg = reader.readNewMail();
-                msg = reader.readLastMails();
+                msg = reader.readNewMail();
+//                msg = reader.readLastMails();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -93,7 +93,7 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
          */
         MailClient.adapter.addAll(result);
         MailClient.adapter.notifyDataSetChanged();
-        MailClient.save(result);
+        MailClient.save(MailClient.emailList);
         statusDialog.dismiss();
         super.onPostExecute(result);
     }
