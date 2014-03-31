@@ -5,10 +5,12 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 
 import static android.text.Html.fromHtml;
 
@@ -70,6 +72,17 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
             try {
                 email.setSubject(msg[i].getSubject());
                 email.setDate(msg[i].getSentDate());
+                try {
+                    Object multipart = msg[i].getContent();
+                    if (!(multipart instanceof Multipart)) {
+                        email.setContentToString(multipart.toString());
+                    }
+                    else {
+                        email.setContent((Multipart) multipart);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } catch (MessagingException e) {
                 e.printStackTrace();
             }

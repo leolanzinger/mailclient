@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.io.IOException;
@@ -41,7 +43,7 @@ public class MailClient extends Activity {
          *  Instantiate list adapter
          */
         ListView listView = (ListView) findViewById(R.id.listView);
-        adapter = new EmailAdapter(this, R.id.subject, emailList);
+        adapter = new EmailAdapter(this, R.id.list_subject, emailList);
         listView.setAdapter(adapter);
 
         /*
@@ -56,6 +58,17 @@ public class MailClient extends Activity {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MailClient.this, ReadMail.class);
+                int index = i;
+                intent.putExtra("index", index);
+                startActivity(intent);
+            }
+        });
     }
 
 

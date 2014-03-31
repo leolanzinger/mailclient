@@ -35,10 +35,10 @@ public class EmailAdapter extends ArrayAdapter<Email> {
 
         Email item = getItem(position);
         if (item != null) {
-            TextView subjectView = (TextView) view.findViewById(R.id.subject);
+            TextView subjectView = (TextView) view.findViewById(R.id.list_subject);
             subjectView.setText(item.subject);
 
-            TextView dateView = (TextView) view.findViewById(R.id.date);
+            TextView dateView = (TextView) view.findViewById(R.id.list_date);
             dateView.setText(item.date.toString());
         }
         return view;

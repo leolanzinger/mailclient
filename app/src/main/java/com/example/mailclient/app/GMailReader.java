@@ -76,12 +76,8 @@ public class GMailReader extends javax.mail.Authenticator {
             if ( MailClient.emailList.size() > 0 ) {
                 for (int i = 0; i < mess_count; i++) {
                     Date cur_date = folder.getMessage(mess_count - i).getSentDate();
-                    Log.i("check_duplicates", "messaggio letto ha data" + cur_date.toString());
-                    Log.i("check_duplicates", "ultimo messaggio cachato con data" + MailClient.emailList.get(MailClient.emailList.size() - 1).date.toString());
                     if ( cur_date.equals(MailClient.emailList.get(MailClient.emailList.size() - 1).date) ) {
                         already_count = i;
-                        Log.i("check_duplicates", "trovata email già letta ad indice i:");
-                        Log.i("check_duplicates", String.valueOf(i));
                         i = mess_count + 1;
                     } else {
                         // set a number of max receivable mails

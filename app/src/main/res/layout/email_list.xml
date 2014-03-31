@@ -10,11 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="subject"
-        android:id="@+id/subject" />
+        android:id="@+id/list_subject" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="date"
-        android:id="@+id/date" />
+        android:id="@+id/list_date" />
 </LinearLayout>

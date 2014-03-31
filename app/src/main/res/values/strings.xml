@@ -6,5 +6,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">MailClient</string>
     <string name="send_activity">sendEmail</string>
+    <string name="title_activity_read_mail">ReadMail</string>
 
 </resources>
