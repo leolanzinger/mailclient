@@ -31,7 +31,11 @@ public class SendMailActivity extends Activity {
     private static final int SELECT_PICTURE = 1;
     ArrayList<String> selectedImagePath;
     public static ArrayList<Message> messageBox;
-
+    public final EditText fromEmailText = (EditText) this.findViewById(R.id.editText1);
+    final EditText passwordEmail = (EditText) this.findViewById(R.id.editText2);
+    final EditText toEmailText = (EditText) this.findViewById(R.id.editText3);
+    final EditText subjectEmailText = (EditText) this.findViewById(R.id.editText4);
+    final EditText bodyEmailText = (EditText) this.findViewById(R.id.editText5);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,11 +50,7 @@ public class SendMailActivity extends Activity {
         final Button attach = (Button) this.findViewById(R.id.button3);
         final TextView received_mail = (TextView) this.findViewById(R.id.received_mail);
 
-        final EditText fromEmailText = (EditText) this.findViewById(R.id.editText1);
-        final EditText passwordEmail = (EditText) this.findViewById(R.id.editText2);
-        final EditText toEmailText = (EditText) this.findViewById(R.id.editText3);
-        final EditText subjectEmailText = (EditText) this.findViewById(R.id.editText4);
-        final EditText bodyEmailText = (EditText) this.findViewById(R.id.editText5);
+
         selectedImagePath = new ArrayList<String>();
         /*
         *   Add listener to "send email" button and call

@@ -18,13 +18,22 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reply"
+                android:id="@+id/reply"
+                android:onClick="replyMail"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Large Text"
                 android:id="@+id/read_subject"
-                android:layout_alignParentTop="true"
+                android:layout_below="@+id/reply"
                 android:layout_centerHorizontal="true" />
 
             <TextView

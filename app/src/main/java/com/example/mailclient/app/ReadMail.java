@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 
@@ -21,6 +22,7 @@ public class ReadMail extends Activity {
         Bundle extras = getIntent().getExtras();
         int index = extras.getInt("index", 0);
 
+        Button reply = (Button) findViewById(R.id.reply);
         TextView subject = (TextView) findViewById(R.id.read_subject);
         TextView date = (TextView) findViewById(R.id.read_date);
         TextView body = (TextView) findViewById(R.id.read_body);
@@ -56,6 +58,10 @@ public class ReadMail extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public void replyMail(View view) {
+        Intent intent = new Intent(this, SendMailActivity.class);
+        startActivity(intent);
     }
 
 }
