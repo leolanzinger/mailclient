@@ -47,8 +47,8 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
             GMailReader reader = new GMailReader(args[0].toString(),
                     args[1].toString());
             try {
-                msg = reader.readNewMail();
-//                msg = reader.readLastMails();
+//                msg = reader.readNewMail();
+                msg = reader.readLastMails();
             } catch (Exception e) {
                 e.printStackTrace();
             }

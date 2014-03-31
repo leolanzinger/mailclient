@@ -46,7 +46,10 @@ public class GMailReader extends javax.mail.Authenticator {
         }
     }
 
-    // reads new mails
+    /*
+     *  Reads only unread mails
+     *  and marks them as read
+     */
     public synchronized Message[] readNewMail() throws Exception {
         try {
             Folder folder = store.getFolder("Inbox");
@@ -59,38 +62,53 @@ public class GMailReader extends javax.mail.Authenticator {
         }
     }
 
-    // reads last 20 mails (not working)
-    // TODO : download only mails that are not cached
+    /*
+     *  Reads mails from the inbox that are not cached yet
+     *  Marks every downloaded email as read in the IMAP folder
+     *  It retrieves a maximum of 30 mails.
+     */
     public synchronized Message[] readLastMails() throws Exception {
         try {
             Folder folder = store.getFolder("Inbox");
             folder.open(Folder.READ_WRITE);
             int already_count = 1;
+            int mess_count = folder.getMessageCount();
             if ( MailClient.emailList.size() > 0 ) {
-                for (int i = 1; i < folder.getMessageCount(); i++) {
-                    Date cur_date = folder.getMessage(folder.getMessageCount() - (i - 1)).getSentDate();
-                    if (cur_date == MailClient.emailList.get(MailClient.emailList.size() - 1).date) {
+                for (int i = 0; i < mess_count; i++) {
+                    Date cur_date = folder.getMessage(mess_count - i).getSentDate();
+                    Log.i("check_duplicates", "messaggio letto ha data" + cur_date.toString());
+                    Log.i("check_duplicates", "ultimo messaggio cachato con data" + MailClient.emailList.get(MailClient.emailList.size() - 1).date.toString());
+                    if ( cur_date.equals(MailClient.emailList.get(MailClient.emailList.size() - 1).date) ) {
                         already_count = i;
+                        Log.i("check_duplicates", "trovata email già letta ad indice i:");
+                        Log.i("check_duplicates", String.valueOf(i));
+                        i = mess_count + 1;
                     } else {
                         // set a number of max receivable mails
-                        if (folder.getMessageCount() > 30) {
+                        if (mess_count > 30) {
                             already_count = 30;
                         } else {
-                            already_count = folder.getMessageCount();
+                            already_count = mess_count;
                         }
                     }
                 }
             }
             else {
-                if (folder.getMessageCount() > 30) {
+                if (mess_count > 30) {
                     already_count = 30;
                 } else {
-                    already_count = folder.getMessageCount();
+                    already_count = mess_count;
                 }
             }
-            Message[] all_msgs = folder.getMessages(folder.getMessageCount() - (already_count - 1), already_count);
-            folder.setFlags(all_msgs, new Flags(Flags.Flag.SEEN), true);
-            return all_msgs;
+            if ( (mess_count - already_count) != mess_count ) {
+                Message[] all_msgs = folder.getMessages( (mess_count - already_count) + 1, mess_count);
+                folder.setFlags(all_msgs, new Flags(Flags.Flag.SEEN), true);
+                return all_msgs;
+            }
+            else {
+                Message[] all_msg = new Message[0];
+                return  all_msg;
+            }
         } catch (Exception e) {
             return null;
         }
