@@ -35,14 +35,23 @@
                 android:id="@+id/read_date"
                 android:layout_below="@+id/read_subject"
                 android:layout_centerHorizontal="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Small Text"
+                android:id="@+id/read_from"
+                android:layout_below="@+id/read_date"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/blue" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="New Text"
                 android:id="@+id/read_body"
-                android:layout_below="@+id/read_date"
-                android:layout_centerHorizontal="true" />
+                android:layout_below="@+id/read_from"
+                android:layout_centerHorizontal="true"/>
 
             </RelativeLayout>
 

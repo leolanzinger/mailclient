@@ -23,12 +23,25 @@ public class ReadMail extends Activity {
 
         TextView subject = (TextView) findViewById(R.id.read_subject);
         TextView date = (TextView) findViewById(R.id.read_date);
+        TextView from = (TextView) findViewById(R.id.read_from);
         TextView body = (TextView) findViewById(R.id.read_body);
 
         email = MailClient.emailList.get(index);
 
         subject.setText(email.subject);
         date.setText(email.date.toString());
+
+        String from_addresses = "";
+        for (int i=0; i<email.from.length; i++) {
+            if (i == 0) {
+                from_addresses = from_addresses.concat(String.valueOf(email.from[i]));
+            }
+            else {
+                from_addresses = from_addresses.concat(", " + email.from[i]);
+            }
+        }
+        from.setText(from_addresses);
+
         String body_content = "";
         for (int i=0; i<email.body.size(); i++) {
             body_content = body_content.concat(email.body.get(i));
