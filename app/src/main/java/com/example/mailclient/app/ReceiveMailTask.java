@@ -72,6 +72,7 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
             try {
                 email.setSubject(msg[i].getSubject());
                 email.setDate(msg[i].getSentDate());
+                email.setFrom(msg[i].getFrom());
                 try {
                     Object multipart = msg[i].getContent();
                     if (!(multipart instanceof Multipart)) {
