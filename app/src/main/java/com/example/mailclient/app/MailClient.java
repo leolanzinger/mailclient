@@ -101,7 +101,7 @@ public class MailClient extends Activity {
                 SmoothProgressBarUtils.generateDrawableWithColors(
                         getResources().getIntArray(R.array.pocket_background_colors),
                         ((SmoothProgressDrawable) mPocketBar.getIndeterminateDrawable()).getStrokeWidth()));
-        mPocketBar.setVisibility(View.INVISIBLE);
+        mPocketBar.setVisibility(View.GONE);
         mPocketBar.progressiveStop();
     }
 

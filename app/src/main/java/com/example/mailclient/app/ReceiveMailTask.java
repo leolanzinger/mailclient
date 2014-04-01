@@ -105,7 +105,7 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
         MailClient.save(MailClient.emailList);
         MailClient.mPocketBar.progressiveStop();
         MailClient.listView.onRefreshComplete();
-        MailClient.mPocketBar.setVisibility(View.INVISIBLE);
+        MailClient.mPocketBar.setVisibility(View.GONE);
         super.onPostExecute(result);
     }
 
