@@ -53,6 +53,9 @@ public class EmailAdapter extends ArrayAdapter<Email> {
             TextView dateView = (TextView) view.findViewById(R.id.list_date);
             String date_format = new SimpleDateFormat("dd MMM").format(item.date.getTime());
             dateView.setText(date_format);
+
+            TextView excerptView = (TextView) view.findViewById(R.id.list_excerpt);
+            excerptView.setText(item.excerpt);
         }
         return view;
     }

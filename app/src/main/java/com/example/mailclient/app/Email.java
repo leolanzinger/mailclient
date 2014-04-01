@@ -1,5 +1,8 @@
 package com.example.mailclient.app;
 
+import android.text.Html;
+import android.text.Spanned;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,11 +26,13 @@ public class Email implements Serializable {
     Date date;
     ArrayList<String> body;
     Address[] from;
+    String excerpt;
 
     public Email() {
         subject = new String();
         date = new Date();
         body = new ArrayList<String>(0);
+        excerpt = "";
     }
 
     /*
@@ -69,9 +74,28 @@ public class Email implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        setExcerpt();
     }
 
     public void setContentToString(String string) {
         body.add(string);
+        setExcerpt();
+    }
+
+    public void setExcerpt() {
+        if (body.size() > 0) {
+            String body_content = "";
+            for (int i=0; i<body.size(); i++) {
+                body_content = body_content.concat(body.get(i));
+            }
+            Spanned spanned = Html.fromHtml(body_content);
+            if (spanned.toString().replaceAll("  ","").split("\\r?\\n")[0].length() > 40) {
+                excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0].substring(0, 40);
+            }
+            else {
+                excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0];
+            }
+            excerpt += "...";
+        }
     }
 }
