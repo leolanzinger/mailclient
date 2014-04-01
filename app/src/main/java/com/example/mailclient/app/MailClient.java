@@ -10,10 +10,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import eu.erikw.PullToRefreshListView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -31,10 +33,13 @@ public class MailClient extends Activity {
     static EmailAdapter adapter;
     static InternalStorage storer;
     static String KEY = "mailClient";
+    private String account_email = "mailclientandroid@gmail.com";
+    private String account_password = "android2014";
 
     public static Context baseContext;
     public static SmoothProgressBar mPocketBar;
     public static PullToRefreshListView listView;
+    public static Button refresh_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,11 @@ public class MailClient extends Activity {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }
+
+        if (adapter.isEmpty() || adapter == null) {
+            refresh_button = (Button) findViewById(R.id.refresh_button);
+            refresh_button.setVisibility(View.VISIBLE);
         }
 
         /*
@@ -132,13 +142,21 @@ public class MailClient extends Activity {
 
     /*
      *  Execute receive mail async task
-     *  and triggers progress bar
+     *  and triggers progress bar.
+     *  The firs is triggered from main activity,
+     *  the second is triggered from refresh_button
      */
     public void receiveEmail() {
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
-        String account_email = "mailclientandroid@gmail.com";
-        String account_password = "android2014";
+        ReceiveMailTask receive_task = new ReceiveMailTask(MailClient.this);
+        receive_task.execute(account_email, account_password);
+    }
+
+    public void receiveMail(View view) {
+        refresh_button.setVisibility(View.GONE);
+        mPocketBar.setVisibility(View.VISIBLE);
+        mPocketBar.progressiveStart();
         ReceiveMailTask receive_task = new ReceiveMailTask(MailClient.this);
         receive_task.execute(account_email, account_password);
     }
