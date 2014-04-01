@@ -103,8 +103,6 @@ public class MailClient extends Activity {
     public void receiveEmail(View view) {
         String account_email = "mailclientandroid@gmail.com";
         String account_password = "android2014";
-//        String account_email = "leonardo.lanzinger@gmail.com";
-//        String account_password = "leothebassist";
         ReceiveMailTask receive_task = new ReceiveMailTask(MailClient.this);
         receive_task.execute(account_email, account_password);
     }
