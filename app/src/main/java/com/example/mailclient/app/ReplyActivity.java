@@ -1,5 +1,9 @@
 package com.example.mailclient.app;
 
+/**
+ * Created by teo on 01/04/14.
+ */
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -20,13 +24,15 @@ import java.util.List;
 
 import javax.mail.Message;
 
+
+
 /*
 *   Send and receive emails activity.
 *   Async tasks are used because Android doesn't
 *   allow Network operation in the main thread.
 */
 
-public class SendMailActivity extends Activity {
+public class ReplyActivity extends Activity {
 
     private static final int SELECT_PICTURE = 1;
     ArrayList<String> selectedImagePath;
@@ -53,6 +59,13 @@ public class SendMailActivity extends Activity {
         final EditText bodyEmailText = (EditText) this.findViewById(R.id.editText5);
         selectedImagePath = new ArrayList<String>();
 
+        //E LAVORARE QUA PER PRENDERLI COME REPLY
+        Intent intent=getIntent();
+        fromEmailText.setText(intent.getStringExtra("fromEmail"));
+        passwordEmail.setText(intent.getStringExtra("password"));
+        subjectEmailText.setText(intent.getStringExtra("subject"));
+        bodyEmailText.setText(intent.getStringExtra("body"));
+        toEmailText.setText(intent.getStringExtra("to"));
 
         /*
         *   Add listener to "send email" button and call
@@ -87,10 +100,10 @@ public class SendMailActivity extends Activity {
 
                 Log.i("Check", "stampiamo la size della lista: "+ selectedImagePath.size());
                 if (selectedImagePath.size()==0){
-                    new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody);
+                    new SendMailTask(ReplyActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody);
                 }
                 else {
-                    new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
+                    new SendMailTask(ReplyActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
                 }
                 selectedImagePath=new ArrayList<String>();
             }
@@ -104,7 +117,7 @@ public class SendMailActivity extends Activity {
             public void onClick(View v) {
                 String account_email = "mailclientandroid@gmail.com";
                 String account_password = "android2014t";
-                ReceiveMailTask receive_task = new ReceiveMailTask(SendMailActivity.this);
+                ReceiveMailTask receive_task = new ReceiveMailTask(ReplyActivity.this);
                 receive_task.execute(account_email, account_password);
             }
         });
