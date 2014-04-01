@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -13,9 +15,11 @@ import android.widget.ListView;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import eu.erikw.PullToRefreshListView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
+
 
 
 public class MailClient extends Activity {
@@ -30,6 +34,7 @@ public class MailClient extends Activity {
 
     public static Context baseContext;
     public static SmoothProgressBar mPocketBar;
+    public static PullToRefreshListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +49,19 @@ public class MailClient extends Activity {
         emailList  = new ArrayList<Email>();
 
         /*
+         *  Instantiate pullable listView
+         */
+        listView = (PullToRefreshListView) findViewById(R.id.listView);
+        listView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                receiveEmail();
+            }
+        });
+
+        /*
          *  Instantiate list adapter
          */
-        ListView listView = (ListView) findViewById(R.id.listView);
         adapter = new EmailAdapter(this, R.id.list_subject, emailList);
         listView.setAdapter(adapter);
 
@@ -86,7 +101,7 @@ public class MailClient extends Activity {
                 SmoothProgressBarUtils.generateDrawableWithColors(
                         getResources().getIntArray(R.array.pocket_background_colors),
                         ((SmoothProgressDrawable) mPocketBar.getIndeterminateDrawable()).getStrokeWidth()));
-//        mPocketBar.setVisibility(View.INVISIBLE);
+        mPocketBar.setVisibility(View.INVISIBLE);
         mPocketBar.progressiveStop();
     }
 
@@ -116,12 +131,11 @@ public class MailClient extends Activity {
     }
 
     /*
-     *  Triggered from receive email button:
-     *  execute receive mail async task
+     *  Execute receive mail async task
      *  and triggers progress bar
      */
-    public void receiveEmail(View view) {
-//        mPocketBar.setVisibility(View.VISIBLE);
+    public void receiveEmail() {
+        mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
         String account_email = "mailclientandroid@gmail.com";
         String account_password = "android2014";
