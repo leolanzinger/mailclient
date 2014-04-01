@@ -38,6 +38,9 @@ public class EmailAdapter extends ArrayAdapter<Email> {
             TextView subjectView = (TextView) view.findViewById(R.id.list_subject);
             subjectView.setText(item.subject);
 
+            TextView fromView = (TextView) view.findViewById(R.id.list_from);
+            fromView.setText(item.from[0].toString());
+
             TextView dateView = (TextView) view.findViewById(R.id.list_date);
             dateView.setText(item.date.toString());
         }
