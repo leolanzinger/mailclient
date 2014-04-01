@@ -1,13 +1,18 @@
 package com.example.mailclient.app;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+
+import javax.mail.internet.InternetAddress;
 
 /**
  * Created by Leo on 30/03/14.
@@ -39,10 +44,15 @@ public class EmailAdapter extends ArrayAdapter<Email> {
             subjectView.setText(item.subject);
 
             TextView fromView = (TextView) view.findViewById(R.id.list_from);
-            fromView.setText(item.from[0].toString());
+            String email = item.from == null ? null : ((InternetAddress) item.from[0]).getPersonal();
+            if (email == null || email.isEmpty()) {
+                email = item.from == null ? null : ((InternetAddress) item.from[0]).getAddress();
+            }
+            fromView.setText(email);
 
             TextView dateView = (TextView) view.findViewById(R.id.list_date);
-            dateView.setText(item.date.toString());
+            String date_format = new SimpleDateFormat("dd MMM").format(item.date.getTime());
+            dateView.setText(date_format);
         }
         return view;
     }
