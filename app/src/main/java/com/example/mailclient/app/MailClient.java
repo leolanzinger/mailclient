@@ -86,7 +86,7 @@ public class MailClient extends Activity {
                 SmoothProgressBarUtils.generateDrawableWithColors(
                         getResources().getIntArray(R.array.pocket_background_colors),
                         ((SmoothProgressDrawable) mPocketBar.getIndeterminateDrawable()).getStrokeWidth()));
-        mPocketBar.setVisibility(View.INVISIBLE);
+//        mPocketBar.setVisibility(View.INVISIBLE);
         mPocketBar.progressiveStop();
     }
 
@@ -121,7 +121,7 @@ public class MailClient extends Activity {
      *  and triggers progress bar
      */
     public void receiveEmail(View view) {
-        mPocketBar.setVisibility(View.VISIBLE);
+//        mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
         String account_email = "mailclientandroid@gmail.com";
         String account_password = "android2014";
