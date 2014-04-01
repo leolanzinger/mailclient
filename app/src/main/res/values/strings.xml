@@ -7,5 +7,7 @@
     <string name="title_activity_main">MailClient</string>
     <string name="send_activity">sendEmail</string>
     <string name="title_activity_read_mail">ReadMail</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>
