@@ -11,6 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+/*
+ *  Activity that displays a single email
+ *  - is triggered from main activity
+ */
 
 public class ReadMail extends Activity {
 
@@ -31,13 +35,20 @@ public class ReadMail extends Activity {
         from = (TextView) findViewById(R.id.read_from);
         body = (TextView) findViewById(R.id.read_body);
 
+        /*
+         *  Set contents for the TextViews
+         *  (subject, date, sender and content)
+         */
+
         email = MailClient.emailList.get(index);
 
         subject.setText(email.subject);
+        from.setText(from_addresses);
+
+        /*
+         *  Parse date into dd - MMM format (e.g: 30 mar)
+         */
         date.setText(email.date.toString());
-
-        Log.i("Reply",""+email.from[0]);
-
         for (int i=0; i<email.from.length; i++) {
             if (i == 0) {
                 from_addresses = from_addresses.concat(String.valueOf(email.from[i]));
@@ -46,33 +57,27 @@ public class ReadMail extends Activity {
                 from_addresses = from_addresses.concat(", " + email.from[i]);
             }
         }
-        from.setText(from_addresses);
 
+        /*
+         *  Parse body content from HTML String and
+         *  display it as styled HTML text
+         */
         String body_content = "";
-
         for (int i=0; i<email.body.size(); i++) {
             body_content = body_content.concat(email.body.get(i));
         }
         body.setText(Html.fromHtml(body_content));
-
-
-
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.read_mail, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;

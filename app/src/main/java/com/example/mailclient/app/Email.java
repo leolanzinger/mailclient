@@ -53,6 +53,9 @@ public class Email implements Serializable {
         }
     }
 
+    /*
+     *  Store body content if it is a Multipart Message
+     */
     public void setContent(Multipart multipart) {
         try {
             for (int x = 0; x < multipart.getCount(); x++) {
@@ -77,11 +80,18 @@ public class Email implements Serializable {
         setExcerpt();
     }
 
+    /*
+     *  Store body content if it is a String
+     */
     public void setContentToString(String string) {
         body.add(string);
         setExcerpt();
     }
 
+    /*
+     *  Parse body content and extract the excerpt of body.
+     *  - saves only first line without multiple spaces
+     */
     public void setExcerpt() {
         if (body.size() > 0) {
             String body_content = "";

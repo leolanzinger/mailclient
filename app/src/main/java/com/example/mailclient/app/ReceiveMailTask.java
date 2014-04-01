@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +23,6 @@ import static android.text.Html.fromHtml;
 
 public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>> {
 
-    private ProgressDialog statusDialog;
     private Activity sendMailActivity;
 
     public ReceiveMailTask(Activity activity) {
@@ -30,11 +31,6 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
     }
 
     protected void onPreExecute() {
-        statusDialog = new ProgressDialog(sendMailActivity);
-        statusDialog.setMessage("Getting ready...");
-        statusDialog.setIndeterminate(false);
-        statusDialog.setCancelable(false);
-        statusDialog.show();
     }
 
     /*
@@ -94,21 +90,21 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
 
     @Override
     public void onProgressUpdate(Object... values) {
-        statusDialog.setMessage(values[0].toString());
-
     }
 
     @Override
     public void onPostExecute(ArrayList<Email> result) {
 
         /*
-         *  Notify adapter of the retrieved mails
-         *  and store them into cache
+         *  Notify adapter of the retrieved mails,
+         *  store them into cache and hide progress
+         *  bar
          */
         MailClient.adapter.addAll(result);
         MailClient.adapter.notifyDataSetChanged();
         MailClient.save(MailClient.emailList);
-        statusDialog.dismiss();
+        MailClient.mPocketBar.progressiveStop();
+        MailClient.mPocketBar.setVisibility(View.INVISIBLE);
         super.onPostExecute(result);
     }
 

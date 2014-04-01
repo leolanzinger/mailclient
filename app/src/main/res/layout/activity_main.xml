@@ -25,6 +25,13 @@
             android:onClick="sendEmail"/>
     </LinearLayout>
 
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        android:id="@+id/pocket"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/PocketProgressBar"
+        android:indeterminate="true"/>
+
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
