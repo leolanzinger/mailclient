@@ -90,6 +90,7 @@ public class ReadMail extends Activity {
         if (!email.seen) {
             UpdateMailTask update_task = new UpdateMailTask(this);
             update_task.execute(email.ID);
+            email.seen = true;
         }
 
         try {
