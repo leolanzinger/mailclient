@@ -2,10 +2,10 @@
 <merger>
 
     <dataSet config="main" >
-        <source path="/Users/Teo/dev/mailclient/pulltorefresh/src/main/assets" />
+        <source path="/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/src/main/assets" />
     </dataSet>
     <dataSet config="release" >
-        <source path="/Users/Teo/dev/mailclient/pulltorefresh/src/release/assets" />
+        <source path="/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/src/release/assets" />
     </dataSet>
 
 </merger>

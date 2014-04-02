@@ -76,7 +76,7 @@ public class GMailReader extends javax.mail.Authenticator {
             if ( MailClient.emailList.size() > 0 ) {
                 for (int i = 0; i < mess_count; i++) {
                     Date cur_date = folder.getMessage(mess_count - i).getSentDate();
-                    if ( cur_date.equals(MailClient.emailList.get(MailClient.emailList.size() - 1).date) ) {
+                    if ( cur_date.equals(MailClient.emailList.get(0).date) ) {
                         already_count = i;
                         i = mess_count + 1;
                     } else {

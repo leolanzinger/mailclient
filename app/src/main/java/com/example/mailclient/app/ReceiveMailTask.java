@@ -97,7 +97,9 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
          *  store them into cache and hide progress
          *  bar
          */
-        MailClient.adapter.addAll(result);
+        for (Email em : result) {
+            MailClient.adapter.insert(em, 0);
+        }
         MailClient.adapter.notifyDataSetChanged();
         MailClient.save(MailClient.emailList);
         MailClient.mPocketBar.progressiveStop();
