@@ -4,18 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 
 import eu.erikw.PullToRefreshListView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -33,8 +29,8 @@ public class MailClient extends Activity {
     static EmailAdapter adapter;
     static InternalStorage storer;
     static String KEY = "mailClient";
-    private String account_email = "mailclientandroid@gmail.com";
-    private String account_password = "android2014";
+    public static String account_email = "mailclientandroid@gmail.com";
+    public static String account_password = "android2014";
 
     public static Context baseContext;
     public static SmoothProgressBar mPocketBar;
