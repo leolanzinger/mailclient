@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+
 import javax.activation.DataHandler;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
@@ -54,7 +56,8 @@ public class ReadMail extends Activity {
         /*
          *  Parse date into dd - MMM format (e.g: 30 mar)
          */
-        date.setText(email.date.toString());
+        String date_format = new SimpleDateFormat("dd MMM").format(email.date.getTime());
+        date.setText(date_format);
 
         for (int i=0; i<email.from.length; i++) {
             if (i == 0) {
@@ -81,14 +84,6 @@ public class ReadMail extends Activity {
                 to_addresses = to_addresses.concat(s);
             }
         }
-        try {
-            showBody(email.body);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-<<<<<<< HEAD
-        body.setText(Html.fromHtml(body_content));
-
         /*
          *  Notify IMAP server that the mail is read
          */
@@ -96,9 +91,14 @@ public class ReadMail extends Activity {
             UpdateMailTask update_task = new UpdateMailTask(this);
             update_task.execute(email.ID);
         }
-=======
 
-//        /*
+        try {
+            showBody(email.body);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+           /*
 //         *  Parse body content from HTML String and
 //         *  display it as styled HTML text
 //         */
@@ -107,7 +107,6 @@ public class ReadMail extends Activity {
 //            body_content = body_content.concat(email.body.get(i));
 //        }
 //        body.setText(Html.fromHtml(body_content));
->>>>>>> 8f3ad69cc23e56dee40c5f675248572377669592
     }
 
 

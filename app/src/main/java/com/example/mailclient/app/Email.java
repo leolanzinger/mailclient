@@ -107,17 +107,17 @@ public class Email implements Serializable {
      *  Parse body content and extract the excerpt of body.
      *  - saves only first line without multiple spaces
      */
-<<<<<<< HEAD
-    public void setExcerpt() {
-        if (body.size() > 0) {
-            String body_content = "";
-            for (int i=0; i<body.size(); i++) {
-                body_content = body_content.concat(body.get(i));
-            }
-            Spanned spanned = Html.fromHtml(body_content);
-            if (spanned.toString().replaceAll("  ","").split("\\r?\\n")[0].length() > 39) {
-                excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0].substring(0, 39);
-=======
+
+//    public void setExcerpt() {
+//        if (body.size() > 0) {
+//            String body_content = "";
+//            for (int i=0; i<body.size(); i++) {
+//                body_content = body_content.concat(body.get(i));
+//            }
+//            Spanned spanned = Html.fromHtml(body_content);
+//            if (spanned.toString().replaceAll("  ","").split("\\r?\\n")[0].length() > 39) {
+//                excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0].substring(0, 39);
+
     public void setExcerpt() throws MessagingException, IOException {
 
         //BISOGNA CONTROLLARE SE IL BODY È DI TIPO MIME O SOLO TESTO
@@ -133,10 +133,7 @@ public class Email implements Serializable {
             //attachment here!
             if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
                 Log.i("Check","Mail have some attachment");
-
-                DataHandler handler = messageBodyPart.getDataHandler();
                 //buttiamo fuori il multipart!
->>>>>>> 8f3ad69cc23e56dee40c5f675248572377669592
             }
             else {
                 //è testo, quindi lo concateno!
@@ -145,42 +142,19 @@ public class Email implements Serializable {
 
             }
         }
-<<<<<<< HEAD
+
+        //butto il body_content in html
+        Spanned spanned = Html.fromHtml(body_content);
+        if (spanned.toString().replaceAll("  ","").split("\\r?\\n")[0].length() > 39) {
+            excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0].substring(0, 39);
+        }
+        else {
+            excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0];
+        }
+        excerpt += "...";
     }
 
     public void setID(String s) {
         ID = s;
     }
 }
-=======
-
-        //butto il body_content in html
-        Spanned spanned = Html.fromHtml(body_content);
-        if (spanned.toString().replaceAll("  ","").split("\\r?\\n")[0].length() > 40) {
-            excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0].substring(0, 40);
-        }
-        else {
-            excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0];
-        }
-        excerpt += "...";
-        }
-
-
-
-//    public void setExcerpt() {
-//        if (body.size() > 0) {
-//            String body_content = "";
-//            for (int i=0; i<body.size(); i++) {
-//                body_content = body_content.concat(body.get(i));
-//            }
-//            Spanned spanned = Html.fromHtml(body_content);
-//            if (spanned.toString().replaceAll("  ","").split("\\r?\\n")[0].length() > 40) {
-//                excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0].substring(0, 40);
-//            }
-//            else {
-//                excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0];
-//            }
-//            excerpt += "...";
-//        }
-    }
->>>>>>> 8f3ad69cc23e56dee40c5f675248572377669592
