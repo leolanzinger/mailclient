@@ -52,17 +52,13 @@ public class ReplyActivity extends Activity {
         final Button attach = (Button) this.findViewById(R.id.button3);
         final TextView received_mail = (TextView) this.findViewById(R.id.received_mail);
 
-        final EditText fromEmailText = (EditText) this.findViewById(R.id.editText1);
-        final EditText passwordEmail = (EditText) this.findViewById(R.id.editText2);
         final EditText toEmailText = (EditText) this.findViewById(R.id.editText3);
         final EditText subjectEmailText = (EditText) this.findViewById(R.id.editText4);
         final EditText bodyEmailText = (EditText) this.findViewById(R.id.editText5);
         selectedImagePath = new ArrayList<String>();
 
         //E LAVORARE QUA PER PRENDERLI COME REPLY
-        Intent intent=getIntent();
-        fromEmailText.setText(intent.getStringExtra("fromEmail"));
-        passwordEmail.setText(intent.getStringExtra("password"));
+        final Intent intent=getIntent();
         subjectEmailText.setText(intent.getStringExtra("subject"));
         bodyEmailText.setText(intent.getStringExtra("body"));
         toEmailText.setText(intent.getStringExtra("to"));
@@ -88,8 +84,8 @@ public class ReplyActivity extends Activity {
 //                String emailBody = "parapatutiti";
 
 
-                String fromEmail = fromEmailText.getText().toString();
-                String fromPassword = passwordEmail.getText().toString();
+                String fromEmail=intent.getStringExtra("fromEmail");
+                String fromPassword=intent.getStringExtra("password");
                 String toEmails = toEmailText.getText().toString();
                 List<String> toEmailList = Arrays.asList(toEmails
                         .split("\\s*,\\s*"));

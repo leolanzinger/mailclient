@@ -41,7 +41,15 @@ public class EmailAdapter extends ArrayAdapter<Email> {
         Email item = getItem(position);
         if (item != null) {
             TextView subjectView = (TextView) view.findViewById(R.id.list_subject);
-            subjectView.setText(item.subject);
+            String subject_excerpt;
+            if( item.subject.length() > 15 ) {
+                subject_excerpt = item.subject.substring(0, 15);
+                subject_excerpt += "...";
+            }
+            else {
+                subject_excerpt = item.subject;
+            }
+            subjectView.setText(subject_excerpt);
 
             TextView fromView = (TextView) view.findViewById(R.id.list_from);
             String email = item.from == null ? null : ((InternetAddress) item.from[0]).getPersonal();
