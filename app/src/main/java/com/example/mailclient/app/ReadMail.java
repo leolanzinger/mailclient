@@ -87,6 +87,14 @@ public class ReadMail extends Activity {
             body_content = body_content.concat(email.body.get(i));
         }
         body.setText(Html.fromHtml(body_content));
+
+        /*
+         *  Notify IMAP server that the mail is read
+         */
+        if (!email.seen) {
+            UpdateMailTask update_task = new UpdateMailTask(this);
+            update_task.execute(email.ID);
+        }
     }
 
 

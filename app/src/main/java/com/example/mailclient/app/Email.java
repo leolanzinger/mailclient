@@ -22,22 +22,34 @@ import javax.mail.Multipart;
  */
 public class Email implements Serializable {
 
+    boolean seen;
     String subject;
     Date date;
     ArrayList<String> body;
     Address[] from,to;
     String excerpt;
+    String ID;
 
     public Email() {
         subject = new String();
         date = new Date();
         body = new ArrayList<String>(0);
         excerpt = "";
+        seen = false;
     }
 
     /*
      *  Fill up Email object
      */
+
+    public void setSeen() {
+        seen = true;
+    }
+
+    public void setUnSeen() {
+        seen = false;
+    }
+
     public void setSubject(String sub) {
         subject = sub;
     }
@@ -106,13 +118,17 @@ public class Email implements Serializable {
                 body_content = body_content.concat(body.get(i));
             }
             Spanned spanned = Html.fromHtml(body_content);
-            if (spanned.toString().replaceAll("  ","").split("\\r?\\n")[0].length() > 40) {
-                excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0].substring(0, 40);
+            if (spanned.toString().replaceAll("  ","").split("\\r?\\n")[0].length() > 39) {
+                excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0].substring(0, 39);
             }
             else {
                 excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0];
             }
             excerpt += "...";
         }
+    }
+
+    public void setID(String s) {
+        ID = s;
     }
 }

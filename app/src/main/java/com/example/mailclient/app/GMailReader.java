@@ -75,8 +75,8 @@ public class GMailReader extends javax.mail.Authenticator {
             int mess_count = folder.getMessageCount();
             if ( MailClient.emailList.size() > 0 ) {
                 for (int i = 0; i < mess_count; i++) {
-                    Date cur_date = folder.getMessage(mess_count - i).getSentDate();
-                    if ( cur_date.equals(MailClient.emailList.get(0).date) ) {
+                    String cur_ID = folder.getMessage(mess_count - i).getHeader("Message-Id")[0];
+                    if ( cur_ID.equals(MailClient.emailList.get(0).ID) ) {
                         already_count = i;
                         i = mess_count + 1;
                     } else {
@@ -87,6 +87,7 @@ public class GMailReader extends javax.mail.Authenticator {
                             already_count = mess_count;
                         }
                     }
+
                 }
             }
             else {
@@ -98,7 +99,7 @@ public class GMailReader extends javax.mail.Authenticator {
             }
             if ( (mess_count - already_count) != mess_count ) {
                 Message[] all_msgs = folder.getMessages( (mess_count - already_count) + 1, mess_count);
-                folder.setFlags(all_msgs, new Flags(Flags.Flag.SEEN), true);
+//                folder.setFlags(all_msgs, new Flags(Flags.Flag.SEEN), true);
                 return all_msgs;
             }
             else {
