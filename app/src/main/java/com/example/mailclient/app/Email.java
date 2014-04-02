@@ -25,7 +25,7 @@ public class Email implements Serializable {
     String subject;
     Date date;
     ArrayList<String> body;
-    Address[] from;
+    Address[] from,to;
     String excerpt;
 
     public Email() {
@@ -50,6 +50,13 @@ public class Email implements Serializable {
         from = new Address[addr.length];
         for (int i = 0; i < addr.length; i++) {
             from[i] = addr[i];
+        }
+    }
+
+    public void setTo(Address[] addr) {
+        to = new Address[addr.length];
+        for (int i = 0; i < addr.length; i++) {
+            to[i] = addr[i];
         }
     }
 

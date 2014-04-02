@@ -1,11 +1,9 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,8 +11,6 @@ import java.util.ArrayList;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-
-import static android.text.Html.fromHtml;
 
 /*
 *   Async Task to perform retrieving
@@ -69,6 +65,7 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
                 email.setSubject(msg[i].getSubject());
                 email.setDate(msg[i].getSentDate());
                 email.setFrom(msg[i].getFrom());
+                email.setTo(msg[i].getAllRecipients());
                 try {
                     Object multipart = msg[i].getContent();
                     if (!(multipart instanceof Multipart)) {

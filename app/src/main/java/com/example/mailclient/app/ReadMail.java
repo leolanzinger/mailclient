@@ -20,6 +20,7 @@ public class ReadMail extends Activity {
 
     Email email;
     String from_addresses = "";
+    String to_addresses = "";
     TextView subject,date,from,body;
 
     @Override
@@ -58,6 +59,17 @@ public class ReadMail extends Activity {
             }
         }
 
+        for (int i=0; i<email.to.length; i++) {
+            if (i == 0) {
+                to_addresses = to_addresses.concat(String.valueOf(email.to[i]));
+            }
+            else {
+                to_addresses = to_addresses.concat(", " + email.to[i]);
+            }
+        }
+
+
+
         /*
          *  Parse body content from HTML String and
          *  display it as styled HTML text
@@ -88,8 +100,9 @@ public class ReadMail extends Activity {
         Intent intent = new Intent(this, ReplyActivity.class);
 
         //parametri di from e password sono hardcodati, devo cercare di passare il destinatario della mail come fromEmail e la password vuota
-        intent.putExtra("fromEmail","mailclientandroid@gmail.com");
-        intent.putExtra("password","android2014");
+        Log.i("Reply","check email.to: "+to_addresses);
+        intent.putExtra("fromEmail",to_addresses);
+        intent.putExtra("password","");
         intent.putExtra("subject","Re: "+ email.subject);
         intent.putExtra("body",""+body.getText()); //DA INDENTARE
         intent.putExtra("to",from_addresses);
