@@ -145,7 +145,7 @@ public class MailClient extends Activity {
      *  Triggered from send email button:
      *  call send email activity
      */
-    public void sendEmail(View view) {
+    public void sendEmail(MenuItem menu) {
         Intent intent = new Intent(this, SendMailActivity.class);
         startActivity(intent);
     }
