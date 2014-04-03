@@ -30,7 +30,7 @@ public class SendMailActivity extends Activity {
 
     private static final int SELECT_PICTURE = 1;
     ArrayList<String> selectedImagePath;
-    public static ArrayList<Message> messageBox;
+    EditText toEmailText, subjectEmailText, bodyEmailText;
 
 
     @Override
@@ -38,73 +38,12 @@ public class SendMailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sendmailactivity);
 
-        /*
-        *   Buttons for receiving / sending emails
-        */
-        final Button send = (Button) this.findViewById(R.id.button1);
-        final Button receive = (Button) this.findViewById(R.id.button2);
-        final Button attach = (Button) this.findViewById(R.id.button3);
-        final TextView received_mail = (TextView) this.findViewById(R.id.received_mail);
-
-        final EditText toEmailText = (EditText) this.findViewById(R.id.editText3);
-        final EditText subjectEmailText = (EditText) this.findViewById(R.id.editText4);
-        final EditText bodyEmailText = (EditText) this.findViewById(R.id.editText5);
-        selectedImagePath = new ArrayList<String>();
-
+        selectedImagePath = new ArrayList<String> ();
 
         /*
-        *   Add listener to "send email" button and call
-        *   async task to perform send mail tasks
+        *   Buttons for sending emails
         */
-        send.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                Log.i("SendMailActivity", "Send Button Clicked.");
-
-                //Scegliere se usare dati già hardcodati o da editare negli edittext
-
-//                String fromEmail = "leonardo.lanzinger@gmail.com";
-//                String fromPassword = "leothebassist";
-//                String toEmails = "matteolever@me.com";
-//                List<String> toEmailList = Arrays.asList(toEmails
-//                        .split("\\s*,\\s*"));
-//                Log.i("SendMailActivity", "To List: " + toEmailList);
-//                String emailSubject = "soggettodiprova";
-//                String emailBody = "parapatutiti";
-
-
-                String fromEmail = MailClient.account_email;
-                String fromPassword = MailClient.account_password;
-                String toEmails = toEmailText.getText().toString();
-                List<String> toEmailList = Arrays.asList(toEmails
-                        .split("\\s*,\\s*"));
-                Log.i("SendMailActivity", "To List: " + toEmailList);
-                String emailSubject = subjectEmailText.getText().toString();
-                String emailBody = bodyEmailText.getText().toString();
-
-
-                Log.i("Check", "stampiamo la size della lista: "+ selectedImagePath.size());
-                if (selectedImagePath.size()==0){
-                    new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody);
-                }
-                else {
-                    new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
-                }
-            }
-        });
-
-        /*
-        *   Add listener to "receive email" button and call
-        *   async task to perform receive mail tasks
-        */
-        receive.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
-                String account_email = "mailclientandroid@gmail.com";
-                String account_password = "android2014t";
-                ReceiveMailTask receive_task = new ReceiveMailTask(SendMailActivity.this);
-                receive_task.execute(account_email, account_password);
-            }
-        });
+        final Button attach = (Button) this.findViewById(R.id.send_attach_button);
 
         attach.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
@@ -164,5 +103,33 @@ public class SendMailActivity extends Activity {
         }
         else
             return uri.getPath();               // FOR OI/ASTRO/Dropbox etc
+    }
+
+    public void sendEmail(MenuItem menu) {
+
+
+//        final TextView received_mail = (TextView) this.findViewById(R.id.received_mail);
+
+        toEmailText = (EditText) this.findViewById(R.id.send_to_edit);
+        subjectEmailText = (EditText) this.findViewById(R.id.send_subject_edit);
+        bodyEmailText = (EditText) this.findViewById(R.id.send_body);
+
+        String fromEmail = MailClient.account_email;
+        String fromPassword = MailClient.account_password;
+        String toEmails = toEmailText.getText().toString();
+        List<String> toEmailList = Arrays.asList(toEmails
+                .split("\\s*,\\s*"));
+        Log.i("SendMailActivity", "To List: " + toEmailList);
+        String emailSubject = subjectEmailText.getText().toString();
+        String emailBody = bodyEmailText.getText().toString();
+
+
+        Log.i("Check", "stampiamo la size della lista: "+ selectedImagePath.size());
+        if (selectedImagePath.size()==0){
+            new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody);
+        }
+        else {
+            new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
+        }
     }
 }
