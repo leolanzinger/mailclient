@@ -1,7 +1,9 @@
 package com.example.mailclient.app;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,11 +75,15 @@ public class EmailAdapter extends ArrayAdapter<Email> {
                 subjectView.setTypeface(null, Typeface.BOLD);
                 fromView.setTypeface(null, Typeface.BOLD);
                 dateView.setTypeface(null, Typeface.BOLD);
+
+                view.setBackgroundResource(R.color.unread);
             }
             else {
                 subjectView.setTypeface(null, Typeface.NORMAL);
                 fromView.setTypeface(null, Typeface.NORMAL);
                 dateView.setTypeface(null, Typeface.NORMAL);
+
+                view.setBackgroundResource(R.color.white);
             }
         }
         return view;

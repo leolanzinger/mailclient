@@ -35,6 +35,9 @@ public class UpdateMailTask extends AsyncTask {
     @Override
     protected Object doInBackground(Object... args) {
         try {
+            /*
+             *  Updates INBOX status of updated Emails
+             */
             Log.i("UpdateMailTask", "About to instantiate GMailUpdater...");
             GMailUpdater updater = new GMailUpdater(MailClient.account_email, MailClient.account_password);
             try {

@@ -49,9 +49,7 @@ public class ReadMail extends Activity {
          */
 
         email = MailClient.emailList.get(index);
-
         subject.setText(email.subject);
-        from.setText(from_addresses);
 
         /*
          *  Parse date into dd - MMM format (e.g: 30 mar)
@@ -59,6 +57,9 @@ public class ReadMail extends Activity {
         String date_format = new SimpleDateFormat("dd MMM").format(email.date.getTime());
         date.setText(date_format);
 
+        /*
+         *  Fill up from address fields
+         */
         for (int i=0; i<email.from.length; i++) {
             if (i == 0) {
                 String s = email.from == null ? null : ((InternetAddress) email.from[i]).getAddress();
@@ -71,7 +72,11 @@ public class ReadMail extends Activity {
                 from_addresses = from_addresses.concat(s);
             }
         }
+        from.setText(from_addresses);
 
+        /*
+         *  Fill up to address fields
+         */
         for (int i=0; i<email.to.length; i++) {
             if (i == 0) {
                 String s = email.to == null ? null : ((InternetAddress) email.to[i]).getAddress();
@@ -84,6 +89,17 @@ public class ReadMail extends Activity {
                 to_addresses = to_addresses.concat(s);
             }
         }
+
+        /*
+         *  Parse body content from HTML String and
+         *  display it as styled HTML text
+         */
+        String body_content = "";
+        for (int i=0; i<email.body.size(); i++) {
+            body_content = body_content.concat(email.body.get(i));
+        }
+        body.setText(Html.fromHtml(body_content));
+
         /*
          *  Notify IMAP server that the mail is read
          */
@@ -92,23 +108,7 @@ public class ReadMail extends Activity {
             update_task.execute(email.ID);
             email.seen = true;
         }
-
-        try {
-            showBody(email.body);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-
-           /*
-//         *  Parse body content from HTML String and
-//         *  display it as styled HTML text
-//         */
-//        String body_content = "";
-//        for (int i=0; i<email.body.size(); i++) {
-//            body_content = body_content.concat(email.body.get(i));
-//        }
-//        body.setText(Html.fromHtml(body_content));
-    }
+}
 
 
     @Override
@@ -125,6 +125,12 @@ public class ReadMail extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    /*
+     *  Launch new ReplyActivity
+     *  that sends an email back to
+     *  "from" addressess
+     */
     public void replyMail(View view) {
         Intent intent = new Intent(this, ReplyActivity.class);
 
@@ -135,6 +141,10 @@ public class ReadMail extends Activity {
         intent.putExtra("to",from_addresses);
         startActivity(intent);
     }
+
+    /*
+     *  Unused showBodyMethod
+     */
     public void showBody(MimeMultipart fullBody) throws MessagingException {
 
         MimeBodyPart messageBodyPart;

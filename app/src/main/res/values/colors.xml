@@ -3,6 +3,7 @@
     <color name="grey">#9B9B9B</color>
     <color name="black">#4A4A4A</color>
     <color name="white">#FFFFFF</color>
+    <color name="unread">#EAF0F5</color>
 
     <integer-array name="pocket_background_colors">
         <item>@color/pocket_color_1</item>

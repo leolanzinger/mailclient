@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.activation.DataHandler;
@@ -27,7 +28,7 @@ public class Email implements Serializable {
     boolean seen;
     String subject;
     Date date;
-    MimeMultipart body;
+    ArrayList<String> body;
     Address[] from,to;
     String excerpt;
     String ID;
@@ -35,7 +36,7 @@ public class Email implements Serializable {
     public Email() {
         subject = new String();
         date = new Date();
-        body = new MimeMultipart();
+        body = new ArrayList<String> ();
         excerpt = "";
         seen = false;
     }
@@ -78,28 +79,44 @@ public class Email implements Serializable {
      *  Store body content if it is a Multipart Message
      */
     public void setContent(Multipart multipart) throws MessagingException, IOException {
-        Log.i("Check","tipo= "+multipart.getContentType());
-
         try {
             for (int x = 0; x < multipart.getCount(); x++) {
                 BodyPart bodyPart = multipart.getBodyPart(x);
-                    body.addBodyPart(bodyPart);
+
+                String disposition = bodyPart.getDisposition();
+
+                if (disposition != null && (disposition.equals(BodyPart.ATTACHMENT))) {
+                    System.out.println("Mail have some attachment : ");
+
+                    DataHandler handler = bodyPart.getDataHandler();
+                    System.out.println("file name : " + handler.getName());
+                } else {
+                    body.add(bodyPart.getContent().toString());
+                }
             }
         } catch (MessagingException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         setExcerpt();
-
+//      Log.i("Check","tipo= "+multipart.getContentType());
+//
+//        try {
+//            for (int x = 0; x < multipart.getCount(); x++) {
+//                BodyPart bodyPart = multipart.getBodyPart(x);
+//                    body.addBodyPart(bodyPart);
+//            }
+//        } catch (MessagingException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /*
      *  Store body content if it is a String
      */
     public void setContentToString(String string) throws MessagingException, IOException {
-        MimeBodyPart messageBodyPart = new MimeBodyPart();
-        messageBodyPart.setText(string);
-
-        body.addBodyPart(messageBodyPart);
+        body.add(string);
         setExcerpt();
     }
 
@@ -107,17 +124,6 @@ public class Email implements Serializable {
      *  Parse body content and extract the excerpt of body.
      *  - saves only first line without multiple spaces
      */
-
-//    public void setExcerpt() {
-//        if (body.size() > 0) {
-//            String body_content = "";
-//            for (int i=0; i<body.size(); i++) {
-//                body_content = body_content.concat(body.get(i));
-//            }
-//            Spanned spanned = Html.fromHtml(body_content);
-//            if (spanned.toString().replaceAll("  ","").split("\\r?\\n")[0].length() > 39) {
-//                excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0].substring(0, 39);
-
     public void setExcerpt() throws MessagingException, IOException {
 
         //BISOGNA CONTROLLARE SE IL BODY È DI TIPO MIME O SOLO TESTO
@@ -125,10 +131,9 @@ public class Email implements Serializable {
         MimeBodyPart messageBodyPart;
         String body_content = "";
 
-        for (int i=0; i<body.getCount(); i++) {
-            messageBodyPart = (MimeBodyPart) body.getBodyPart(i); //prende ad ogni ciclo for un part del messaggio
+        for (int i=0; i<body.size(); i++) {
 
-            String disposition = messageBodyPart.getDisposition();
+            String disposition = body.get(i);
 
             //attachment here!
             if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
@@ -137,7 +142,7 @@ public class Email implements Serializable {
             }
             else {
                 //è testo, quindi lo concateno!
-                body_content = body_content.concat(messageBodyPart.toString());  // the changed code
+                body_content = body_content.concat(disposition);  // the changed code
                 Log.i("Check", "body content: " + body_content);
 
             }

@@ -20,6 +20,12 @@ import javax.mail.search.SearchTerm;
 /**
  * Created by Leo on 02/04/14.
  */
+
+/*
+*  GMailUpdater Java class to notify email state change using smtp
+*  protocol over gmail servers
+*/
+
 public class GMailUpdater extends javax.mail.Authenticator {
     private static final String TAG = "GMailUpdater";
 
