@@ -8,32 +8,40 @@
     android:paddingRight="20dip"
     android:paddingBottom="5dip">
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:weightSum="1">
 
         <TextView
-            android:layout_width="270dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="subject"
             android:id="@+id/list_subject"
             android:textSize="25dip"
             android:layout_weight="0.18"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp" />
 
         <TextView
-            android:layout_width="300dp"
-            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="bottom"
             android:text="date"
             android:textSize="16dip"
             android:id="@+id/list_date"
             android:layout_gravity="right"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="0dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="0dp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
