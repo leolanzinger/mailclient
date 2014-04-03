@@ -77,14 +77,14 @@ public class EmailAdapter extends ArrayAdapter<Email> {
                 fromView.setTypeface(null, Typeface.BOLD);
                 dateView.setTypeface(null, Typeface.BOLD);
 
-                view.setBackgroundColor(Color.parseColor("#EAF0F5"));
+                view.setBackgroundResource(R.drawable.unseen);
             }
             else {
                 subjectView.setTypeface(null, Typeface.NORMAL);
                 fromView.setTypeface(null, Typeface.NORMAL);
                 dateView.setTypeface(null, Typeface.NORMAL);
 
-                view.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                view.setBackgroundResource(R.drawable.seen);
             }
         }
         return view;

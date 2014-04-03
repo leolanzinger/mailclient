@@ -4,6 +4,7 @@
     <color name="black">#4A4A4A</color>
     <color name="white">#FFFFFF</color>
     <color name="unread">#EAF0F5</color>
+    <color name="pressing">#B7D7F2</color>
 
     <integer-array name="pocket_background_colors">
         <item>@color/pocket_color_1</item>
