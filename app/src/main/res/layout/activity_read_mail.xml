@@ -2,10 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.mailclient.app.ReadMail"
     android:background="@color/white">
 
@@ -13,7 +9,9 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/read_scrollView" >
+        android:id="@+id/read_scrollView"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -28,39 +26,79 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"/>
 
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/read_from_wrapper"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/reply">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="From: "
+                    android:id="@+id/from_holder" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="from@mail.com"
+                    android:id="@+id/read_from"
+                    android:textColor="@color/blue"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/from_holder" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/read_to_wrapper"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/read_from_wrapper">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="To: "
+                    android:id="@+id/to_holder" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="to@email.com"
+                    android:id="@+id/read_to"
+                    android:textColor="@color/blue"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/to_holder" />
+            </RelativeLayout>
+
             <TextView
+                android:id="@+id/read_subject"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Large Text"
-                android:id="@+id/read_subject"
-                android:layout_below="@+id/reply"
+                android:text="Subject"
+                android:layout_below="@+id/read_to_wrapper"
+                android:layout_marginTop="15dp"
                 android:layout_centerHorizontal="true"/>
 
             <TextView
+                android:id="@+id/read_date"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Small Text"
-                android:id="@+id/read_date"
+                android:text="dd/mm/yy"
                 android:layout_below="@+id/read_subject"
                 android:layout_centerHorizontal="true" />
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Small Text"
-                android:id="@+id/read_from"
-                android:layout_below="@+id/read_date"
-                android:layout_centerHorizontal="true"
-                android:textColor="@color/blue" />
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text"
+                android:text="Dear John, ..."
                 android:id="@+id/read_body"
-                android:layout_below="@+id/read_from"
+                android:layout_below="@+id/read_date"
+                android:layout_marginTop="15dp"
                 android:layout_centerHorizontal="true"/>
 
             </RelativeLayout>
@@ -68,6 +106,5 @@
 
 
     </ScrollView>
-
 
 </RelativeLayout>

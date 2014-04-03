@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -28,7 +29,7 @@ public class ReadMail extends Activity {
     Email email;
     String from_addresses = "";
     String to_addresses = "";
-    TextView subject,date,from,body;
+    TextView subject,date,from,body, to;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class ReadMail extends Activity {
         subject = (TextView) findViewById(R.id.read_subject);
         date = (TextView) findViewById(R.id.read_date);
         from = (TextView) findViewById(R.id.read_from);
+        to = (TextView) findViewById(R.id.read_to);
         body = (TextView) findViewById(R.id.read_body);
 
         /*
@@ -89,6 +91,7 @@ public class ReadMail extends Activity {
                 to_addresses = to_addresses.concat(s);
             }
         }
+        to.setText(to_addresses);
 
         /*
          *  Parse body content from HTML String and
@@ -111,10 +114,13 @@ public class ReadMail extends Activity {
 }
 
 
+    //inflate the menu with custom actions
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.read_mail, menu);
-        return true;
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.read_mail, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
