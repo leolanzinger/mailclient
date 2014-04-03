@@ -19,7 +19,7 @@ public class SendMailTask extends AsyncTask {
     private Activity sendMailActivity;
 
     public SendMailTask(Activity activity) {
-        sendMailActivity = activity;
+        this.sendMailActivity = activity;
 
     }
 
@@ -80,6 +80,7 @@ public class SendMailTask extends AsyncTask {
 
     @Override
     public void onPostExecute(Object result) {
+        this.sendMailActivity.finish();
         statusDialog.dismiss();
     }
 
