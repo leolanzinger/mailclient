@@ -1,6 +1,7 @@
 package com.example.mailclient.app;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,8 +43,8 @@ public class EmailAdapter extends ArrayAdapter<Email> {
         if (item != null) {
             TextView subjectView = (TextView) view.findViewById(R.id.list_subject);
             String subject_excerpt;
-            if( item.subject.length() > 15 ) {
-                subject_excerpt = item.subject.substring(0, 15);
+            if( item.subject.length() > 14 ) {
+                subject_excerpt = item.subject.substring(0, 14);
                 subject_excerpt += "...";
             }
             else {
@@ -64,6 +65,20 @@ public class EmailAdapter extends ArrayAdapter<Email> {
 
             TextView excerptView = (TextView) view.findViewById(R.id.list_excerpt);
             excerptView.setText(item.excerpt);
+
+            /*
+             *  Set bold if email not read
+             */
+            if (!item.seen) {
+                subjectView.setTypeface(null, Typeface.BOLD);
+                fromView.setTypeface(null, Typeface.BOLD);
+                dateView.setTypeface(null, Typeface.BOLD);
+            }
+            else {
+                subjectView.setTypeface(null, Typeface.NORMAL);
+                fromView.setTypeface(null, Typeface.NORMAL);
+                dateView.setTypeface(null, Typeface.NORMAL);
+            }
         }
         return view;
     }

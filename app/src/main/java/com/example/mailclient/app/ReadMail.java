@@ -10,7 +10,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+
+import javax.activation.DataHandler;
+import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
 
 /*
  *  Activity that displays a single email
@@ -50,7 +56,8 @@ public class ReadMail extends Activity {
         /*
          *  Parse date into dd - MMM format (e.g: 30 mar)
          */
-        date.setText(email.date.toString());
+        String date_format = new SimpleDateFormat("dd MMM").format(email.date.getTime());
+        date.setText(date_format);
 
         for (int i=0; i<email.from.length; i++) {
             if (i == 0) {
@@ -77,16 +84,30 @@ public class ReadMail extends Activity {
                 to_addresses = to_addresses.concat(s);
             }
         }
-
         /*
-         *  Parse body content from HTML String and
-         *  display it as styled HTML text
+         *  Notify IMAP server that the mail is read
          */
-        String body_content = "";
-        for (int i=0; i<email.body.size(); i++) {
-            body_content = body_content.concat(email.body.get(i));
+        if (!email.seen) {
+            UpdateMailTask update_task = new UpdateMailTask(this);
+            update_task.execute(email.ID);
+            email.seen = true;
         }
-        body.setText(Html.fromHtml(body_content));
+
+        try {
+            showBody(email.body);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
+           /*
+//         *  Parse body content from HTML String and
+//         *  display it as styled HTML text
+//         */
+//        String body_content = "";
+//        for (int i=0; i<email.body.size(); i++) {
+//            body_content = body_content.concat(email.body.get(i));
+//        }
+//        body.setText(Html.fromHtml(body_content));
     }
 
 
@@ -113,6 +134,32 @@ public class ReadMail extends Activity {
         intent.putExtra("body",""+body.getText()); //DA INDENTARE
         intent.putExtra("to",from_addresses);
         startActivity(intent);
+    }
+    public void showBody(MimeMultipart fullBody) throws MessagingException {
+
+        MimeBodyPart messageBodyPart;
+        String body_content = "";
+
+        for (int i=0; i<fullBody.getCount(); i++) {
+            messageBodyPart = (MimeBodyPart) fullBody.getBodyPart(i); //prende ad ogni ciclo for un part del messaggio
+
+            String disposition = messageBodyPart.getDisposition();
+
+            //attachment here!
+            if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
+                System.out.println("Mail have some attachment");
+
+                DataHandler handler = messageBodyPart.getDataHandler();
+                System.out.println("file name : " + handler.getName());
+                //buttiamo fuori il multipart, mi sa che lo dovremo salvare e mostrare dalla "cache"
+            }
+            else {
+                //è testo, quindi lo concateno!
+                body_content = body_content.concat(messageBodyPart.toString());  // the changed code
+            }
+        }
+        body.setText(Html.fromHtml(body_content));
+
     }
 
 }
