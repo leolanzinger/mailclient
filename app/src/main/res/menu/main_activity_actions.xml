@@ -4,6 +4,10 @@
           android:title="new_mail"
           android:showAsAction="ifRoom"
           android:onClick="sendEmail" />
+    <item android:id="@+id/search"
+        android:icon="@drawable/search"
+        android:title="search"
+        android:showAsAction="ifRoom"/>
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:showAsAction="never" />
