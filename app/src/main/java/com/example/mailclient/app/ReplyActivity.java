@@ -36,19 +36,16 @@ public class ReplyActivity extends Activity {
 
     private static final int SELECT_PICTURE = 1;
     ArrayList<String> selectedImagePath;
-    EditText toEmailText, subjectEmailText, bodyEmailText;
+    EditText toEmailText, ccEmailText, subjectEmailText, bodyEmailText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sendmailactivity);
 
-        /*
-        *   Buttons for sending emails
-        */
-        final Button attach = (Button) this.findViewById(R.id.send_attach_button);
 
         toEmailText = (EditText) this.findViewById(R.id.send_to_edit);
+        ccEmailText = (EditText) this.findViewById(R.id.send_cc_edit);
         subjectEmailText = (EditText) this.findViewById(R.id.send_subject_edit);
         bodyEmailText = (EditText) this.findViewById(R.id.send_body);
         selectedImagePath = new ArrayList<String>();
@@ -59,17 +56,6 @@ public class ReplyActivity extends Activity {
         bodyEmailText.setText(intent.getStringExtra("body"));
         toEmailText.setText(intent.getStringExtra("to"));
 
-        attach.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
-                // in onCreate or any event where your want the user to
-                // select a file
-                Intent intent = new Intent();
-                intent.setType("*/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Document"), SELECT_PICTURE);
-
-            }
-        });
     }
 
     @Override
@@ -125,6 +111,7 @@ public class ReplyActivity extends Activity {
 //        final TextView received_mail = (TextView) this.findViewById(R.id.received_mail);
 
         toEmailText = (EditText) this.findViewById(R.id.send_to_edit);
+        ccEmailText = (EditText) this.findViewById(R.id.send_cc_edit);
         subjectEmailText = (EditText) this.findViewById(R.id.send_subject_edit);
         bodyEmailText = (EditText) this.findViewById(R.id.send_body);
 
@@ -145,5 +132,12 @@ public class ReplyActivity extends Activity {
         else {
             new SendMailTask(ReplyActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
         }
+    }
+
+    public void addAttachment ( MenuItem menu ) {
+        Intent intent = new Intent();
+        intent.setType("*/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Select Document"), SELECT_PICTURE);
     }
 }

@@ -30,7 +30,7 @@ public class SendMailActivity extends Activity {
 
     private static final int SELECT_PICTURE = 1;
     ArrayList<String> selectedImagePath;
-    EditText toEmailText, subjectEmailText, bodyEmailText;
+    EditText toEmailText, ccEmailText, subjectEmailText, bodyEmailText;
 
 
     @Override
@@ -40,22 +40,6 @@ public class SendMailActivity extends Activity {
 
         selectedImagePath = new ArrayList<String> ();
 
-        /*
-        *   Buttons for sending emails
-        */
-        final Button attach = (Button) this.findViewById(R.id.send_attach_button);
-
-        attach.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
-                // in onCreate or any event where your want the user to
-                // select a file
-                Intent intent = new Intent();
-                intent.setType("*/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Document"), SELECT_PICTURE);
-
-            }
-        });
     }
 
     @Override
@@ -111,6 +95,7 @@ public class SendMailActivity extends Activity {
 //        final TextView received_mail = (TextView) this.findViewById(R.id.received_mail);
 
         toEmailText = (EditText) this.findViewById(R.id.send_to_edit);
+        ccEmailText = (EditText) this.findViewById(R.id.send_cc_edit);
         subjectEmailText = (EditText) this.findViewById(R.id.send_subject_edit);
         bodyEmailText = (EditText) this.findViewById(R.id.send_body);
 
@@ -131,5 +116,12 @@ public class SendMailActivity extends Activity {
         else {
             new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
         }
+    }
+
+    public void addAttachment ( MenuItem menu ) {
+        Intent intent = new Intent();
+        intent.setType("*/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Select Document"), SELECT_PICTURE);
     }
 }

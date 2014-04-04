@@ -8,37 +8,20 @@
     android:background="@color/white"
     android:weightSum="100">
 
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="90">
-
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
 
-                <TextView
-                    android:id="@+id/send_to_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="To Mail" />
-
-                <EditText
-                    android:id="@+id/send_to_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textEmailAddress"
-                    />
-            </LinearLayout>
+            <EditText
+                android:id="@+id/send_to_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:hint="To"
+                />
 
         </LinearLayout>
 
@@ -47,23 +30,31 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
 
-                <TextView
-                    android:id="@+id/send_subject_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Subject" />
+            <EditText
+                android:id="@+id/send_cc_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:hint="Cc"
+                />
 
-                <EditText
-                    android:id="@+id/send_subject_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10" />
-            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/send_subject_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Subject"
+            />
+
         </LinearLayout>
 
         <LinearLayout
@@ -74,24 +65,12 @@
             <EditText
                 android:id="@+id/send_body"
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textMultiLine"
+                android:hint="Your email"
                 />
+
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="10">
-
-        <Button
-            android:id="@+id/send_attach_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Attachment" />
-    </LinearLayout>
 
 </LinearLayout>
