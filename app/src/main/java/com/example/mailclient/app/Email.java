@@ -85,12 +85,16 @@ public class Email implements Serializable {
 
                 String disposition = bodyPart.getDisposition();
 
-                if (disposition != null && (disposition.equals(BodyPart.ATTACHMENT))) {
-                    System.out.println("Mail have some attachment : ");
+
+                // TODO: se la parte di Multipart è attachment fare qualcosa
+                if (disposition != null && (disposition.equalsIgnoreCase(BodyPart.ATTACHMENT))) {
+                    Log.i("multipart" + x, disposition);
+                    Log.i("multipart" + x,"Mail have some attachment : ");
 
                     DataHandler handler = bodyPart.getDataHandler();
-                    System.out.println("file name : " + handler.getName());
                 } else {
+                    Log.i("multipart" + x, "mail is a string");
+                    Log.i("multipart" + x, "string is:" + bodyPart.getContent().toString());
                     body.add(bodyPart.getContent().toString());
                 }
             }
@@ -136,14 +140,15 @@ public class Email implements Serializable {
             String disposition = body.get(i);
 
             //attachment here!
+            // disposition == null
             if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
-                Log.i("Check","Mail have some attachment");
+                Log.i("excerpt" + i,"Mail have some attachment");
                 //buttiamo fuori il multipart!
             }
             else {
                 //è testo, quindi lo concateno!
                 body_content = body_content.concat(disposition);  // the changed code
-                Log.i("Check", "body content: " + body_content);
+                Log.i("excerpt" + i, "body content: " + body_content);
 
             }
         }

@@ -11,11 +11,12 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.mailclient.app.SendMailActivity"
-            android:label="@string/send_activity" >
+            android:label=""
+            android:parentActivityName="com.example.mailclient.app.MailClient" >
         </activity>
         <activity
             android:name="com.example.mailclient.app.ReplyActivity"
-            android:label="@string/send_activity" >
+            android:label="" >
         </activity>
         <activity
             android:name="com.example.mailclient.app.MailClient"

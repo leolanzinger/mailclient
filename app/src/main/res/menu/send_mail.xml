@@ -2,6 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.mailclient.app.SendMailActivity" >
 
+    <item android:id="@+id/attachment"
+        android:icon="@drawable/attachment"
+        android:title="attachment"
+        android:showAsAction="always"
+        android:onClick="addAttachment"/>
     <item android:id="@+id/send_mail"
         android:icon="@drawable/send_mail"
         android:title="send_mail"

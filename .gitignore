@@ -2,3 +2,5 @@
 /local.properties
 /.idea/workspace.xml
 .DS_Store
+pulltorefresh/build/incremental/mergeAssets/release/merger.xml
+pulltorefresh/build/incremental/packageResources/release/merger.xml

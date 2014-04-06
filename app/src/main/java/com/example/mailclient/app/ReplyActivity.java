@@ -4,6 +4,7 @@ package com.example.mailclient.app;
  * Created by teo on 01/04/14.
  */
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -36,19 +37,16 @@ public class ReplyActivity extends Activity {
 
     private static final int SELECT_PICTURE = 1;
     ArrayList<String> selectedImagePath;
-    EditText toEmailText, subjectEmailText, bodyEmailText;
+    EditText toEmailText, ccEmailText, subjectEmailText, bodyEmailText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sendmailactivity);
 
-        /*
-        *   Buttons for sending emails
-        */
-        final Button attach = (Button) this.findViewById(R.id.send_attach_button);
 
         toEmailText = (EditText) this.findViewById(R.id.send_to_edit);
+        ccEmailText = (EditText) this.findViewById(R.id.send_cc_edit);
         subjectEmailText = (EditText) this.findViewById(R.id.send_subject_edit);
         bodyEmailText = (EditText) this.findViewById(R.id.send_body);
         selectedImagePath = new ArrayList<String>();
@@ -56,20 +54,20 @@ public class ReplyActivity extends Activity {
         //E LAVORARE QUA PER PRENDERLI COME REPLY
         final Intent intent=getIntent();
         subjectEmailText.setText(intent.getStringExtra("subject"));
-        bodyEmailText.setText(intent.getStringExtra("body"));
         toEmailText.setText(intent.getStringExtra("to"));
 
-        attach.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v) {
-                // in onCreate or any event where your want the user to
-                // select a file
-                Intent intent = new Intent();
-                intent.setType("*/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Document"), SELECT_PICTURE);
+        /*
+         *  Set quoted original message
+         */
+        String body_cont = intent.getStringExtra("body");
+        bodyEmailText.setText("\nOriginal message: \n\n" + body_cont);
+        bodyEmailText.requestFocus();
+        bodyEmailText.setSelection(0);
 
-            }
-        });
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override
@@ -96,11 +94,15 @@ public class ReplyActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        else {
+            this.finish();
+            return true;
+        }
     }
 
     public String getPath(Uri uri) {
@@ -125,6 +127,7 @@ public class ReplyActivity extends Activity {
 //        final TextView received_mail = (TextView) this.findViewById(R.id.received_mail);
 
         toEmailText = (EditText) this.findViewById(R.id.send_to_edit);
+        ccEmailText = (EditText) this.findViewById(R.id.send_cc_edit);
         subjectEmailText = (EditText) this.findViewById(R.id.send_subject_edit);
         bodyEmailText = (EditText) this.findViewById(R.id.send_body);
 
@@ -145,5 +148,12 @@ public class ReplyActivity extends Activity {
         else {
             new SendMailTask(ReplyActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
         }
+    }
+
+    public void addAttachment ( MenuItem menu ) {
+        Intent intent = new Intent();
+        intent.setType("*/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,"Select Document"), SELECT_PICTURE);
     }
 }
