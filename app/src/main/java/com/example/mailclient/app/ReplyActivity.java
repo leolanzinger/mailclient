@@ -4,6 +4,7 @@ package com.example.mailclient.app;
  * Created by teo on 01/04/14.
  */
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -56,6 +57,9 @@ public class ReplyActivity extends Activity {
         bodyEmailText.setText(intent.getStringExtra("body"));
         toEmailText.setText(intent.getStringExtra("to"));
 
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override
@@ -82,11 +86,15 @@ public class ReplyActivity extends Activity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        else {
+            this.finish();
+            return true;
+        }
     }
 
     public String getPath(Uri uri) {
