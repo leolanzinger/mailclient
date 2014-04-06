@@ -23,8 +23,7 @@
     <!--bottom bar style-->
     <style name="MyBottomBar"
 >
-        <item name="android:backgroundSplit">@color/white</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:backgroundSplit">@drawable/bottom_navbar_background</item>
     </style>
 
     <!-- ActionBar title text -->
