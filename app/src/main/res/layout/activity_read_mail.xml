@@ -13,9 +13,10 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
             <Button
                 android:layout_width="wrap_content"
@@ -54,7 +55,7 @@
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/read_to_wrapper"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_below="@+id/read_from_wrapper">
                 <TextView
                     android:layout_width="wrap_content"
@@ -94,14 +95,14 @@
 
             <TextView
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:text="Dear John, ..."
                 android:id="@+id/read_body"
                 android:layout_below="@+id/read_date"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
                 android:layout_centerHorizontal="true"/>
 
-            </RelativeLayout>
+        </LinearLayout>
 
 
 
