@@ -54,8 +54,16 @@ public class ReplyActivity extends Activity {
         //E LAVORARE QUA PER PRENDERLI COME REPLY
         final Intent intent=getIntent();
         subjectEmailText.setText(intent.getStringExtra("subject"));
-        bodyEmailText.setText(intent.getStringExtra("body"));
         toEmailText.setText(intent.getStringExtra("to"));
+
+        /*
+         *  Set quoted original message
+         */
+        String body_cont = intent.getStringExtra("body");
+        bodyEmailText.setText("\nOriginal message: \n\n" + body_cont);
+        bodyEmailText.requestFocus();
+        bodyEmailText.setSelection(0);
+
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
