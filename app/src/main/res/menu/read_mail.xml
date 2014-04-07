@@ -1,14 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/delete_mail"
-        android:icon="@drawable/delete"
-        android:title="delete"
-        android:showAsAction="ifRoom"/>
-    <item android:id="@+id/pin_mail"
-        android:title="todo"
-        android:icon="@drawable/pin"
+    <item android:id="@+id/reply_mail"
+        android:title="reply"
+        android:icon="@drawable/reply"
         android:showAsAction="ifRoom"
         />
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:showAsAction="never" />
+    <item android:id="@+id/reply_all_mail"
+        android:title="reply all"
+        android:icon="@drawable/replyall"
+        android:showAsAction="ifRoom"
+        />
+    <item android:id="@+id/forward"
+        android:title="forward"
+        android:icon="@drawable/forward"
+        android:showAsAction="ifRoom"
+        />
 </menu>

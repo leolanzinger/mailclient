@@ -1,9 +1,12 @@
 package com.example.mailclient.app;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -111,6 +114,18 @@ public class ReadMail extends Activity {
             update_task.execute(email.ID);
             email.seen = true;
         }
+//        View customNav = LayoutInflater.from(this).inflate(R.layout.custom_view, null);
+//        getActionBar().setCustomView(customNav);
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflator.inflate(R.layout.custom_view, null);
+
+        actionBar.setCustomView(v);
 }
 
 
