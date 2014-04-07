@@ -101,6 +101,11 @@
                 android:layout_below="@+id/read_date"
                 android:layout_marginTop="16dp"
                 android:layout_centerHorizontal="true"/>
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/read_attachment"
+                android:onClick="showAttachment"/>
 
         </LinearLayout>
 

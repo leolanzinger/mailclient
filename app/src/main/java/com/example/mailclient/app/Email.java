@@ -9,13 +9,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.activation.DataHandler;
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
 
 /**
  * Created by Leo on 30/03/14.
@@ -32,6 +30,7 @@ public class Email implements Serializable {
     Address[] from,to;
     String excerpt;
     String ID;
+    String attachmentPath;
 
     public Email() {
         subject = new String();
@@ -39,6 +38,7 @@ public class Email implements Serializable {
         body = new ArrayList<String> ();
         excerpt = "";
         seen = false;
+        attachmentPath= "";
     }
 
     /*
@@ -81,7 +81,7 @@ public class Email implements Serializable {
     public void setContent(Multipart multipart) throws MessagingException, IOException {
         try {
             for (int x = 0; x < multipart.getCount(); x++) {
-                BodyPart bodyPart = multipart.getBodyPart(x);
+                MimeBodyPart bodyPart = (MimeBodyPart) multipart.getBodyPart(x);
 
                 String disposition = bodyPart.getDisposition();
 
@@ -91,7 +91,14 @@ public class Email implements Serializable {
                     Log.i("multipart" + x, disposition);
                     Log.i("multipart" + x,"Mail have some attachment : ");
 
-                    DataHandler handler = bodyPart.getDataHandler();
+                    String fileName=bodyPart.getFileName(); //Now it takes the attachment's name
+
+                    Log.i("Attach name", fileName);
+                    attachmentPath = "media/" + fileName;
+
+                    bodyPart.saveFile(attachmentPath);
+
+
                 } else {
                     Log.i("multipart" + x, "mail is a string");
                     Log.i("multipart" + x, "string is:" + bodyPart.getContent().toString());
@@ -167,4 +174,5 @@ public class Email implements Serializable {
     public void setID(String s) {
         ID = s;
     }
+
 }

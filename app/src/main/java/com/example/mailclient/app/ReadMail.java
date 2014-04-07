@@ -4,8 +4,10 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 
 import javax.activation.DataHandler;
@@ -33,6 +36,7 @@ public class ReadMail extends Activity {
     String from_addresses = "";
     String to_addresses = "";
     TextView subject,date,from,body, to;
+    Button attachmentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,8 @@ public class ReadMail extends Activity {
         from = (TextView) findViewById(R.id.read_from);
         to = (TextView) findViewById(R.id.read_to);
         body = (TextView) findViewById(R.id.read_body);
+        attachmentView= (Button) findViewById(R.id.read_attachment);
+
 
         /*
          *  Set contents for the TextViews
@@ -126,6 +132,9 @@ public class ReadMail extends Activity {
         View v = inflator.inflate(R.layout.custom_view, null);
 
         actionBar.setCustomView(v);
+
+        attachmentView.setText(email.attachmentPath);
+
 }
 
 
@@ -190,7 +199,14 @@ public class ReadMail extends Activity {
             }
         }
         body.setText(Html.fromHtml(body_content));
+    }
 
+    public void showAttachment(View view){
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Log.i("Attach", email.attachmentPath);
+        intent.setDataAndType(Uri.fromFile(new File(email.attachmentPath)), "image/*");
+        startActivity(intent);
     }
 
 }
