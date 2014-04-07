@@ -2,29 +2,52 @@
 <merger>
 
     <dataSet config="main" >
+<<<<<<< HEAD
         <source path="/Users/Teo/dev/mailclient/pulltorefresh/src/main/res" >
             <file
                 name="ptr_pulltorefresh_arrow"
                 path="/Users/Teo/dev/mailclient/pulltorefresh/src/main/res/drawable-hdpi/ptr_pulltorefresh_arrow.png"
+=======
+        <source path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res" >
+            <file
+                name="ptr_pulltorefresh_arrow"
+                path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res/drawable-hdpi/ptr_pulltorefresh_arrow.png"
+>>>>>>> 293036ae48a3348a7a59bbb1823f8ab8a160b94d
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="ptr_pulltorefresh_arrow"
+<<<<<<< HEAD
                 path="/Users/Teo/dev/mailclient/pulltorefresh/src/main/res/drawable-ldpi/ptr_pulltorefresh_arrow.png"
+=======
+                path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res/drawable-ldpi/ptr_pulltorefresh_arrow.png"
+>>>>>>> 293036ae48a3348a7a59bbb1823f8ab8a160b94d
                 qualifiers="ldpi"
                 type="drawable" />
             <file
                 name="ptr_pulltorefresh_arrow"
+<<<<<<< HEAD
                 path="/Users/Teo/dev/mailclient/pulltorefresh/src/main/res/drawable-mdpi/ptr_pulltorefresh_arrow.png"
+=======
+                path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res/drawable-mdpi/ptr_pulltorefresh_arrow.png"
+>>>>>>> 293036ae48a3348a7a59bbb1823f8ab8a160b94d
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="ptr_header"
+<<<<<<< HEAD
                 path="/Users/Teo/dev/mailclient/pulltorefresh/src/main/res/layout/ptr_header.xml"
                 qualifiers=""
                 type="layout" />
             <file
                 path="/Users/Teo/dev/mailclient/pulltorefresh/src/main/res/values/ptr_default_style.xml"
+=======
+                path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res/layout/ptr_header.xml"
+                qualifiers=""
+                type="layout" />
+            <file
+                path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res/values/ptr_default_style.xml"
+>>>>>>> 293036ae48a3348a7a59bbb1823f8ab8a160b94d
                 qualifiers="" >
 
                 <style name="ptr_header" >
@@ -155,7 +178,11 @@ true
                 </style>
             </file>
             <file
+<<<<<<< HEAD
                 path="/Users/Teo/dev/mailclient/pulltorefresh/src/main/res/values/strings.xml"
+=======
+                path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res/values/strings.xml"
+>>>>>>> 293036ae48a3348a7a59bbb1823f8ab8a160b94d
                 qualifiers="" >
                 <string name="ptr_pull_to_refresh" >Pull to refresh
                 </string>
@@ -167,11 +194,19 @@ true
                 </string>
             </file>
         </source>
+<<<<<<< HEAD
         <source path="/Users/Teo/dev/mailclient/pulltorefresh/build/res/rs/release" />
         <source path="/Users/Teo/dev/mailclient/pulltorefresh/build/res/generated/release" />
     </dataSet>
     <dataSet config="release" >
         <source path="/Users/Teo/dev/mailclient/pulltorefresh/src/release/res" />
+=======
+        <source path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/build/res/rs/release" />
+        <source path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/build/res/generated/release" />
+    </dataSet>
+    <dataSet config="release" >
+        <source path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/release/res" />
+>>>>>>> 293036ae48a3348a7a59bbb1823f8ab8a160b94d
     </dataSet>
 
 </merger>
