@@ -1,10 +1,11 @@
 <resources>
     <color name="blue">#2D5FB7</color>
-    <color name="grey">#eee</color>
+    <color name="grey">#cacaca</color>
     <color name="black">#4A4A4A</color>
     <color name="white">#FFFFFF</color>
     <color name="unread">#EAF0F5</color>
     <color name="pressing">#B7D7F2</color>
+    <color name="navbar_border">#EEE</color>
 
     <integer-array name="pocket_background_colors">
         <item>@color/pocket_color_1</item>
