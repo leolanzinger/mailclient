@@ -9,16 +9,13 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.mail.Message;
 
 /*
 *   Send and receive emails activity.
@@ -27,6 +24,8 @@ import javax.mail.Message;
 */
 
 public class SendMailActivity extends Activity {
+
+//    private static final int READ_REQUEST_CODE = 42;
 
     private static final int SELECT_PICTURE = 1;
     ArrayList<String> selectedImagePath;
@@ -45,11 +44,16 @@ public class SendMailActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                Uri selectedImageUri = data.getData();
-                Log.d("URI VAL", "selectedImageUri = " + selectedImageUri.toString());
-                selectedImagePath.add(getPath(selectedImageUri));
-            }
+            Uri selectedImageUri = data.getData();
+            Log.d("URI VAL", "selectedImageUri = " + selectedImageUri.toString());
+            selectedImagePath.add(getPath(selectedImageUri));
+
+          //Show toast with "name of file" added
+            File file = new File(getPath(selectedImageUri));
+            String fileName=file.getName();
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(this, fileName + " attached!", duration);
+            toast.show();
         }
     }
 

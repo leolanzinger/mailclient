@@ -9,21 +9,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.mail.Message;
 
 
 
@@ -35,7 +33,9 @@ import javax.mail.Message;
 
 public class ReplyActivity extends Activity {
 
-    private static final int SELECT_PICTURE = 1;
+    //    private static final int SELECT_PICTURE = 1;
+    private static final int OLDERVERSION = 0;
+    private static final int NEWVERSION = 1;
     ArrayList<String> selectedImagePath;
     EditText toEmailText, ccEmailText, subjectEmailText, bodyEmailText;
 
@@ -52,7 +52,7 @@ public class ReplyActivity extends Activity {
         selectedImagePath = new ArrayList<String>();
 
         //E LAVORARE QUA PER PRENDERLI COME REPLY
-        final Intent intent=getIntent();
+        final Intent intent = getIntent();
         subjectEmailText.setText(intent.getStringExtra("subject"));
         toEmailText.setText(intent.getStringExtra("to"));
 
@@ -73,11 +73,16 @@ public class ReplyActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                Uri selectedImageUri = data.getData();
-                Log.d("URI VAL", "selectedImageUri = " + selectedImageUri.toString());
-                selectedImagePath.add(getPath(selectedImageUri));
-            }
+            Uri selectedImageUri = data.getData();
+            Log.d("URI VAL", "selectedImageUri = " + selectedImageUri.toString());
+            selectedImagePath.add(getPath(selectedImageUri));
+
+            //Show toast with "name of file" added
+            File file = new File(getPath(selectedImageUri));
+            String fileName=file.getName();
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(this, fileName + " attached!", duration);
+            toast.show();
         }
     }
 
@@ -98,17 +103,16 @@ public class ReplyActivity extends Activity {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
-        }
-        else {
+        } else {
             this.finish();
             return true;
         }
     }
 
     public String getPath(Uri uri) {
-        String[] projection = {  MediaStore.MediaColumns.DATA};
+        String[] projection = {MediaStore.MediaColumns.DATA};
         Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if(cursor != null) {
+        if (cursor != null) {
             //HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
             //THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
             cursor.moveToFirst();
@@ -116,8 +120,7 @@ public class ReplyActivity extends Activity {
             String filePath = cursor.getString(columnIndex);
             cursor.close();
             return filePath;
-        }
-        else
+        } else
             return uri.getPath();               // FOR OI/ASTRO/Dropbox etc
     }
 
@@ -141,19 +144,39 @@ public class ReplyActivity extends Activity {
         String emailBody = bodyEmailText.getText().toString();
 
 
-        Log.i("Check", "stampiamo la size della lista: "+ selectedImagePath.size());
-        if (selectedImagePath.size()==0){
+        Log.i("Check", "stampiamo la size della lista: " + selectedImagePath.size());
+        if (selectedImagePath.size() == 0) {
             new SendMailTask(ReplyActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody);
-        }
-        else {
+        } else {
             new SendMailTask(ReplyActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
         }
     }
 
-    public void addAttachment ( MenuItem menu ) {
-        Intent intent = new Intent();
-        intent.setType("*/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,"Select Document"), SELECT_PICTURE);
+    public void addAttachment(MenuItem menu) {
+        if (Build.VERSION.SDK_INT < 19) {
+            Intent intent = new Intent();
+            intent.setType("image/jpeg");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(intent, OLDERVERSION);
+        } else {
+            // ACTION_OPEN_DOCUMENT is the intent to choose a file via the system's file
+            // browser.
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+
+            // Filter to only show results that can be "opened", such as a
+            // file (as opposed to a list of contacts or timezones)
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+            // Filter to show only images, using the image MIME data type.
+            // If one wanted to search for ogg vorbis files, the type would be "audio/ogg".
+            // To search for all documents available via installed storage providers,
+            // it would be "*/*".
+            intent.setType("image/*");
+        }
+
+//        Intent intent = new Intent();
+//        intent.setType("*/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(Intent.createChooser(intent,"Select Document"), SELECT_PICTURE);
     }
 }
