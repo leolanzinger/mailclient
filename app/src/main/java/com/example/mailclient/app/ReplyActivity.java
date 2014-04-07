@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -36,8 +37,9 @@ public class ReplyActivity extends Activity {
     //    private static final int SELECT_PICTURE = 1;
     private static final int OLDERVERSION = 0;
     private static final int NEWVERSION = 1;
-    ArrayList<String> selectedImagePath;
+    ArrayList<String> selectedImagePath,attachmentList;
     EditText toEmailText, ccEmailText, subjectEmailText, bodyEmailText;
+    TextView attachmentView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,10 @@ public class ReplyActivity extends Activity {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        attachmentView = (TextView) this.findViewById(R.id.attachment);
+        attachmentList = new ArrayList<String> ();
+
+
     }
 
     @Override
@@ -83,6 +89,11 @@ public class ReplyActivity extends Activity {
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(this, fileName + " attached!", duration);
             toast.show();
+
+            //concat filename to attachment's textview
+            attachmentList.add(fileName);
+            attachmentView.setText(attachmentList.toString());
+
         }
     }
 

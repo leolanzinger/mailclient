@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -28,8 +29,10 @@ public class SendMailActivity extends Activity {
 //    private static final int READ_REQUEST_CODE = 42;
 
     private static final int SELECT_PICTURE = 1;
-    ArrayList<String> selectedImagePath;
+    ArrayList<String> selectedImagePath,attachmentList;
     EditText toEmailText, ccEmailText, subjectEmailText, bodyEmailText;
+    TextView attachmentView;
+
 
 
     @Override
@@ -37,7 +40,10 @@ public class SendMailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sendmailactivity);
 
+        attachmentView = (TextView) this.findViewById(R.id.attachment);
         selectedImagePath = new ArrayList<String> ();
+        attachmentList = new ArrayList<String> ();
+
 
     }
 
@@ -54,6 +60,11 @@ public class SendMailActivity extends Activity {
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(this, fileName + " attached!", duration);
             toast.show();
+
+            //concat filename to attachment's textview
+            attachmentList.add(fileName);
+            attachmentView.setText(attachmentList.toString());
+
         }
     }
 
@@ -120,6 +131,8 @@ public class SendMailActivity extends Activity {
         else {
             new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
         }
+
+        attachmentList.clear();
     }
 
     public void addAttachment ( MenuItem menu ) {
