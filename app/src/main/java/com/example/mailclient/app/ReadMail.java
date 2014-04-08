@@ -161,7 +161,7 @@ public class ReadMail extends Activity {
      *  that sends an email back to
      *  "from" addressess
      */
-    public void replyMail(View view) {
+    public void replyMail(MenuItem menu) {
         Intent intent = new Intent(this, ReplyActivity.class);
 
         intent.putExtra("fromEmail",MailClient.account_email);

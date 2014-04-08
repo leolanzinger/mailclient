@@ -23,7 +23,6 @@
                 android:layout_height="wrap_content"
                 android:text="Reply"
                 android:id="@+id/reply"
-                android:onClick="replyMail"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"/>
 

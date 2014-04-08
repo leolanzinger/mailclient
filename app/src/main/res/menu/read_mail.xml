@@ -3,6 +3,7 @@
         android:title="reply"
         android:icon="@drawable/reply"
         android:showAsAction="ifRoom"
+        android:onClick="replyMail"
         />
     <item android:id="@+id/reply_all_mail"
         android:title="reply all"
