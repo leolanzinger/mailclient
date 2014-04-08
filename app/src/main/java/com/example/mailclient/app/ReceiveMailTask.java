@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import javax.mail.Flags;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Multipart;
 import javax.mail.search.FlagTerm;
-
-import static javax.mail.Flags.Flag.SEEN;
 
 /*
 *   Async Task to perform retrieving
@@ -86,15 +83,16 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
                 email.setID(ID);
 
                 try {
-                    Object multipart = msg[i].getContent();
-                    if (!(multipart instanceof Multipart)) {
-                        Log.i("multipart", "è una stringa");
-                        email.setContentToString(multipart.toString());
-                    }
-                    else {
-                        Log.i("multipart", "è un multipart");
-                        email.setContent((Multipart) multipart);
-                    }
+                    email.setContent(msg[i]);
+//                    Object multipart = msg[i].getContent();
+//                    if (!(multipart instanceof Multipart)) {
+//                        Log.i("multipart", "è una stringa");
+//                        email.setContentToString(multipart.toString());
+//                    }
+//                    else {
+//                        Log.i("multipart", "è un multipart");
+//                        email.setContent(msg[i]);
+//                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -4,16 +4,21 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
 import javax.mail.Address;
-import javax.mail.BodyPart;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.internet.MimeBodyPart;
+import javax.mail.Part;
 
 /**
  * Created by Leo on 30/03/14.
@@ -26,7 +31,7 @@ public class Email implements Serializable {
     boolean seen;
     String subject;
     Date date;
-    ArrayList<String> body;
+    ArrayList<String> body, body_temp;
     Address[] from,to;
     String excerpt;
     String ID;
@@ -36,10 +41,13 @@ public class Email implements Serializable {
         subject = new String();
         date = new Date();
         body = new ArrayList<String> ();
+        body_temp = new ArrayList<String> ();
         excerpt = "";
         seen = false;
         attachmentPath= "";
     }
+
+
 
     /*
      *  Fill up Email object
@@ -76,59 +84,58 @@ public class Email implements Serializable {
     }
 
     /*
-     *  Store body content if it is a Multipart Message
+     *  Store body content
      */
-    public void setContent(Multipart multipart) throws MessagingException, IOException {
-        try {
-            for (int x = 0; x < multipart.getCount(); x++) {
-                MimeBodyPart bodyPart = (MimeBodyPart) multipart.getBodyPart(x);
-
-                String disposition = bodyPart.getDisposition();
-
-
-                // TODO: se la parte di Multipart è attachment fare qualcosa
-                if (disposition != null && (disposition.equalsIgnoreCase(BodyPart.ATTACHMENT))) {
-                    Log.i("multipart" + x, disposition);
-                    Log.i("multipart" + x,"Mail have some attachment : ");
-
-                    String fileName=bodyPart.getFileName(); //Now it takes the attachment's name
-
-                    Log.i("Attach name", fileName);
-                    attachmentPath = "media/" + fileName;
-
-                    bodyPart.saveFile(attachmentPath);
-
-
-                } else {
-                    Log.i("multipart" + x, "mail is a string");
-                    Log.i("multipart" + x, "string is:" + bodyPart.getContent().toString());
-                    body.add(bodyPart.getContent().toString());
-                }
-            }
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void setContent(Message msg) throws MessagingException, IOException {
+        // TODO: call getContent sul message
+        getContent(msg);
+        if (body_temp != null && body_temp.size() != 0) {
+            body.add(body_temp.get(body_temp.size() - 1));
         }
+        // TODO: FINALLY CALL setExcerpt()
         setExcerpt();
-//      Log.i("Check","tipo= "+multipart.getContentType());
-//
-//        try {
-//            for (int x = 0; x < multipart.getCount(); x++) {
-//                BodyPart bodyPart = multipart.getBodyPart(x);
-//                    body.addBodyPart(bodyPart);
-//            }
-//        } catch (MessagingException e) {
-//            e.printStackTrace();
-//        }
     }
 
-    /*
-     *  Store body content if it is a String
+    /**
+     * Return the primary content of the message.
      */
-    public void setContentToString(String string) throws MessagingException, IOException {
-        body.add(string);
-        setExcerpt();
+    private void getContent(Part p) throws MessagingException, IOException {
+
+        Log.i("Check", p.getContentType().toString());
+        Multipart mp = (Multipart)p.getContent();
+        for (int i=0; i < mp.getCount(); i++) {
+            if ( mp.getBodyPart(i).isMimeType("multipart/*")) {
+                getContent(mp.getBodyPart(i));
+            }
+            else {
+                if (mp.getBodyPart(i).isMimeType("text/*")) {
+                    Log.i("Check", mp.getBodyPart(i).getContentType());
+                    String s = (String) mp.getBodyPart(i).getContent();
+                    body_temp.add(s);
+                }
+                else {
+                    // TODO: QUI C'è L'ALLEGATO
+                    Log.i("Check", mp.getBodyPart(i).getContentType());
+                    Log.i("Check", mp.getBodyPart(i).getFileName());
+
+
+                    saveFile(mp.getBodyPart(i).getFileName(),mp.getBodyPart(i).getInputStream());
+                    attachmentPath="media/"+mp.getBodyPart(i).getFileName();
+
+//                    attachmentPath="temp/"+mp.getBodyPart(i).getFileName();
+//                    File tempFile = new File(attachmentPath);
+//                    InputStream is = mp.getBodyPart(i).getInputStream();
+//                    FileOutputStream fos = new FileOutputStream(tempFile);
+//                    byte[] buf = new byte[4096];
+//                    int bytesRead;
+//                    while((bytesRead = is.read(buf))!=-1) {
+//                        fos.write(buf, 0, bytesRead);
+//                    }
+//                    fos.close();
+//
+                }
+            }
+        }
     }
 
     /*
@@ -137,9 +144,8 @@ public class Email implements Serializable {
      */
     public void setExcerpt() throws MessagingException, IOException {
 
-        //BISOGNA CONTROLLARE SE IL BODY È DI TIPO MIME O SOLO TESTO
+        //TODO: pulirlo
 
-        MimeBodyPart messageBodyPart;
         String body_content = "";
 
         for (int i=0; i<body.size(); i++) {
@@ -149,7 +155,7 @@ public class Email implements Serializable {
             //attachment here!
             // disposition == null
             if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
-                Log.i("excerpt" + i,"Mail have some attachment");
+                Log.i("excerpt " + i,"Mail have some attachment");
                 //buttiamo fuori il multipart!
             }
             else {
@@ -171,8 +177,32 @@ public class Email implements Serializable {
         excerpt += "...";
     }
 
+    /*
+     *  Set ID for every message (so we can check online unread / read messages)
+     */
     public void setID(String s) {
         ID = s;
     }
 
+    public static void saveFile(String filename, InputStream input) throws IOException {
+        if (filename == null) {
+            filename = File.createTempFile("xx", ".out").getName();
+        }
+        // Do no overwrite existing file
+        File file = new File("media/"+filename);
+        for (int i=0; file.exists(); i++) {
+            file = new File(filename+i);
+        }
+        FileOutputStream fos = new FileOutputStream(file);
+        BufferedOutputStream bos = new BufferedOutputStream(fos);
+
+        BufferedInputStream bis = new BufferedInputStream(input);
+        int aByte;
+        while ((aByte = bis.read()) != -1) {
+            bos.write(aByte);
+        }
+        bos.flush();
+        bos.close();
+        bis.close();
+    }
 }
