@@ -62,9 +62,9 @@ public class ReadMail extends Activity {
         subject.setText(email.subject);
 
         /*
-         *  Parse date into dd - MMM format (e.g: 30 mar)
+         *  Parse date into dd MMMM yyyy format (e.g: 30 marzo 2014)
          */
-        String date_format = new SimpleDateFormat("dd MMM").format(email.date.getTime());
+        String date_format = new SimpleDateFormat("dd MMMM yyyy").format(email.date.getTime());
         date.setText(date_format);
 
         /*
@@ -119,16 +119,16 @@ public class ReadMail extends Activity {
             update_task.execute(email.ID);
             email.seen = true;
         }
-//        View customNav = LayoutInflater.from(this).inflate(R.layout.custom_view, null);
+//        View customNav = LayoutInflater.from(this).inflate(R.layout.topbar_readmail, null);
 //        getActionBar().setCustomView(customNav);
 
         ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
 
         LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflator.inflate(R.layout.custom_view, null);
+        View v = inflator.inflate(R.layout.topbar_readmail, null);
 
         actionBar.setCustomView(v);
 
@@ -152,6 +152,7 @@ public class ReadMail extends Activity {
         if (id == R.id.action_settings) {
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
