@@ -45,7 +45,6 @@ public class ReadMail extends Activity {
         Bundle extras = getIntent().getExtras();
         int index = extras.getInt("index", 0);
 
-        Button reply = (Button) findViewById(R.id.reply);
         subject = (TextView) findViewById(R.id.read_subject);
         date = (TextView) findViewById(R.id.read_date);
         from = (TextView) findViewById(R.id.read_from);
