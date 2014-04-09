@@ -19,11 +19,7 @@ import android.widget.TextView;
 import java.io.File;
 import java.text.SimpleDateFormat;
 
-import javax.activation.DataHandler;
-import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
 
 /*
  *  Activity that displays a single email
@@ -170,35 +166,6 @@ public class ReadMail extends Activity {
         intent.putExtra("body",""+body.getText()); //DA INDENTARE
         intent.putExtra("to",from_addresses);
         startActivity(intent);
-    }
-
-    /*
-     *  Unused showBodyMethod
-     */
-    public void showBody(MimeMultipart fullBody) throws MessagingException {
-
-        MimeBodyPart messageBodyPart;
-        String body_content = "";
-
-        for (int i=0; i<fullBody.getCount(); i++) {
-            messageBodyPart = (MimeBodyPart) fullBody.getBodyPart(i); //prende ad ogni ciclo for un part del messaggio
-
-            String disposition = messageBodyPart.getDisposition();
-
-            //attachment here!
-            if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
-                System.out.println("Mail have some attachment");
-
-                DataHandler handler = messageBodyPart.getDataHandler();
-                System.out.println("file name : " + handler.getName());
-                //buttiamo fuori il multipart, mi sa che lo dovremo salvare e mostrare dalla "cache"
-            }
-            else {
-                //è testo, quindi lo concateno!
-                body_content = body_content.concat(messageBodyPart.toString());  // the changed code
-            }
-        }
-        body.setText(Html.fromHtml(body_content));
     }
 
     public void showAttachment(View view){

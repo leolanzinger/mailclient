@@ -4,12 +4,11 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -114,25 +113,9 @@ public class Email implements Serializable {
                     body_temp.add(s);
                 }
                 else {
-                    // TODO: QUI C'è L'ALLEGATO
-                    Log.i("Check", mp.getBodyPart(i).getContentType());
-                    Log.i("Check", mp.getBodyPart(i).getFileName());
-
-
-                    saveFile(mp.getBodyPart(i).getFileName(),mp.getBodyPart(i).getInputStream());
-                    attachmentPath="media/"+mp.getBodyPart(i).getFileName();
-
-//                    attachmentPath="temp/"+mp.getBodyPart(i).getFileName();
-//                    File tempFile = new File(attachmentPath);
-//                    InputStream is = mp.getBodyPart(i).getInputStream();
-//                    FileOutputStream fos = new FileOutputStream(tempFile);
-//                    byte[] buf = new byte[4096];
-//                    int bytesRead;
-//                    while((bytesRead = is.read(buf))!=-1) {
-//                        fos.write(buf, 0, bytesRead);
-//                    }
-//                    fos.close();
-//
+                    String filePath= "storage/sdcard0/Download/"+mp.getBodyPart(i).getFileName();
+                    saveFile(mp.getBodyPart(i).getInputStream(), filePath);
+                    attachmentPath=filePath;
                 }
             }
         }
@@ -184,25 +167,19 @@ public class Email implements Serializable {
         ID = s;
     }
 
-    public static void saveFile(String filename, InputStream input) throws IOException {
-        if (filename == null) {
-            filename = File.createTempFile("xx", ".out").getName();
+    public void saveFile(InputStream uploadedInputStream, String serverLocation) {
+        try {
+            OutputStream outputStream;
+            int read = 0;
+            byte[] bytes = new byte[1024];
+            outputStream = new FileOutputStream(new File(serverLocation));
+            while ((read = uploadedInputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+            outputStream.flush();
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        // Do no overwrite existing file
-        File file = new File("media/"+filename);
-        for (int i=0; file.exists(); i++) {
-            file = new File(filename+i);
-        }
-        FileOutputStream fos = new FileOutputStream(file);
-        BufferedOutputStream bos = new BufferedOutputStream(fos);
-
-        BufferedInputStream bis = new BufferedInputStream(input);
-        int aByte;
-        while ((aByte = bis.read()) != -1) {
-            bos.write(aByte);
-        }
-        bos.flush();
-        bos.close();
-        bis.close();
     }
 }
