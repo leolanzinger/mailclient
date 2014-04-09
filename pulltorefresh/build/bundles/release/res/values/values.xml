@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+<<<<<<< HEAD
     <!-- From: file:/Users/Teo/dev/mailclient/pulltorefresh/src/main/res/values/strings.xml -->
+=======
+    <!-- From: file:/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/src/main/res/values/strings.xml -->
+>>>>>>> 3e9c5a100173648a3a44cb742988186fcc8fedf6
     <eat-comment />
 
     <string name="ptr_last_updated">Updated: %1$s</string>
     <string name="ptr_pull_to_refresh">Pull to refresh</string>
     <string name="ptr_refreshing">Refreshing…</string>
     <string name="ptr_release_to_refresh">Release to refresh</string>
+<<<<<<< HEAD
     <!-- From: file:/Users/Teo/dev/mailclient/pulltorefresh/src/main/res/values/ptr_default_style.xml -->
+=======
+    <!-- From: file:/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/src/main/res/values/ptr_default_style.xml -->
+>>>>>>> 3e9c5a100173648a3a44cb742988186fcc8fedf6
     <eat-comment />
 
     <style name="ptr_arrow">
