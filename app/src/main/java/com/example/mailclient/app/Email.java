@@ -2,7 +2,6 @@ package com.example.mailclient.app;
 
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,8 +44,6 @@ public class Email implements Serializable {
         seen = false;
         attachmentPath= "";
     }
-
-
 
     /*
      *  Fill up Email object
@@ -100,7 +97,6 @@ public class Email implements Serializable {
      */
     private void getContent(Part p) throws MessagingException, IOException {
 
-        Log.i("Check", p.getContentType().toString());
         Multipart mp = (Multipart)p.getContent();
         for (int i=0; i < mp.getCount(); i++) {
             if ( mp.getBodyPart(i).isMimeType("multipart/*")) {
@@ -108,7 +104,6 @@ public class Email implements Serializable {
             }
             else {
                 if (mp.getBodyPart(i).isMimeType("text/*")) {
-                    Log.i("Check", mp.getBodyPart(i).getContentType());
                     String s = (String) mp.getBodyPart(i).getContent();
                     body_temp.add(s);
                 }
@@ -130,26 +125,11 @@ public class Email implements Serializable {
         //TODO: pulirlo
 
         String body_content = "";
-
         for (int i=0; i<body.size(); i++) {
-
             String disposition = body.get(i);
-
-            //attachment here!
-            // disposition == null
-            if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
-                Log.i("excerpt " + i,"Mail have some attachment");
-                //buttiamo fuori il multipart!
-            }
-            else {
-                //è testo, quindi lo concateno!
-                body_content = body_content.concat(disposition);  // the changed code
-                Log.i("excerpt" + i, "body content: " + body_content);
-
-            }
+            body_content = body_content.concat(disposition);
         }
 
-        //butto il body_content in html
         Spanned spanned = Html.fromHtml(body_content);
         if (spanned.toString().replaceAll("  ","").split("\\r?\\n")[0].length() > 39) {
             excerpt += spanned.toString().replaceAll("  ", "").split("\\r?\\n")[0].substring(0, 39);

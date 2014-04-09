@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 <!-- From: file:/Users/Teo/dev/mailclient/pulltorefresh/src/main/AndroidManifest.xml -->
-=======
-<!-- From: file:/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/src/main/AndroidManifest.xml -->
->>>>>>> 3e9c5a100173648a3a44cb742988186fcc8fedf6
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="4" android:versionName="1.3.0" package="eu.erikw">
     
     <uses-sdk android:minSdkVersion="4" android:targetSdkVersion="4"/>

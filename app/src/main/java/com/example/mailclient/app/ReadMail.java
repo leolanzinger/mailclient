@@ -148,7 +148,6 @@ public class ReadMail extends Activity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -159,7 +158,6 @@ public class ReadMail extends Activity {
      */
     public void replyMail(MenuItem menu) {
         Intent intent = new Intent(this, ReplyActivity.class);
-
         intent.putExtra("fromEmail",MailClient.account_email);
         intent.putExtra("password",MailClient.account_password);
         intent.putExtra("subject","Re: "+ email.subject);
@@ -171,7 +169,6 @@ public class ReadMail extends Activity {
     public void showAttachment(View view){
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
-        Log.i("Attach", email.attachmentPath);
         intent.setDataAndType(Uri.fromFile(new File(email.attachmentPath)), "image/*");
         startActivity(intent);
     }
