@@ -8,11 +8,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -31,7 +35,9 @@ public class ReadMail extends Activity {
     Email email;
     String from_addresses = "";
     String to_addresses = "";
-    TextView subject,date,from,body, to;
+    String body_content;
+    TextView subject,date,from,to;
+    WebView body;
     Button attachmentView;
 
     @Override
@@ -45,7 +51,7 @@ public class ReadMail extends Activity {
         date = (TextView) findViewById(R.id.read_date);
         from = (TextView) findViewById(R.id.read_from);
         to = (TextView) findViewById(R.id.read_to);
-        body = (TextView) findViewById(R.id.read_body);
+        body = (WebView) findViewById(R.id.read_body);
         attachmentView= (Button) findViewById(R.id.read_attachment);
 
 
@@ -101,11 +107,14 @@ public class ReadMail extends Activity {
          *  Parse body content from HTML String and
          *  display it as styled HTML text
          */
-        String body_content = "";
+        body_content = "<style type='text/css'>\n" +
+                "       body {margin: 0 !important;} img {max-width: 100% !important;height:initial;} div,p,span,a {max-width: 100% !important;}\n" +
+                "       </style>";
         for (int i=0; i<email.body.size(); i++) {
             body_content = body_content.concat(email.body.get(i));
         }
-        body.setText(Html.fromHtml(body_content));
+        body.loadData(body_content, "text/html", "utf-8");
+        body.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
 
         /*
          *  Notify IMAP server that the mail is read
@@ -161,7 +170,7 @@ public class ReadMail extends Activity {
         intent.putExtra("fromEmail",MailClient.account_email);
         intent.putExtra("password",MailClient.account_password);
         intent.putExtra("subject","Re: "+ email.subject);
-        intent.putExtra("body",""+body.getText()); //DA INDENTARE
+        intent.putExtra("body",""+Html.fromHtml(body_content).toString()); //DA INDENTARE
         intent.putExtra("to",from_addresses);
         startActivity(intent);
     }

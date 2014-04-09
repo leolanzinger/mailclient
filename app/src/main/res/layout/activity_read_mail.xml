@@ -10,6 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/read_scrollView"
+        android:scrollbars="none"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
@@ -85,13 +86,14 @@
                 android:layout_below="@+id/read_subject"
                 android:layout_centerHorizontal="true" />
 
-            <TextView
+            <WebView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:text="Dear John, ..."
                 android:id="@+id/read_body"
                 android:layout_below="@+id/read_date"
                 android:layout_marginTop="16dp"
+                android:scrollbars="none"
                 android:layout_centerHorizontal="true"/>
             <Button
                 android:layout_width="fill_parent"
