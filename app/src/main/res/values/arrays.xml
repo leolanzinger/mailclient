@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="sidebar_icons">
-        <item>@drawable/pin</item>
-        <item>@drawable/inbox</item>
-        <item>@drawable/send</item>
-        <item>@drawable/delete</item>
+        <item>pin</item>
+        <item>inbox</item>
+        <item>send_mail</item>
+        <item>delete</item>
     </array>
 
     <array name="sidebar_titles">

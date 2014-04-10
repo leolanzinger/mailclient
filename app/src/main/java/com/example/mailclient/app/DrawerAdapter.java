@@ -43,7 +43,7 @@ public class DrawerAdapter extends ArrayAdapter<String> {
 
         String item = getItem(position);
         ImageView icon = (ImageView) view.findViewById(R.id.drawer_list_image);
-        icon.setImageResource(g);
+        icon.setImageDrawable(context.getResources().getDrawable(context.getResources().getIdentifier(item, "drawable", context.getPackageName())));
 
         TextView title = (TextView) view.findViewById(R.id.drawer_list_title);
         String[] titles = context.getResources().getStringArray(R.array.sidebar_titles);
