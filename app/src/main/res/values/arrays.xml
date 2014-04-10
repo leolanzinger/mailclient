@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="sidebar">
-        <item>to do</item>
+    <array name="sidebar_icons">
+        <item>pin</item>
         <item>inbox</item>
-        <item>sent</item>
-        <item>trash</item>
-    </string-array>
+        <item>send_mail</item>
+        <item>delete</item>
+    </array>
+
+    <array name="sidebar_titles">
+        <item>TO DO</item>
+        <item>INBOX</item>
+        <item>SENT</item>
+        <item>TRASH</item>
+    </array>
 </resources>

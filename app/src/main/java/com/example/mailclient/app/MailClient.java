@@ -64,11 +64,11 @@ public class MailClient extends Activity {
         /*
          *  Implement drawer layout and adapters
          */
-        mDrawerLinks = getResources().getStringArray(R.array.sidebar);
+        mDrawerLinks = getResources().getStringArray(R.array.sidebar_icons);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mDrawerLinks));
+        mDrawerList.setAdapter(new DrawerAdapter(this, R.layout.drawer_list, mDrawerLinks));
         // Set the list's click listener
 //        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
