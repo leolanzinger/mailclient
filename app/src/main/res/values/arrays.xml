@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="sidebar_icons">
-        <item>to do</item>
-        <item>inbox</item>
-        <item>sent</item>
-        <item>trash</item>
+        <item>@drawable/pin</item>
+        <item>@drawable/inbox</item>
+        <item>@drawable/send</item>
+        <item>@drawable/delete</item>
+    </array>
+
+    <array name="sidebar_titles">
+        <item>TO DO</item>
+        <item>INBOX</item>
+        <item>SENT</item>
+        <item>TRASH</item>
     </array>
 </resources>

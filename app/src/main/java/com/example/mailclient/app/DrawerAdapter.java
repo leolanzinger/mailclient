@@ -1,11 +1,15 @@
 package com.example.mailclient.app;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -38,7 +42,12 @@ public class DrawerAdapter extends ArrayAdapter<String> {
         }
 
         String item = getItem(position);
+        ImageView icon = (ImageView) view.findViewById(R.id.drawer_list_image);
+        icon.setImageResource(g);
 
+        TextView title = (TextView) view.findViewById(R.id.drawer_list_title);
+        String[] titles = context.getResources().getStringArray(R.array.sidebar_titles);
+        title.setText(titles[position]);
 
         return view;
     }
