@@ -6,6 +6,9 @@
     <color name="unread">#EAF0F5</color>
     <color name="pressing">#B7D7F2</color>
     <color name="navbar_border">#EEE</color>
+    <color name="red">#FF5A24</color>
+    <color name="green">#569d4f</color>
+    <color name="yellow">#FCBC54</color>
 
     <integer-array name="pocket_background_colors">
         <item>@color/pocket_color_1</item>

@@ -8,9 +8,9 @@
     </array>
 
     <array name="sidebar_titles">
-        <item>TO DO</item>
-        <item>INBOX</item>
-        <item>SENT</item>
-        <item>TRASH</item>
+        <item>to do</item>
+        <item>inbox</item>
+        <item>sent</item>
+        <item>trash</item>
     </array>
 </resources>

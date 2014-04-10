@@ -21,11 +21,12 @@
         android:id="@+id/readMail_pin"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:background="@drawable/seen"
+        android:background="@drawable/not_pinned"
         android:src="@drawable/pin"
         android:contentDescription="pin"
         android:layout_toLeftOf="@id/readMail_delete"
-        android:paddingRight="@dimen/icon_dist"
+        android:onClick="setToDo"
+        android:layout_marginRight="@dimen/icon_dist"
         />
 
 </RelativeLayout>
