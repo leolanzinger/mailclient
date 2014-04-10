@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="sidebar">
+    <array name="sidebar_icons">
         <item>to do</item>
         <item>inbox</item>
         <item>sent</item>
         <item>trash</item>
-    </string-array>
+    </array>
 </resources>

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
@@ -36,6 +37,7 @@ public class ReadMail extends Activity {
     String from_addresses = "";
     String to_addresses = "";
     String body_content;
+    String body_content_html;
     TextView subject,date,from,to;
     WebView body;
     Button attachmentView;
@@ -107,14 +109,18 @@ public class ReadMail extends Activity {
          *  Parse body content from HTML String and
          *  display it as styled HTML text
          */
-        body_content = "<style type='text/css'>\n" +
+        body_content = "";
+        body_content_html = "<style type='text/css'>\n" +
                 "       body {margin: 0 !important;} img {max-width: 100% !important;height:initial;} div,p,span,a {max-width: 100% !important;}\n" +
                 "       </style>";
         for (int i=0; i<email.body.size(); i++) {
             body_content = body_content.concat(email.body.get(i));
+            body_content_html = body_content_html.concat(email.body.get(i));
         }
-        body.loadData(body_content, "text/html", "utf-8");
+        body.loadData(body_content_html, "text/html", "utf-8");
         body.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        body.getSettings().setJavaScriptEnabled(true);
+        body.requestFocus(View.FOCUS_DOWN);
 
         /*
          *  Notify IMAP server that the mail is read
