@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -136,7 +137,8 @@ public class MailClient extends Activity {
         }
 
         /*
-         *  Open email when clicking on email in the list, now it's on the swipeDetector stuff
+         *  Open email when clicking on email in the list
+         *  NOW IT'S ON the swipeDetector stuff
          */
 //         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //             @Override
@@ -171,8 +173,10 @@ public class MailClient extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (swipeDetector.swipeDetected()){
                     // do the onSwipe action
-                    Log.i("suaipa","suaipa");
-
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(baseContext, "pinned", duration);
+                    toast.show();
+                    emailList.get(position).addTodo();
                 } else {
                     // do the onItemClick action
                     Intent intent = new Intent(MailClient.this, ReadMail.class);
