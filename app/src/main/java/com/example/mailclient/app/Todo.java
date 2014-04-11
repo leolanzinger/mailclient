@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -127,17 +128,17 @@ public class Todo extends Activity {
         /*
          *  Open email when clicking on email in the list
          */
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(Todo.this, ReadMail.class);
-                // TODO: trovare indice dentro a Inbox.emailList
-                int pos = Inbox.emailList.indexOf(todo_list.get(i));
-                intent.putExtra("index", pos);
-                startActivity(intent);
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Intent intent = new Intent(Todo.this, ReadMail.class);
+//                // TODO: trovare indice dentro a Inbox.emailList
+//                int pos = Inbox.emailList.indexOf(todo_list.get(i));
+//                intent.putExtra("index", pos);
+//                startActivity(intent);
+//            }
+//        });
 
 
         /*
@@ -150,6 +151,50 @@ public class Todo extends Activity {
                         ((SmoothProgressDrawable) mPocketBar.getIndeterminateDrawable()).getStrokeWidth()));
         mPocketBar.setVisibility(View.GONE);
         mPocketBar.progressiveStop();
+
+
+        /*
+        this stuff is from http://stackoverflow.com/questions/4373485/android-swipe-on-list/9340202#9340202
+        and it should help us somehow to swipe stuff here and there.
+        */
+        //    final ListView listView = getListView();
+        final SwipeDetector swipeDetector = new SwipeDetector();
+        listView.setOnTouchListener(swipeDetector);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (swipeDetector.swipeDetected()){
+                    // do the onSwipe action
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(baseContext, "unpinned", duration);
+                    toast.show();
+                    Inbox.emailList.get(Inbox.emailList.indexOf(todo_list.get(position))).removeTodo();
+                    todo_list.remove(position);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Intent intent = new Intent(Todo.this, ReadMail.class);
+                // TODO: trovare indice dentro a Inbox.emailList
+                    int pos = Inbox.emailList.indexOf(todo_list.get(position));
+                    intent.putExtra("index", pos);
+                    startActivity(intent);
+
+                }
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view,int position, long id) {
+                if (swipeDetector.swipeDetected()){
+                    // do the onSwipe action
+                    Log.i("suaipa","suaipa");
+                    return true;
+
+                } else {
+                    // do the onItemLongClick action
+                    Log.i("onItemLongClick","onItemLongClick");
+                    return true;
+                }
+            }
+        });
     }
 
     @Override
