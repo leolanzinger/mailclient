@@ -242,6 +242,12 @@ public class MailClient extends Activity {
         adapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        save(emailList);
+    }
+
     /*
      *  Triggered from send email button:
      *  call send email activity

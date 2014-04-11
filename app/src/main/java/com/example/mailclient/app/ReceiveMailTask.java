@@ -79,6 +79,7 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
                     email.setSeen();
                 }
 
+                email.todo = false;
 
                 email.setID(ID);
 

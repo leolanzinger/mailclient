@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.io.File;
@@ -41,6 +42,7 @@ public class ReadMail extends Activity {
     TextView subject,date,from,to;
     WebView body;
     Button attachmentView;
+    ImageButton todoButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +143,20 @@ public class ReadMail extends Activity {
         LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflator.inflate(R.layout.topbar_readmail, null);
 
+
+        /*
+         *  To Do icon
+         */
+        todoButton = (ImageButton) v.findViewById(R.id.readMail_pin);
+        if (email.todo) {
+            todoButton.setBackgroundResource(R.drawable.pinned);
+        }
+        else {
+            todoButton.setBackgroundResource(R.drawable.not_pinned);
+        }
+
+        Log.i("todo", String.valueOf(email.todo));
+
         actionBar.setCustomView(v);
 
         attachmentView.setText(email.attachmentPath);
@@ -188,4 +204,15 @@ public class ReadMail extends Activity {
         startActivity(intent);
     }
 
+    public void setToDo(View view) {
+        if (email.todo) {
+            email.removeTodo();
+            todoButton.setBackgroundResource(R.drawable.not_pinned);
+        }
+        else {
+            email.addTodo();
+            todoButton.setBackgroundColor(R.color.yellow);
+            todoButton.setBackgroundResource(R.drawable.pinned);
+        }
+    }
 }
