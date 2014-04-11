@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.mailclient.app.MailClient" >
+    tools:context="com.example.mailclient.app.Inbox" >
     
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"

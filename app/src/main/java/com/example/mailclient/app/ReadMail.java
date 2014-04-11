@@ -8,14 +8,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -64,7 +61,7 @@ public class ReadMail extends Activity {
          *  (subject, date, sender and content)
          */
 
-        email = MailClient.emailList.get(index);
+        email = Inbox.emailList.get(index);
         subject.setText(email.subject);
 
         /*
@@ -132,8 +129,7 @@ public class ReadMail extends Activity {
             update_task.execute(email.ID);
             email.seen = true;
         }
-//        View customNav = LayoutInflater.from(this).inflate(R.layout.topbar_readmail, null);
-//        getActionBar().setCustomView(customNav);
+
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowHomeEnabled(true);
@@ -154,8 +150,6 @@ public class ReadMail extends Activity {
         else {
             todoButton.setBackgroundResource(R.drawable.not_pinned);
         }
-
-        Log.i("todo", String.valueOf(email.todo));
 
         actionBar.setCustomView(v);
 
@@ -189,8 +183,8 @@ public class ReadMail extends Activity {
      */
     public void replyMail(MenuItem menu) {
         Intent intent = new Intent(this, ReplyActivity.class);
-        intent.putExtra("fromEmail",MailClient.account_email);
-        intent.putExtra("password",MailClient.account_password);
+        intent.putExtra("fromEmail", Inbox.account_email);
+        intent.putExtra("password", Inbox.account_password);
         intent.putExtra("subject","Re: "+ email.subject);
         intent.putExtra("body",""+Html.fromHtml(body_content).toString()); //DA INDENTARE
         intent.putExtra("to",from_addresses);
@@ -204,6 +198,9 @@ public class ReadMail extends Activity {
         startActivity(intent);
     }
 
+    /*
+     *  Sets the to do variable or unset it if the email is already pinned
+     */
     public void setToDo(View view) {
         if (email.todo) {
             email.removeTodo();
@@ -214,5 +211,6 @@ public class ReadMail extends Activity {
             todoButton.setBackgroundColor(R.color.yellow);
             todoButton.setBackgroundResource(R.drawable.pinned);
         }
+        Inbox.save(Inbox.emailList);
     }
 }
