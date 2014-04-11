@@ -1,7 +1,11 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +28,8 @@ import eu.erikw.PullToRefreshListView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
+
+import com.example.mailclient.app.DrawerAdapter;
 
 
 /*
@@ -55,6 +62,8 @@ public class Inbox extends Activity {
 
     public Inbox() {
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,20 +155,6 @@ public class Inbox extends Activity {
         }
 
         /*
-         *  Open email when clicking on email in the list
-         */
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(Inbox.this, ReadMail.class);
-                int index = i;
-                intent.putExtra("index", index);
-                startActivity(intent);
-            }
-        });
-
-        /*
          *  Istantiate progress bar and hide it
          */
         mPocketBar = (SmoothProgressBar) findViewById(R.id.pocket);
@@ -169,6 +164,47 @@ public class Inbox extends Activity {
                         ((SmoothProgressDrawable) mPocketBar.getIndeterminateDrawable()).getStrokeWidth()));
         mPocketBar.setVisibility(View.GONE);
         mPocketBar.progressiveStop();
+
+        /*
+        this stuff is from http://stackoverflow.com/questions/4373485/android-swipe-on-list/9340202#9340202
+        and it should help us somehow to swipe stuff here and there.
+        */
+        //    final ListView listView = getListView();
+        final SwipeDetector swipeDetector = new SwipeDetector();
+        listView.setOnTouchListener(swipeDetector);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (swipeDetector.swipeDetected()){
+                    // do the onSwipe action
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(baseContext, "pinned", duration);
+                    toast.show();
+                    emailList.get(position).addTodo();
+                } else {
+                    // do the onItemClick action
+                    Intent intent = new Intent(Inbox.this, ReadMail.class);
+                    int index = position;
+                    intent.putExtra("index", index);
+                    startActivity(intent);
+
+                }
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view,int position, long id) {
+                if (swipeDetector.swipeDetected()){
+                    // do the onSwipe action
+                    Log.i("suaipa","suaipa");
+                    return true;
+
+                } else {
+                    // do the onItemLongClick action
+                    Log.i("onItemLongClick","onItemLongClick");
+                    return true;
+                }
+            }
+        });
     }
 
     @Override
