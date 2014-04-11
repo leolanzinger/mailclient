@@ -190,9 +190,9 @@ public class Todo extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        for (Email check_em : todo_list) {
-            if (!check_em.todo) {
-                todo_list.remove(check_em);
+        for(int i=0; i<todo_list.size(); i++) {
+            if (!todo_list.get(i).todo) {
+                todo_list.remove(todo_list.get(i));
             }
         }
         adapter.notifyDataSetChanged();
