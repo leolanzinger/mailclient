@@ -21,6 +21,4 @@
             android:textSize="@dimen/drawer_text"
             android:gravity="center_vertical"
             android:layout_weight="90" />
-
-
 </LinearLayout>
