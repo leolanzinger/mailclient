@@ -38,7 +38,7 @@ public class Todo extends Activity {
     public static SmoothProgressBar mPocketBar;
     public static PullToRefreshListView listView;
     public static Button refresh_button;
-    private ArrayList<Email> todo_list;
+    private static ArrayList<Email> todo_list;
 
     /*
      *  Drawer menu variables
@@ -121,8 +121,8 @@ public class Todo extends Activity {
         /*
          *  Set refresh button if email list is empty
          */
+        refresh_button = (Button) findViewById(R.id.refresh_button);
         if (adapter.isEmpty() || adapter == null) {
-            refresh_button = (Button) findViewById(R.id.refresh_button);
             refresh_button.setVisibility(View.VISIBLE);
         }
 
@@ -173,6 +173,7 @@ public class Todo extends Activity {
                             Inbox.emailList.get(Inbox.emailList.indexOf(todo_list.get(position))).removeTodo();
                             todo_list.remove(position);
                             adapter.notifyDataSetChanged();
+                            checkEmpty();
                         }
                     }
                     else {
@@ -190,6 +191,7 @@ public class Todo extends Activity {
                             Inbox.emailList.get(Inbox.emailList.indexOf(todo_list.get(position))).setSeen();
                             todo_list.remove(position);
                             adapter.notifyDataSetChanged();
+                            checkEmpty();
                         }
                     }
                 } else {
@@ -263,6 +265,7 @@ public class Todo extends Activity {
             }
         }
         adapter.notifyDataSetChanged();
+        checkEmpty();
     }
 
     @Override
@@ -300,4 +303,20 @@ public class Todo extends Activity {
         ReceiveMailTask receive_task = new ReceiveMailTask(Todo.this);
         receive_task.execute(Inbox.account_email, Inbox.account_password);
     }
+
+    public static void updateList(int new_emails) {
+        for(int i=0; i<new_emails; i++) {
+            if (!Inbox.emailList.get(i).seen) {
+                adapter.insert(Inbox.emailList.get(i), 0);
+            }
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    public static void checkEmpty() {
+        if (todo_list.isEmpty()) {
+            refresh_button.setVisibility(View.VISIBLE);
+        }
+    }
 }
+

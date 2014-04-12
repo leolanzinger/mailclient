@@ -20,10 +20,10 @@ import javax.mail.search.FlagTerm;
 
 public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>> {
 
-    private Activity sendMailActivity;
+    private Activity receiveMailActivity;
 
     public ReceiveMailTask(Activity activity) {
-        sendMailActivity = activity;
+        receiveMailActivity = activity;
 
     }
 
@@ -130,9 +130,19 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
         }
         Inbox.adapter.notifyDataSetChanged();
         Inbox.save(Inbox.emailList);
-        Inbox.mPocketBar.progressiveStop();
-        Inbox.listView.onRefreshComplete();
-        Inbox.mPocketBar.setVisibility(View.GONE);
+
+        if (receiveMailActivity instanceof Todo ) {
+            Todo.updateList(result.size());
+            Todo.mPocketBar.progressiveStop();
+            Todo.listView.onRefreshComplete();
+            Todo.mPocketBar.setVisibility(View.GONE);
+            Todo.checkEmpty();
+        }
+        else if (receiveMailActivity instanceof Inbox) {
+            Inbox.mPocketBar.progressiveStop();
+            Inbox.listView.onRefreshComplete();
+            Inbox.mPocketBar.setVisibility(View.GONE);
+        }
         super.onPostExecute(result);
     }
 
