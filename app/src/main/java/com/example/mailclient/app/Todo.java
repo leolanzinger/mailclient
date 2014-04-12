@@ -190,6 +190,8 @@ public class Todo extends Activity {
                             toast.show();
                             Inbox.emailList.get(Inbox.emailList.indexOf(todo_list.get(position))).setSeen();
                             todo_list.remove(position);
+                            UpdateMailTask update_task = new UpdateMailTask(Todo.this);
+                            update_task.execute(Inbox.emailList.get(position).ID);
                             adapter.notifyDataSetChanged();
                             checkEmpty();
                         }
