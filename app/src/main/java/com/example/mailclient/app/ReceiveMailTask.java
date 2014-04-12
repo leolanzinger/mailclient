@@ -85,15 +85,6 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
 
                 try {
                     email.setContent(msg[i]);
-//                    Object multipart = msg[i].getContent();
-//                    if (!(multipart instanceof Multipart)) {
-//                        Log.i("multipart", "è una stringa");
-//                        email.setContentToString(multipart.toString());
-//                    }
-//                    else {
-//                        Log.i("multipart", "è un multipart");
-//                        email.setContent(msg[i]);
-//                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
