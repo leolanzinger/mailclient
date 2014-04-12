@@ -109,10 +109,11 @@ public class Todo extends Activity {
          *  Instantiate to do array list and its adapter
          */
         todo_list = new ArrayList<Email>();
-        for (Email check_em : Inbox.emailList) {
-            if (check_em.todo) {
-                todo_list.add(check_em);
+        for (int i=0; i<Inbox.emailList.size(); i++) {
+            if (Inbox.emailList.get(i).todo || !Inbox.emailList.get(i).seen) {
+                todo_list.add(Inbox.emailList.get(i));
             }
+            else {}
         }
         adapter = new EmailAdapter(this, R.id.list_subject, todo_list);
         listView.setAdapter(adapter);
@@ -164,12 +165,33 @@ public class Todo extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (swipeDetector.swipeDetected()){
                     // do the onSwipe action
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(baseContext, "unpinned", duration);
-                    toast.show();
-                    Inbox.emailList.get(Inbox.emailList.indexOf(todo_list.get(position))).removeTodo();
-                    todo_list.remove(position);
-                    adapter.notifyDataSetChanged();
+                    if (todo_list.get(position).todo ) {
+                        if (swipeDetector.getAction().equals(SwipeDetector.Action.LR)) {
+                            int duration = Toast.LENGTH_SHORT;
+                            Toast toast = Toast.makeText(baseContext, "unpinned", duration);
+                            toast.show();
+                            Inbox.emailList.get(Inbox.emailList.indexOf(todo_list.get(position))).removeTodo();
+                            todo_list.remove(position);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                    else {
+                        if (swipeDetector.getAction().equals(SwipeDetector.Action.LR)) {
+                            int duration = Toast.LENGTH_SHORT;
+                            Toast toast = Toast.makeText(baseContext, "pinned", duration);
+                            toast.show();
+                            Inbox.emailList.get(Inbox.emailList.indexOf(todo_list.get(position))).addTodo();
+                            adapter.notifyDataSetChanged();
+                        }
+                        else if (swipeDetector.getAction().equals(SwipeDetector.Action.RL)) {
+                            int duration = Toast.LENGTH_SHORT;
+                            Toast toast = Toast.makeText(baseContext, "archieved", duration);
+                            toast.show();
+                            Inbox.emailList.get(Inbox.emailList.indexOf(todo_list.get(position))).setSeen();
+                            todo_list.remove(position);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
                 } else {
                     Intent intent = new Intent(Todo.this, ReadMail.class);
                 // TODO: trovare indice dentro a Inbox.emailList
@@ -236,7 +258,7 @@ public class Todo extends Activity {
     public void onResume() {
         super.onResume();
         for(int i=0; i<todo_list.size(); i++) {
-            if (!todo_list.get(i).todo) {
+            if (!todo_list.get(i).todo && todo_list.get(i).seen) {
                 todo_list.remove(todo_list.get(i));
             }
         }
