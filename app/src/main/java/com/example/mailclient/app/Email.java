@@ -26,6 +26,7 @@ import javax.mail.Part;
  */
 public class Email implements Serializable {
 
+    boolean todo;
     boolean seen;
     String subject;
     Date date;
@@ -42,6 +43,7 @@ public class Email implements Serializable {
         excerpt = "";
         seen = false;
         attachmentPath= new ArrayList<String>();
+        todo = false;
     }
 
     /*
@@ -160,5 +162,13 @@ public class Email implements Serializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void addTodo() {
+        todo = true;
+    }
+
+    public void removeTodo() {
+        todo = false;
     }
 }

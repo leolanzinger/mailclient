@@ -114,8 +114,8 @@ public class SendMailActivity extends Activity {
         subjectEmailText = (EditText) this.findViewById(R.id.send_subject_edit);
         bodyEmailText = (EditText) this.findViewById(R.id.send_body);
 
-        String fromEmail = MailClient.account_email;
-        String fromPassword = MailClient.account_password;
+        String fromEmail = Inbox.account_email;
+        String fromPassword = Inbox.account_password;
         String toEmails = toEmailText.getText().toString();
         List<String> toEmailList = Arrays.asList(toEmails
                 .split("\\s*,\\s*"));

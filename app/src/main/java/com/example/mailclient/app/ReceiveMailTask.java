@@ -79,6 +79,7 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
                     email.setSeen();
                 }
 
+                email.todo = false;
 
                 email.setID(ID);
 
@@ -102,7 +103,7 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
             list.add(email);
         }
 
-        GMailUpdater updater = new GMailUpdater(MailClient.account_email, MailClient.account_password);
+        GMailUpdater updater = new GMailUpdater(Inbox.account_email, Inbox.account_password);
         try {
             updater.updateGmail(unread_mess_ID, false);
         } catch (Exception e) {
@@ -125,13 +126,13 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
          *  bar
          */
         for (Email em : result) {
-            MailClient.adapter.insert(em, 0);
+            Inbox.adapter.insert(em, 0);
         }
-        MailClient.adapter.notifyDataSetChanged();
-        MailClient.save(MailClient.emailList);
-        MailClient.mPocketBar.progressiveStop();
-        MailClient.listView.onRefreshComplete();
-        MailClient.mPocketBar.setVisibility(View.GONE);
+        Inbox.adapter.notifyDataSetChanged();
+        Inbox.save(Inbox.emailList);
+        Inbox.mPocketBar.progressiveStop();
+        Inbox.listView.onRefreshComplete();
+        Inbox.mPocketBar.setVisibility(View.GONE);
         super.onPostExecute(result);
     }
 

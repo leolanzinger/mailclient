@@ -73,10 +73,10 @@ public class GMailReader extends javax.mail.Authenticator {
             folder.open(Folder.READ_WRITE);
             int already_count = 1;
             int mess_count = folder.getMessageCount();
-            if ( MailClient.emailList.size() > 0 ) {
+            if ( Inbox.emailList.size() > 0 ) {
                 for (int i = 0; i < mess_count; i++) {
                     String cur_ID = folder.getMessage(mess_count - i).getHeader("Message-Id")[0];
-                    if ( cur_ID.equals(MailClient.emailList.get(0).ID) ) {
+                    if ( cur_ID.equals(Inbox.emailList.get(0).ID) ) {
                         already_count = i;
                         i = mess_count + 1;
                     } else {

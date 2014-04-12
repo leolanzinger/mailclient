@@ -15,6 +15,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -35,8 +36,10 @@ public class ReadMail extends Activity {
     String from_addresses = "";
     String to_addresses = "";
     String body_content;
+    String body_content_html;
     TextView subject,date,from,to;
     WebView body;
+    ImageButton todoButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,7 @@ public class ReadMail extends Activity {
          *  (subject, date, sender and content)
          */
 
-        email = MailClient.emailList.get(index);
+        email = Inbox.emailList.get(index);
         subject.setText(email.subject);
 
         /*
@@ -104,14 +107,18 @@ public class ReadMail extends Activity {
          *  Parse body content from HTML String and
          *  display it as styled HTML text
          */
-        body_content = "<style type='text/css'>\n" +
+        body_content = "";
+        body_content_html = "<style type='text/css'>\n" +
                 "       body {margin: 0 !important;} img {max-width: 100% !important;height:initial;} div,p,span,a {max-width: 100% !important;}\n" +
                 "       </style>";
         for (int i=0; i<email.body.size(); i++) {
             body_content = body_content.concat(email.body.get(i));
+            body_content_html = body_content_html.concat(email.body.get(i));
         }
-        body.loadData(body_content, "text/html", "utf-8");
+        body.loadData(body_content_html, "text/html", "UTF-8");
         body.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        body.getSettings().setJavaScriptEnabled(true);
+        body.requestFocus(View.FOCUS_DOWN);
 
         /*
          *  Notify IMAP server that the mail is read
@@ -121,8 +128,7 @@ public class ReadMail extends Activity {
             update_task.execute(email.ID);
             email.seen = true;
         }
-//        View customNav = LayoutInflater.from(this).inflate(R.layout.topbar_readmail, null);
-//        getActionBar().setCustomView(customNav);
+
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowHomeEnabled(true);
@@ -131,6 +137,18 @@ public class ReadMail extends Activity {
 
         LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflator.inflate(R.layout.topbar_readmail, null);
+
+
+        /*
+         *  To Do icon
+         */
+        todoButton = (ImageButton) v.findViewById(R.id.readMail_pin);
+        if (email.todo) {
+            todoButton.setBackgroundResource(R.drawable.pinned);
+        }
+        else {
+            todoButton.setBackgroundResource(R.drawable.not_pinned);
+        }
 
         actionBar.setCustomView(v);
 
@@ -195,12 +213,28 @@ public class ReadMail extends Activity {
      */
     public void replyMail(MenuItem menu) {
         Intent intent = new Intent(this, ReplyActivity.class);
-        intent.putExtra("fromEmail",MailClient.account_email);
-        intent.putExtra("password",MailClient.account_password);
+        intent.putExtra("fromEmail", Inbox.account_email);
+        intent.putExtra("password", Inbox.account_password);
         intent.putExtra("subject","Re: "+ email.subject);
         intent.putExtra("body",""+Html.fromHtml(body_content).toString()); //DA INDENTARE
         intent.putExtra("to",from_addresses);
         startActivity(intent);
     }
 
+
+    /*
+     *  Sets the to do variable or unset it if the email is already pinned
+     */
+    public void setToDo(View view) {
+        if (email.todo) {
+            email.removeTodo();
+            todoButton.setBackgroundResource(R.drawable.not_pinned);
+        }
+        else {
+            email.addTodo();
+            todoButton.setBackgroundColor(R.color.yellow);
+            todoButton.setBackgroundResource(R.drawable.pinned);
+        }
+        Inbox.save(Inbox.emailList);
+    }
 }

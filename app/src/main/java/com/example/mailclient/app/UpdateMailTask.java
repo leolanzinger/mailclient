@@ -3,18 +3,8 @@ package com.example.mailclient.app;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.mail.Flags;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.search.FlagTerm;
-
-import static javax.mail.Flags.Flag.SEEN;
 
 /*
 *   Async task to sync messages flags - not used yet
@@ -39,7 +29,7 @@ public class UpdateMailTask extends AsyncTask {
              *  Updates INBOX status of updated Emails
              */
             Log.i("UpdateMailTask", "About to instantiate GMailUpdater...");
-            GMailUpdater updater = new GMailUpdater(MailClient.account_email, MailClient.account_password);
+            GMailUpdater updater = new GMailUpdater(Inbox.account_email, Inbox.account_password);
             try {
                 ArrayList<String> seen = new ArrayList<String>();
                 seen.add((String) args[0]);
