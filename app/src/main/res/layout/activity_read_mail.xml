@@ -95,11 +95,11 @@
                 android:layout_marginTop="16dp"
                 android:scrollbars="none"
                 android:layout_centerHorizontal="true"/>
-            <Button
+            <TableLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/read_attachment"
-                android:onClick="showAttachment"/>
+                android:layout_height="fill_parent"
+                android:id="@+id/array_button">
+            </TableLayout>
 
         </LinearLayout>
 

@@ -7,17 +7,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -38,21 +37,19 @@ public class ReadMail extends Activity {
     String body_content;
     TextView subject,date,from,to;
     WebView body;
-    Button attachmentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_mail);
         Bundle extras = getIntent().getExtras();
-        int index = extras.getInt("index", 0);
+        final int index = extras.getInt("index", 0);
 
         subject = (TextView) findViewById(R.id.read_subject);
         date = (TextView) findViewById(R.id.read_date);
         from = (TextView) findViewById(R.id.read_from);
         to = (TextView) findViewById(R.id.read_to);
         body = (WebView) findViewById(R.id.read_body);
-        attachmentView= (Button) findViewById(R.id.read_attachment);
 
 
         /*
@@ -137,8 +134,39 @@ public class ReadMail extends Activity {
 
         actionBar.setCustomView(v);
 
-        attachmentView.setText(email.attachmentPath);
 
+        //TODO: handle multiple attachments
+
+        if (email.attachmentPath.size()!=0){
+            final TableLayout lm = (TableLayout) findViewById(R.id.array_button);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            for (int i = 0; i < email.attachmentPath.size(); i++) {
+
+                // Create LinearLayout
+                LinearLayout ll = new LinearLayout(this);
+                ll.setOrientation(LinearLayout.VERTICAL);
+
+                Button btn = new Button(this);
+                btn.setText(email.attachmentPath.get(i));
+                btn.setLayoutParams(params);
+                btn.setId(i);
+                final int indice = i;
+                btn.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.fromFile(new File(email.attachmentPath.get(indice))), "image/*");
+                        startActivity(intent);
+
+                    }
+                });
+                //Add button to LinearLayout
+                ll.addView(btn);
+                //Add button to LinearLayout defined in XML
+                lm.addView(ll);
+
+            }
+        }
 }
 
 
@@ -172,13 +200,6 @@ public class ReadMail extends Activity {
         intent.putExtra("subject","Re: "+ email.subject);
         intent.putExtra("body",""+Html.fromHtml(body_content).toString()); //DA INDENTARE
         intent.putExtra("to",from_addresses);
-        startActivity(intent);
-    }
-
-    public void showAttachment(View view){
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.setDataAndType(Uri.fromFile(new File(email.attachmentPath)), "image/*");
         startActivity(intent);
     }
 

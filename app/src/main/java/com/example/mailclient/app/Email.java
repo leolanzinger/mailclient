@@ -29,11 +29,10 @@ public class Email implements Serializable {
     boolean seen;
     String subject;
     Date date;
-    ArrayList<String> body, body_temp;
+    ArrayList<String> body, body_temp, attachmentPath;
     Address[] from,to;
     String excerpt;
     String ID;
-    String attachmentPath;
 
     public Email() {
         subject = new String();
@@ -42,7 +41,7 @@ public class Email implements Serializable {
         body_temp = new ArrayList<String> ();
         excerpt = "";
         seen = false;
-        attachmentPath= "";
+        attachmentPath= new ArrayList<String>();
     }
 
     /*
@@ -110,7 +109,7 @@ public class Email implements Serializable {
                 else {
                     String filePath= "storage/sdcard0/Download/"+mp.getBodyPart(i).getFileName();
                     saveFile(mp.getBodyPart(i).getInputStream(), filePath);
-                    attachmentPath=filePath;
+                    attachmentPath.add(filePath);
                 }
             }
         }
