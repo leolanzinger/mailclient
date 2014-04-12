@@ -115,7 +115,9 @@ public class ReadMail extends Activity {
             body_content = body_content.concat(email.body.get(i));
             body_content_html = body_content_html.concat(email.body.get(i));
         }
-        body.loadData(body_content_html, "text/html", "UTF-8");
+//        body.loadData(body_content_html, "text/html", "UTF-8");
+        body.loadDataWithBaseURL(null, body_content_html, "text/html", "utf-8", null);
+
         body.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         body.getSettings().setJavaScriptEnabled(true);
         body.requestFocus(View.FOCUS_DOWN);
