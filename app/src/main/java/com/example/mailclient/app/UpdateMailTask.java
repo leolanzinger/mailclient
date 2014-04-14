@@ -29,7 +29,7 @@ public class UpdateMailTask extends AsyncTask {
              *  Updates INBOX status of updated Emails
              */
             Log.i("UpdateMailTask", "About to instantiate GMailUpdater...");
-            GMailUpdater updater = new GMailUpdater(Inbox.account_email, Inbox.account_password);
+            GMailUpdater updater = new GMailUpdater(Mailbox.account_email, Mailbox.account_password);
             try {
                 ArrayList<String> seen = new ArrayList<String>();
                 seen.add((String) args[0]);

@@ -60,7 +60,7 @@ public class ReadMail extends Activity {
          *  (subject, date, sender and content)
          */
 
-        email = Inbox.emailList.get(index);
+        email = Mailbox.emailList.get(index);
         subject.setText(email.subject);
 
         /*
@@ -215,8 +215,8 @@ public class ReadMail extends Activity {
      */
     public void replyMail(MenuItem menu) {
         Intent intent = new Intent(this, ReplyActivity.class);
-        intent.putExtra("fromEmail", Inbox.account_email);
-        intent.putExtra("password", Inbox.account_password);
+        intent.putExtra("fromEmail", Mailbox.account_email);
+        intent.putExtra("password", Mailbox.account_password);
         intent.putExtra("subject","Re: "+ email.subject);
         intent.putExtra("body",""+Html.fromHtml(body_content).toString()); //DA INDENTARE
         intent.putExtra("to",from_addresses);
@@ -237,6 +237,6 @@ public class ReadMail extends Activity {
             todoButton.setBackgroundColor(R.color.yellow);
             todoButton.setBackgroundResource(R.drawable.pinned);
         }
-        Inbox.save(Inbox.emailList);
+        Mailbox.save(Mailbox.emailList);
     }
 }

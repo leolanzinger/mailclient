@@ -40,13 +40,7 @@ public class Inbox extends Activity {
     /*
     *   Set main variables
     */
-    static ArrayList<Email> emailList;
     static EmailAdapter adapter;
-    static InternalStorage storer;
-    static String KEY = "mailClient";
-    public static String account_email = "mailclientandroid@gmail.com";
-    public static String account_password = "android2014";
-
     public static Context baseContext;
     public static SmoothProgressBar mPocketBar;
     public static PullToRefreshListView listView;
@@ -84,9 +78,7 @@ public class Inbox extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0) {
-                    Intent intent;
-                    intent = new Intent(Inbox.this, Todo.class);
-                    startActivity(intent);
+                    finish();
                 }
                 else if (i == 1) {
                     mDrawerLayout.closeDrawers();
@@ -113,8 +105,6 @@ public class Inbox extends Activity {
          *  Istantiate cache / storage classes
          */
         baseContext = getBaseContext();
-        storer = new InternalStorage();
-        emailList  = new ArrayList<Email>();
 
         /*
          *  Instantiate pullable listView
@@ -130,21 +120,8 @@ public class Inbox extends Activity {
         /*
          *  Instantiate list adapter
          */
-        adapter = new EmailAdapter(this, R.id.list_subject, emailList);
+        adapter = new EmailAdapter(this, R.id.list_subject, Mailbox.emailList);
         listView.setAdapter(adapter);
-
-        /*
-         *  Load previously cached email objects from internal storage
-         */
-        try {
-            ArrayList<Email> emailList = (ArrayList<Email>) InternalStorage.readObject(this, KEY);
-            adapter.addAll(emailList);
-            adapter.notifyDataSetChanged();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
 
         /*
          *  Set refresh button if email list is empty
@@ -179,7 +156,7 @@ public class Inbox extends Activity {
                     int duration = Toast.LENGTH_SHORT;
                     Toast toast = Toast.makeText(baseContext, "pinned", duration);
                     toast.show();
-                    emailList.get(position).addTodo();
+                    Mailbox.emailList.get(position).addTodo();
                 } else {
                     // do the onItemClick action
                     Intent intent = new Intent(Inbox.this, ReadMail.class);
@@ -253,7 +230,7 @@ public class Inbox extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        save(emailList);
+        Mailbox.save(Mailbox.emailList);
     }
 
     /*
@@ -275,7 +252,7 @@ public class Inbox extends Activity {
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
         ReceiveMailTask receive_task = new ReceiveMailTask(Inbox.this);
-        receive_task.execute(account_email, account_password);
+        receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 
     public void receiveMail(View view) {
@@ -283,17 +260,6 @@ public class Inbox extends Activity {
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
         ReceiveMailTask receive_task = new ReceiveMailTask(Inbox.this);
-        receive_task.execute(account_email, account_password);
-    }
-
-    /*
-     *  Store / Update email list into storage
-     */
-    public static void save(ArrayList<Email> result) {
-        try {
-            storer.writeObject(baseContext, KEY, result);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 }

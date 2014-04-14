@@ -33,6 +33,7 @@ public class Todo extends Activity {
     /*
     *   Set main variables
     */
+    public static Mailbox mailbox;
     static EmailAdapter adapter;
     public static Context baseContext;
     public static SmoothProgressBar mPocketBar;
@@ -58,6 +59,7 @@ public class Todo extends Activity {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
         baseContext = getBaseContext();
+        mailbox = new Mailbox(baseContext);
 
         /*
          *  Implement drawer layout and adapters
@@ -71,7 +73,9 @@ public class Todo extends Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 1) {
-                    finish();
+                    Intent intent;
+                    intent = new Intent(Todo.this, Inbox.class);
+                    startActivity(intent);
                 }
                 else if (i == 0) {
                     mDrawerLayout.closeDrawers();
@@ -109,9 +113,9 @@ public class Todo extends Activity {
          *  Instantiate to do array list and its adapter
          */
         todo_list = new ArrayList<Email>();
-        for (int i=0; i<Inbox.emailList.size(); i++) {
-            if (Inbox.emailList.get(i).todo || !Inbox.emailList.get(i).seen) {
-                todo_list.add(Inbox.emailList.get(i));
+        for (int i=0; i<Mailbox.emailList.size(); i++) {
+            if (Mailbox.emailList.get(i).todo || !Mailbox.emailList.get(i).seen) {
+                todo_list.add(Mailbox.emailList.get(i));
             }
             else {}
         }
@@ -125,22 +129,6 @@ public class Todo extends Activity {
         if (adapter.isEmpty() || adapter == null) {
             refresh_button.setVisibility(View.VISIBLE);
         }
-
-        /*
-         *  Open email when clicking on email in the list
-         */
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Intent intent = new Intent(Todo.this, ReadMail.class);
-//                // TODO: trovare indice dentro a Inbox.emailList
-//                int pos = Inbox.emailList.indexOf(todo_list.get(i));
-//                intent.putExtra("index", pos);
-//                startActivity(intent);
-//            }
-//        });
-
 
         /*
          *  Istantiate progress bar and hide it
@@ -170,7 +158,7 @@ public class Todo extends Activity {
                             int duration = Toast.LENGTH_SHORT;
                             Toast toast = Toast.makeText(baseContext, "unpinned", duration);
                             toast.show();
-                            Inbox.emailList.get(Inbox.emailList.indexOf(todo_list.get(position))).removeTodo();
+                            Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(position))).removeTodo();
                             todo_list.remove(position);
                             adapter.notifyDataSetChanged();
                             checkEmpty();
@@ -181,25 +169,25 @@ public class Todo extends Activity {
                             int duration = Toast.LENGTH_SHORT;
                             Toast toast = Toast.makeText(baseContext, "pinned", duration);
                             toast.show();
-                            Inbox.emailList.get(Inbox.emailList.indexOf(todo_list.get(position))).addTodo();
+                            Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(position))).addTodo();
                             adapter.notifyDataSetChanged();
                         }
                         else if (swipeDetector.getAction().equals(SwipeDetector.Action.RL)) {
                             int duration = Toast.LENGTH_SHORT;
                             Toast toast = Toast.makeText(baseContext, "archieved", duration);
                             toast.show();
-                            Inbox.emailList.get(Inbox.emailList.indexOf(todo_list.get(position))).setSeen();
+                            Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(position))).setSeen();
                             todo_list.remove(position);
                             UpdateMailTask update_task = new UpdateMailTask(Todo.this);
-                            update_task.execute(Inbox.emailList.get(position).ID);
+                            update_task.execute(Mailbox.emailList.get(position).ID);
                             adapter.notifyDataSetChanged();
                             checkEmpty();
                         }
                     }
                 } else {
                     Intent intent = new Intent(Todo.this, ReadMail.class);
-                // TODO: trovare indice dentro a Inbox.emailList
-                    int pos = Inbox.emailList.indexOf(todo_list.get(position));
+                // TODO: trovare indice dentro a Mailbox.emailList
+                    int pos = Mailbox.emailList.indexOf(todo_list.get(position));
                     intent.putExtra("index", pos);
                     startActivity(intent);
 
@@ -221,6 +209,8 @@ public class Todo extends Activity {
                 }
             }
         });
+
+        mDrawerLayout.closeDrawers();
     }
 
     @Override
@@ -261,19 +251,22 @@ public class Todo extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        for(int i=0; i<todo_list.size(); i++) {
-            if (!todo_list.get(i).todo && todo_list.get(i).seen) {
-                todo_list.remove(todo_list.get(i));
+        todo_list.clear();
+        for (int i=0; i<Mailbox.emailList.size(); i++) {
+            if (Mailbox.emailList.get(i).todo || !Mailbox.emailList.get(i).seen) {
+                todo_list.add(Mailbox.emailList.get(i));
             }
+            else {}
         }
         adapter.notifyDataSetChanged();
         checkEmpty();
+        mDrawerLayout.closeDrawers();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Inbox.save(Inbox.emailList);
+        Mailbox.save(Mailbox.emailList);
     }
 
     /*
@@ -295,7 +288,7 @@ public class Todo extends Activity {
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
         ReceiveMailTask receive_task = new ReceiveMailTask(Todo.this);
-        receive_task.execute(Inbox.account_email, Inbox.account_password);
+        receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 
     public void receiveMail(View view) {
@@ -303,13 +296,13 @@ public class Todo extends Activity {
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
         ReceiveMailTask receive_task = new ReceiveMailTask(Todo.this);
-        receive_task.execute(Inbox.account_email, Inbox.account_password);
+        receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 
     public static void updateList(int new_emails) {
         for(int i=0; i<new_emails; i++) {
-            if (!Inbox.emailList.get(i).seen) {
-                adapter.insert(Inbox.emailList.get(i), 0);
+            if (!Mailbox.emailList.get(i).seen) {
+                adapter.insert(Mailbox.emailList.get(i), 0);
             }
         }
         adapter.notifyDataSetChanged();
@@ -318,6 +311,9 @@ public class Todo extends Activity {
     public static void checkEmpty() {
         if (todo_list.isEmpty()) {
             refresh_button.setVisibility(View.VISIBLE);
+        }
+        else {
+            refresh_button.setVisibility(View.GONE);
         }
     }
 }

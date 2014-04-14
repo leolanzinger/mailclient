@@ -94,7 +94,7 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
             list.add(email);
         }
 
-        GMailUpdater updater = new GMailUpdater(Inbox.account_email, Inbox.account_password);
+        GMailUpdater updater = new GMailUpdater(Mailbox.account_email, Mailbox.account_password);
         try {
             updater.updateGmail(unread_mess_ID, false);
         } catch (Exception e) {
@@ -116,13 +116,14 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
          *  store them into cache and hide progress
          *  bar
          */
-        for (Email em : result) {
-            Inbox.adapter.insert(em, 0);
-        }
-        Inbox.adapter.notifyDataSetChanged();
-        Inbox.save(Inbox.emailList);
 
         if (receiveMailActivity instanceof Todo ) {
+
+            for (Email em : result) {
+                Mailbox.emailList.add(0,em);
+            }
+            Mailbox.save(Mailbox.emailList);
+
             Todo.updateList(result.size());
             Todo.mPocketBar.progressiveStop();
             Todo.listView.onRefreshComplete();
@@ -130,6 +131,13 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
             Todo.checkEmpty();
         }
         else if (receiveMailActivity instanceof Inbox) {
+
+            for (Email em : result) {
+                Inbox.adapter.insert(em, 0);
+            }
+            Inbox.adapter.notifyDataSetChanged();
+            Mailbox.save(Mailbox.emailList);
+
             Inbox.mPocketBar.progressiveStop();
             Inbox.listView.onRefreshComplete();
             Inbox.mPocketBar.setVisibility(View.GONE);
