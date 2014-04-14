@@ -163,6 +163,11 @@ public class Todo extends Activity {
                             adapter.notifyDataSetChanged();
                             checkEmpty();
                         }
+                        else if (swipeDetector.getAction().equals(SwipeDetector.Action.MV)) {
+                            Log.i("move", "moving!");
+                            View item = adapter.getView(position, listView.getChildAt(position), listView);
+                            item.setX(item.getX() + 50);
+                        }
                     }
                     else {
                         if (swipeDetector.getAction().equals(SwipeDetector.Action.LR)) {
@@ -186,7 +191,7 @@ public class Todo extends Activity {
                     }
                 } else {
                     Intent intent = new Intent(Todo.this, ReadMail.class);
-                // TODO: trovare indice dentro a Mailbox.emailList
+                // TODO: trovare indice dentro a Mailbox.emailList [non e' il primo dito della tua mano]
                     int pos = Mailbox.emailList.indexOf(todo_list.get(position));
                     intent.putExtra("index", pos);
                     startActivity(intent);

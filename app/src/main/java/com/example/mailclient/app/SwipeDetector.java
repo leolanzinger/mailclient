@@ -15,6 +15,7 @@ public class SwipeDetector implements View.OnTouchListener {
         RL, // Right to Left
         TB, // Top to bottom
         BT, // Bottom to Top
+        MV, // Move
         None // when no action was detected
     }
 
@@ -39,6 +40,17 @@ public class SwipeDetector implements View.OnTouchListener {
                 downY = event.getY();
                 mSwipeDetected = Action.None;
                 return false; // allow other events like Click to be processed
+            case MotionEvent.ACTION_MOVE:
+                float curX = event.getX();
+                //Relative distance to move the slider
+                float distance = (curX - downX);
+                mSwipeDetected = Action.MV;
+                return false;
+//                v.setX(v.getX() + distance);
+                //Move the slider
+//                if (this.viewPosizionContraints(v, distance)) {
+//                    v.setX(v.getX() + distance);
+//                }
             case MotionEvent.ACTION_UP:
                 upX = event.getX();
                 upY = event.getY();
