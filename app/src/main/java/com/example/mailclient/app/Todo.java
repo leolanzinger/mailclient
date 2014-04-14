@@ -165,14 +165,14 @@ public class Todo extends Activity {
                         }
                     }
                     else {
-                        if (swipeDetector.getAction().equals(SwipeDetector.Action.LR)) {
+                        if (swipeDetector.getAction().equals(SwipeDetector.Action.RL)) {
                             int duration = Toast.LENGTH_SHORT;
                             Toast toast = Toast.makeText(baseContext, "pinned", duration);
                             toast.show();
                             Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(position))).addTodo();
                             adapter.notifyDataSetChanged();
                         }
-                        else if (swipeDetector.getAction().equals(SwipeDetector.Action.RL)) {
+                        else if (swipeDetector.getAction().equals(SwipeDetector.Action.LR)) {
                             int duration = Toast.LENGTH_SHORT;
                             Toast toast = Toast.makeText(baseContext, "archieved", duration);
                             toast.show();
@@ -186,7 +186,6 @@ public class Todo extends Activity {
                     }
                 } else {
                     Intent intent = new Intent(Todo.this, ReadMail.class);
-                // TODO: trovare indice dentro a Mailbox.emailList
                     int pos = Mailbox.emailList.indexOf(todo_list.get(position));
                     intent.putExtra("index", pos);
                     startActivity(intent);

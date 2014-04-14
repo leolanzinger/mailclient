@@ -152,11 +152,16 @@ public class Inbox extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (swipeDetector.swipeDetected()){
-                    // do the onSwipe action
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(baseContext, "pinned", duration);
-                    toast.show();
-                    Mailbox.emailList.get(position).addTodo();
+                    if (swipeDetector.getAction().equals(SwipeDetector.Action.RL)) {
+                        // do the onSwipe action
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(baseContext, "pinned", duration);
+                        toast.show();
+                        Mailbox.emailList.get(position).addTodo();
+                    }
+                    else if (swipeDetector.getAction().equals(SwipeDetector.Action.LR)) {
+                        // eliminare
+                    }
                 } else {
                     // do the onItemClick action
                     Intent intent = new Intent(Inbox.this, ReadMail.class);

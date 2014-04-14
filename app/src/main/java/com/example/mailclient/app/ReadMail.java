@@ -108,9 +108,7 @@ public class ReadMail extends Activity {
          *  display it as styled HTML text
          */
         body_content = "";
-        body_content_html = "<style type='text/css'>\n" +
-                "       body {margin: 0 !important;} img {max-width: 100% !important;height:initial;} div,p,span,a {max-width: 100% !important;}\n" +
-                "       </style>";
+        body_content_html = "";
         for (int i=0; i<email.body.size(); i++) {
             body_content = body_content.concat(email.body.get(i));
             body_content_html = body_content_html.concat(email.body.get(i));
