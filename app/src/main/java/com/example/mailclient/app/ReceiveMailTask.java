@@ -128,7 +128,6 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
             Todo.mPocketBar.progressiveStop();
             Todo.listView.onRefreshComplete();
             Todo.mPocketBar.setVisibility(View.GONE);
-            Todo.checkEmpty();
         }
         else if (receiveMailActivity instanceof Inbox) {
 

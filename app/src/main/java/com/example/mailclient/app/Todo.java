@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -121,14 +120,7 @@ public class Todo extends Activity {
         }
         adapter = new EmailAdapter(this, R.id.list_subject, todo_list);
         listView.setAdapter(adapter);
-
-        /*
-         *  Set refresh button if email list is empty
-         */
-        refresh_button = (Button) findViewById(R.id.refresh_button);
-        if (adapter.isEmpty() || adapter == null) {
-            refresh_button.setVisibility(View.VISIBLE);
-        }
+        listView.setEmptyView(findViewById(R.id.empty_todo));
 
         /*
          *  Istantiate progress bar and hide it
@@ -161,18 +153,17 @@ public class Todo extends Activity {
                             Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(position))).removeTodo();
                             todo_list.remove(position);
                             adapter.notifyDataSetChanged();
-                            checkEmpty();
                         }
                     }
                     else {
-                        if (swipeDetector.getAction().equals(SwipeDetector.Action.LR)) {
+                        if (swipeDetector.getAction().equals(SwipeDetector.Action.RL)) {
                             int duration = Toast.LENGTH_SHORT;
                             Toast toast = Toast.makeText(baseContext, "pinned", duration);
                             toast.show();
                             Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(position))).addTodo();
                             adapter.notifyDataSetChanged();
                         }
-                        else if (swipeDetector.getAction().equals(SwipeDetector.Action.RL)) {
+                        else if (swipeDetector.getAction().equals(SwipeDetector.Action.LR)) {
                             int duration = Toast.LENGTH_SHORT;
                             Toast toast = Toast.makeText(baseContext, "archieved", duration);
                             toast.show();
@@ -181,12 +172,10 @@ public class Todo extends Activity {
                             UpdateMailTask update_task = new UpdateMailTask(Todo.this);
                             update_task.execute(Mailbox.emailList.get(position).ID);
                             adapter.notifyDataSetChanged();
-                            checkEmpty();
                         }
                     }
                 } else {
                     Intent intent = new Intent(Todo.this, ReadMail.class);
-                // TODO: trovare indice dentro a Mailbox.emailList
                     int pos = Mailbox.emailList.indexOf(todo_list.get(position));
                     intent.putExtra("index", pos);
                     startActivity(intent);
@@ -259,7 +248,6 @@ public class Todo extends Activity {
             else {}
         }
         adapter.notifyDataSetChanged();
-        checkEmpty();
         mDrawerLayout.closeDrawers();
     }
 
@@ -306,15 +294,6 @@ public class Todo extends Activity {
             }
         }
         adapter.notifyDataSetChanged();
-    }
-
-    public static void checkEmpty() {
-        if (todo_list.isEmpty()) {
-            refresh_button.setVisibility(View.VISIBLE);
-        }
-        else {
-            refresh_button.setVisibility(View.GONE);
-        }
     }
 }
 

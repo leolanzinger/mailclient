@@ -122,14 +122,7 @@ public class Inbox extends Activity {
          */
         adapter = new EmailAdapter(this, R.id.list_subject, Mailbox.emailList);
         listView.setAdapter(adapter);
-
-        /*
-         *  Set refresh button if email list is empty
-         */
-        if (adapter.isEmpty() || adapter == null) {
-            refresh_button = (Button) findViewById(R.id.refresh_button);
-            refresh_button.setVisibility(View.VISIBLE);
-        }
+        listView.setEmptyView(findViewById(R.id.empty_email));
 
         /*
          *  Istantiate progress bar and hide it
@@ -152,11 +145,16 @@ public class Inbox extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (swipeDetector.swipeDetected()){
-                    // do the onSwipe action
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(baseContext, "pinned", duration);
-                    toast.show();
-                    Mailbox.emailList.get(position).addTodo();
+                    if (swipeDetector.getAction().equals(SwipeDetector.Action.RL)) {
+                        // do the onSwipe action
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(baseContext, "pinned", duration);
+                        toast.show();
+                        Mailbox.emailList.get(position).addTodo();
+                    }
+                    else if (swipeDetector.getAction().equals(SwipeDetector.Action.LR)) {
+                        // eliminare
+                    }
                 } else {
                     // do the onItemClick action
                     Intent intent = new Intent(Inbox.this, ReadMail.class);
@@ -256,6 +254,7 @@ public class Inbox extends Activity {
     }
 
     public void receiveMail(View view) {
+        refresh_button = (Button) findViewById(R.id.empty_email);
         refresh_button.setVisibility(View.GONE);
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
