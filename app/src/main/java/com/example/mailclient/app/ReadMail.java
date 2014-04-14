@@ -167,7 +167,8 @@ public class ReadMail extends Activity {
                 ll.setOrientation(LinearLayout.VERTICAL);
 
                 Button btn = new Button(this);
-                btn.setText(email.attachmentPath.get(i));
+                btn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.view_attachment,0,0,0);
+                btn.setText(new File(email.attachmentPath.get(i)).getName());
                 btn.setLayoutParams(params);
                 btn.setId(i);
                 final int indice = i;
