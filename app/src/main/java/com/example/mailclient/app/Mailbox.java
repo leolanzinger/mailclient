@@ -13,7 +13,7 @@ import java.util.ArrayList;
  *  Here goes all the mailbox logic
  */
 public class Mailbox {
-    static ArrayList<Email> emailList;
+    public static ArrayList<Email> emailList;
     static InternalStorage storer;
     public static Context baseContext;
     static String KEY = "mailClient";
@@ -26,7 +26,7 @@ public class Mailbox {
         emailList  = new ArrayList<Email>();
 
         try {
-            ArrayList<Email> emailList = (ArrayList<Email>) InternalStorage.readObject(baseContext, KEY);
+            emailList = (ArrayList<Email>) InternalStorage.readObject(baseContext, KEY);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
