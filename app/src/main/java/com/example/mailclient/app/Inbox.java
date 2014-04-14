@@ -122,7 +122,7 @@ public class Inbox extends Activity {
          */
         adapter = new EmailAdapter(this, R.id.list_subject, Mailbox.emailList);
         listView.setAdapter(adapter);
-        listView.setEmptyView(findViewById(R.id.empty));
+        listView.setEmptyView(findViewById(R.id.empty_email));
 
         /*
          *  Istantiate progress bar and hide it
@@ -254,6 +254,7 @@ public class Inbox extends Activity {
     }
 
     public void receiveMail(View view) {
+        refresh_button = (Button) findViewById(R.id.empty_email);
         refresh_button.setVisibility(View.GONE);
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();

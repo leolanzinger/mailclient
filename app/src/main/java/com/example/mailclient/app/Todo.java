@@ -120,7 +120,7 @@ public class Todo extends Activity {
         }
         adapter = new EmailAdapter(this, R.id.list_subject, todo_list);
         listView.setAdapter(adapter);
-        listView.setEmptyView(findViewById(R.id.empty));
+        listView.setEmptyView(findViewById(R.id.empty_todo));
 
         /*
          *  Istantiate progress bar and hide it
@@ -248,7 +248,6 @@ public class Todo extends Activity {
             else {}
         }
         adapter.notifyDataSetChanged();
-//        checkEmpty();
         mDrawerLayout.closeDrawers();
     }
 

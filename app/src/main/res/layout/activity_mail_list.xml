@@ -15,14 +15,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="refresh"
-            android:id="@+id/empty"
+            android:id="@+id/empty_email"
             android:layout_gravity="center_horizontal"
             android:onClick="receiveMail"
             android:visibility="gone"
             android:background="@color/white"
             android:clickable="true"
             android:drawableStart="@drawable/refresh"
-            />
+            ></Button>
+
+        <ImageView
+            android:contentDescription="empty_todo_placeholder"
+            android:id="@+id/empty_todo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/empty_todo"
+            android:visibility="gone"
+            ></ImageView>
+
 
         <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
             android:id="@+id/pocket"
