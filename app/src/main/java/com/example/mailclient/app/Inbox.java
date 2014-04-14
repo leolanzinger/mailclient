@@ -122,14 +122,7 @@ public class Inbox extends Activity {
          */
         adapter = new EmailAdapter(this, R.id.list_subject, Mailbox.emailList);
         listView.setAdapter(adapter);
-
-        /*
-         *  Set refresh button if email list is empty
-         */
-        if (adapter.isEmpty() || adapter == null) {
-            refresh_button = (Button) findViewById(R.id.refresh_button);
-            refresh_button.setVisibility(View.VISIBLE);
-        }
+        listView.setEmptyView(findViewById(R.id.empty));
 
         /*
          *  Istantiate progress bar and hide it

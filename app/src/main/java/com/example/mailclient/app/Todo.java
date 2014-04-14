@@ -120,14 +120,7 @@ public class Todo extends Activity {
         }
         adapter = new EmailAdapter(this, R.id.list_subject, todo_list);
         listView.setAdapter(adapter);
-
-        /*
-         *  Set refresh button if email list is empty
-         */
-        refresh_button = (Button) findViewById(R.id.refresh_button);
-        if (adapter.isEmpty() || adapter == null) {
-            refresh_button.setVisibility(View.VISIBLE);
-        }
+        listView.setEmptyView(findViewById(R.id.empty));
 
         /*
          *  Istantiate progress bar and hide it
@@ -160,7 +153,6 @@ public class Todo extends Activity {
                             Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(position))).removeTodo();
                             todo_list.remove(position);
                             adapter.notifyDataSetChanged();
-                            checkEmpty();
                         }
                     }
                     else {
@@ -180,7 +172,6 @@ public class Todo extends Activity {
                             UpdateMailTask update_task = new UpdateMailTask(Todo.this);
                             update_task.execute(Mailbox.emailList.get(position).ID);
                             adapter.notifyDataSetChanged();
-                            checkEmpty();
                         }
                     }
                 } else {
@@ -257,7 +248,7 @@ public class Todo extends Activity {
             else {}
         }
         adapter.notifyDataSetChanged();
-        checkEmpty();
+//        checkEmpty();
         mDrawerLayout.closeDrawers();
     }
 
@@ -304,15 +295,6 @@ public class Todo extends Activity {
             }
         }
         adapter.notifyDataSetChanged();
-    }
-
-    public static void checkEmpty() {
-        if (todo_list.isEmpty()) {
-            refresh_button.setVisibility(View.VISIBLE);
-        }
-        else {
-            refresh_button.setVisibility(View.GONE);
-        }
     }
 }
 
