@@ -110,13 +110,17 @@ public class Inbox extends Activity {
         /*
          *  Instantiate pullable listView
          */
+//        listView = (PullToRefreshListView) findViewById(R.id.listView);
         listView = (PullToRefreshListView) findViewById(R.id.listView);
-        listView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                receiveEmail();
-            }
-        });
+
+
+
+//        listView.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                receiveEmail();
+//            }
+//        });
 
         /*
          *  Instantiate list adapter
@@ -136,32 +140,30 @@ public class Inbox extends Activity {
         mPocketBar.setVisibility(View.GONE);
         mPocketBar.progressiveStop();
 
-
-        final SwipeDetector swipeDetector = new SwipeDetector();
-        listView.setOnTouchListener(swipeDetector);
-
         animator = new Animator();
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (swipeDetector.swipeDetected()){
-                    if (swipeDetector.getAction().equals(SwipeDetector.Action.RL_TRIGGER)) {
+
+        listView.setOnTouchListener(new SwipeDetector(false) {
+            @Override
+            public void getResults(int position) {
+                if (this.swipeDetected()){
+                    if (this.getAction().equals(SwipeDetector.Action.RL_TRIGGER)) {
                         // do the onSwipe action
                         Log.i("swipe", "pinned su el " + position);
                         int duration = Toast.LENGTH_SHORT;
                         Toast toast = Toast.makeText(baseContext, "pinned", duration);
                         toast.show();
                         Mailbox.emailList.get(position).addTodo();
-                        animator.resetView(listView.getChildAt(position+1));
+                        animator.resetView(listView.getChildAt(position));
                     }
-                    else if (swipeDetector.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
+                    else if (this.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
                         Log.i("swipe", "delete su el " + position);
                         // eliminare
                         int duration = Toast.LENGTH_SHORT;
                         Toast toast = Toast.makeText(baseContext, "deleted", duration);
                         toast.show();
-                        animator.resetView(listView.getChildAt(position+1));
+                        animator.resetView(listView.getChildAt(position));
                     }
-                    else if (swipeDetector.getAction().equals(SwipeDetector.Action.CLICK)) {
+                    else if (this.getAction().equals(SwipeDetector.Action.CLICK)) {
                         // open email
                         Log.i("swipe", "open el " + position);
                         Intent intent = new Intent(Inbox.this, ReadMail.class);
@@ -169,34 +171,19 @@ public class Inbox extends Activity {
                         intent.putExtra("index", index);
                         startActivity(intent);
                     }
-                    else if (swipeDetector.getAction().equals(SwipeDetector.Action.LR_BACK)) {
+                    else if (this.getAction().equals(SwipeDetector.Action.LR_BACK)) {
                         Log.i("swipe", "back su el " + position);
                         //go back
-                        animator.resetView(listView.getChildAt(position+1));
+                        animator.resetView(listView.getChildAt(position));
                     }
-                    else if (swipeDetector.getAction().equals(SwipeDetector.Action.RL_BACK)) {
+                    else if (this.getAction().equals(SwipeDetector.Action.RL_BACK)) {
                         Log.i("swipe", "back su el " + position);
                         //go back
-                        animator.resetView(listView.getChildAt(position+1));
+                        animator.resetView(listView.getChildAt(position));
                     }
                 }
             }
         });
-//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> parent, View view,int position, long id) {
-//                if (swipeDetector.swipeDetected()){
-//                    // do the onSwipe action
-//                    Log.i("suaipa","suaipa");
-//                    return true;
-//
-//                } else {
-//                    // do the onItemLongClick action
-//                    Log.i("onItemLongClick","onItemLongClick");
-//                    return true;
-//                }
-//            }
-//        });
     }
 
     @Override

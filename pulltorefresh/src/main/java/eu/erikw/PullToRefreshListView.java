@@ -315,6 +315,7 @@ public class PullToRefreshListView extends ListView{
                     if(newHeaderPadding != headerPadding && state != State.REFRESHING){
                         setHeaderPadding(newHeaderPadding);
 
+
                         if(state == State.PULL_TO_REFRESH && headerPadding > 0){
                             setState(State.RELEASE_TO_REFRESH);
 

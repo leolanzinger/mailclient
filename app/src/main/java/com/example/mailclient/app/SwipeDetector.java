@@ -36,8 +36,15 @@ public class SwipeDetector implements ListView.OnTouchListener {
     private float distancePercentage = 0;
     private float distance = 0;
     private float curX = 0;
+    private float curY = 0;
     private float baseX = 0;
-    private int screen_width, SWIPE_THRESHOLD, BLOCK_THRESHOLD;
+    private int screen_width, SWIPE_THRESHOLD, BLOCK_THRESHOLD, position;
+
+    public boolean is_todo = false;
+
+    public SwipeDetector(boolean istodo) {
+        is_todo = istodo;
+    }
 
     public boolean swipeDetected() {
         return mSwipeDetected != Action.None;
@@ -69,6 +76,7 @@ public class SwipeDetector implements ListView.OnTouchListener {
                     child = list.getChildAt(i);
                     child.getHitRect(rect);
                     if (rect.contains(x, y)) {
+                        position = i;
                         cur_item = child; // This is your down view
                         break;
                     }
@@ -89,15 +97,43 @@ public class SwipeDetector implements ListView.OnTouchListener {
             // triggered every finger movement
             case MotionEvent.ACTION_MOVE:
                 curX = event.getX();
+                curY = event.getY();
                 //Relative distance to move the slider
                 distance = (curX - downX);
                 //Add it to starting x position of item
-                if(Math.abs(distance) > BLOCK_THRESHOLD && distance < 0 ) {
-                    //COMMENTO PORTANTE, NON RIMUOVERE
-//                    Log.i(logTag, "distance: " + distance + " screen width threshold: " + screen_width/100*30);
+                if (!is_todo) {
+                    if (Math.abs(curY - downY) < 25) {
+                        if (Math.abs(distance) > BLOCK_THRESHOLD && distance < 0) {
+                            //COMMENTO PORTANTE, NON RIMUOVERE
+                            //                    Log.i(logTag, "distance: " + distance + " screen width threshold: " + screen_width/100*30);
+                        } else {
+                            if (Math.abs(distance) < 25) {
+
+                            } else {
+                                cur_item.setX(baseX + distance);
+                            }
+                        }
+                    } else {
+
+                    }
                 }
                 else {
-                    cur_item.setX(baseX + distance);
+                    if ((baseX + distance) > baseX) {
+                        if (Math.abs(curY - downY) < 25) {
+                            if (Math.abs(distance) > BLOCK_THRESHOLD && distance < 0) {
+                                //COMMENTO PORTANTE, NON RIMUOVERE
+                                //                    Log.i(logTag, "distance: " + distance + " screen width threshold: " + screen_width/100*30);
+                            } else {
+                                if (Math.abs(distance) < 25) {
+
+                                } else {
+                                    cur_item.setX(baseX + distance);
+                                }
+                            }
+                        } else {
+
+                        }
+                    }
                 }
 
                 return false;
@@ -112,7 +148,7 @@ public class SwipeDetector implements ListView.OnTouchListener {
                 float deltaX = upX - downX;
                 float deltaY = downY - upY;
 
-                if( Math.abs(deltaX) > 25 ) {
+                if( Math.abs(deltaX) > 25 && Math.abs(deltaY) < 25) {
                     //You can define something to do after a certain threshold
                     if (Math.abs(deltaX) > BLOCK_THRESHOLD) {
                         if ( deltaX < 0 ) {
@@ -148,11 +184,21 @@ public class SwipeDetector implements ListView.OnTouchListener {
                     }
                 }
                 else {
-                    Log.i(logTag, "click");
-                    mSwipeDetected = Action.CLICK;
+                    if (Math.abs(deltaY) > 25) {
+                        mSwipeDetected = Action.None;
+                    }
+                    else {
+                        Log.i(logTag, "click");
+                        mSwipeDetected = Action.CLICK;
+                    }
                 }
+            getResults(position);
             return false;
         }
         return false;
+    }
+
+    public void getResults(int position) {
+
     }
 }
