@@ -1,11 +1,13 @@
 package com.example.mailclient.app;
 
-/**
+/*
  * Created by teo on 01/04/14.
  */
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -15,7 +17,11 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,12 +40,13 @@ import java.util.List;
 
 public class ReplyActivity extends Activity {
 
-    //    private static final int SELECT_PICTURE = 1;
     private static final int OLDERVERSION = 0;
     private static final int NEWVERSION = 1;
     ArrayList<String> selectedImagePath,attachmentList;
     EditText toEmailText, ccEmailText, subjectEmailText, bodyEmailText;
     TextView attachmentView;
+    LinearLayout.LayoutParams params;
+    TableLayout lm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +60,6 @@ public class ReplyActivity extends Activity {
         bodyEmailText = (EditText) this.findViewById(R.id.send_body);
         selectedImagePath = new ArrayList<String>();
 
-        //E LAVORARE QUA PER PRENDERLI COME REPLY
         final Intent intent = getIntent();
         subjectEmailText.setText(intent.getStringExtra("subject"));
         toEmailText.setText(intent.getStringExtra("to"));
@@ -73,6 +79,9 @@ public class ReplyActivity extends Activity {
         attachmentView = (TextView) this.findViewById(R.id.attachment);
         attachmentList = new ArrayList<String> ();
 
+        lm = (TableLayout) findViewById(R.id.array_button);
+        params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
 
     }
 
@@ -80,7 +89,6 @@ public class ReplyActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             Uri selectedImageUri = data.getData();
-            Log.d("URI VAL", "selectedImageUri = " + selectedImageUri.toString());
             selectedImagePath.add(getPath(selectedImageUri));
 
             //Show toast with "name of file" added
@@ -92,10 +100,59 @@ public class ReplyActivity extends Activity {
 
             //concat filename to attachment's textview
             attachmentList.add(fileName);
-            attachmentView.setText(attachmentList.toString());
+            lm.removeAllViews();
 
+            for (int i = 0; i < attachmentList.size(); i++) {
+
+                // Create LinearLayout
+                final LinearLayout ll = new LinearLayout(this);
+                ll.setOrientation(LinearLayout.VERTICAL);
+
+                final Button btn = new Button(this);
+                btn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.view_attachment,0,0,0);
+                btn.setText(new File(attachmentList.get(i)).getName());
+                btn.setLayoutParams(params);
+                btn.setId(i);
+                final int indice = i;
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(ReplyActivity.this);
+                        // Add the buttons
+                        alertDialog.setPositiveButton(R.string.view, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User views the attachment
+                                Intent intent = new Intent();
+                                intent.setAction(Intent.ACTION_VIEW);
+                                intent.setDataAndType(Uri.fromFile(new File(selectedImagePath.get(indice))), "image/*");
+                                startActivity(intent);
+                            }
+                        });
+                        alertDialog.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User removes the attachment
+                                selectedImagePath.remove(indice);
+                                attachmentList.remove(indice);
+                                ll.removeView(btn);
+                            }
+                        });
+                        alertDialog.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // User cancels the dialog
+                            }
+                        });
+                        alertDialog.show();
+                    }
+                });
+
+                //Add button to LinearLayout
+                ll.addView(btn);
+                //Add button to LinearLayout defined in XML
+                lm.addView(ll);
+            }
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -133,9 +190,6 @@ public class ReplyActivity extends Activity {
     }
 
     public void sendEmail(MenuItem menu) {
-
-
-//        final TextView received_mail = (TextView) this.findViewById(R.id.received_mail);
 
         toEmailText = (EditText) this.findViewById(R.id.send_to_edit);
         ccEmailText = (EditText) this.findViewById(R.id.send_cc_edit);
@@ -181,10 +235,5 @@ public class ReplyActivity extends Activity {
             // it would be "*/*".
             intent.setType("image/*");
         }
-
-//        Intent intent = new Intent();
-//        intent.setType("*/*");
-//        intent.setAction(Intent.ACTION_GET_CONTENT);
-//        startActivityForResult(Intent.createChooser(intent,"Select Document"), SELECT_PICTURE);
     }
 }

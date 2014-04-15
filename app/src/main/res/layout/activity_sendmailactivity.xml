@@ -69,7 +69,6 @@
                 android:ems="10"
                 android:inputType="textMultiLine"
                 android:hint="Your email"
-
                 />
 
         </LinearLayout>
@@ -79,12 +78,19 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/attachment"
+            <!--<TextView-->
+                <!--android:id="@+id/attachment"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/attachments"-->
+                <!--android:ems="10"-->
+                <!--/>-->
+            <TableLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/attachments"
-                />
+                android:layout_height="fill_parent"
+                android:id="@+id/array_button">
+            </TableLayout>
+            <!--TODO: fare una lista più carina degli allegati-->
         </LinearLayout>
 
 </LinearLayout>

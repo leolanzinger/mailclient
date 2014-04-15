@@ -2,6 +2,8 @@ package com.example.mailclient.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,7 +12,11 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,14 +33,12 @@ import java.util.List;
 
 public class SendMailActivity extends Activity {
 
-//    private static final int READ_REQUEST_CODE = 42;
-
     private static final int SELECT_PICTURE = 1;
     ArrayList<String> selectedImagePath,attachmentList;
     EditText toEmailText, ccEmailText, subjectEmailText, bodyEmailText;
     TextView attachmentView;
-
-
+    LinearLayout.LayoutParams params;
+    TableLayout lm;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,9 @@ public class SendMailActivity extends Activity {
         attachmentView = (TextView) this.findViewById(R.id.attachment);
         selectedImagePath = new ArrayList<String> ();
         attachmentList = new ArrayList<String> ();
+        lm = (TableLayout) findViewById(R.id.array_button);
+        params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -54,7 +61,6 @@ public class SendMailActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             Uri selectedImageUri = data.getData();
-            Log.d("URI VAL", "selectedImageUri = " + selectedImageUri.toString());
             selectedImagePath.add(getPath(selectedImageUri));
 
           //Show toast with "name of file" added
@@ -66,10 +72,58 @@ public class SendMailActivity extends Activity {
 
             //concat filename to attachment's textview
             attachmentList.add(fileName);
-            attachmentView.setText(attachmentList.toString());
+            lm.removeAllViews();
 
+            for (int i = 0; i < attachmentList.size(); i++) {
+                // Create LinearLayout
+                final LinearLayout ll = new LinearLayout(this);
+                ll.setOrientation(LinearLayout.VERTICAL);
+
+                final Button btn = new Button(this);
+                btn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.view_attachment,0,0,0);
+                btn.setText(new File(attachmentList.get(i)).getName());
+                btn.setLayoutParams(params);
+                btn.setId(i);
+                final int indice = i;
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(SendMailActivity.this);
+                        // Add the buttons
+                        alertDialog.setPositiveButton(R.string.view, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User views the attachment
+                                Intent intent = new Intent();
+                                intent.setAction(Intent.ACTION_VIEW);
+                                intent.setDataAndType(Uri.fromFile(new File(selectedImagePath.get(indice))), "*/*");
+                                startActivity(intent);
+                            }
+                        });
+                        alertDialog.setNegativeButton(R.string.delete, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User removes the attachment
+                                selectedImagePath.remove(indice);
+                                attachmentList.remove(indice);
+                                ll.removeView(btn);
+                            }
+                        });
+                        alertDialog.setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // User cancels the dialog
+                            }
+                        });
+                        alertDialog.show();
+                    }
+                });
+
+                //Add button to LinearLayout
+                ll.addView(btn);
+                //Add button to LinearLayout defined in XML
+                lm.addView(ll);
+                }
+            }
         }
-    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -108,10 +162,6 @@ public class SendMailActivity extends Activity {
     }
 
     public void sendEmail(MenuItem menu) {
-
-
-//        final TextView received_mail = (TextView) this.findViewById(R.id.received_mail);
-
         toEmailText = (EditText) this.findViewById(R.id.send_to_edit);
         ccEmailText = (EditText) this.findViewById(R.id.send_cc_edit);
         subjectEmailText = (EditText) this.findViewById(R.id.send_subject_edit);
