@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -39,7 +38,8 @@ public class Todo extends Activity {
     public static SmoothProgressBar mPocketBar;
     public static PullToRefreshListView listView;
     public static Button refresh_button;
-    private static ArrayList<Email> todo_list;
+    public static ArrayList<Email> todo_list;
+    private Animator animator;
 
     /*
      *  Drawer menu variables
@@ -121,14 +121,7 @@ public class Todo extends Activity {
         }
         adapter = new EmailAdapter(this, R.id.list_subject, todo_list);
         listView.setAdapter(adapter);
-
-        /*
-         *  Set refresh button if email list is empty
-         */
-        refresh_button = (Button) findViewById(R.id.refresh_button);
-        if (adapter.isEmpty() || adapter == null) {
-            refresh_button.setVisibility(View.VISIBLE);
-        }
+        listView.setEmptyView(findViewById(R.id.empty_todo));
 
         /*
          *  Istantiate progress bar and hide it
@@ -142,60 +135,67 @@ public class Todo extends Activity {
         mPocketBar.progressiveStop();
 
 
-        /*
-        this stuff is from http://stackoverflow.com/questions/4373485/android-swipe-on-list/9340202#9340202
-        and it should help us somehow to swipe stuff here and there.
-        */
-        //    final ListView listView = getListView();
         final SwipeDetector swipeDetector = new SwipeDetector();
         listView.setOnTouchListener(swipeDetector);
+
+        animator = new Animator();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (swipeDetector.swipeDetected()){
-                    // do the onSwipe action
-                    if (todo_list.get(position).todo ) {
-                        if (swipeDetector.getAction().equals(SwipeDetector.Action.LR)) {
-                            int duration = Toast.LENGTH_SHORT;
-                            Toast toast = Toast.makeText(baseContext, "unpinned", duration);
-                            toast.show();
-                            Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(position))).removeTodo();
-                            todo_list.remove(position);
-                            adapter.notifyDataSetChanged();
-                            checkEmpty();
-                        }
-                        else if (swipeDetector.getAction().equals(SwipeDetector.Action.MV)) {
-                            Log.i("move", "moving!");
-                            View item = adapter.getView(position, listView.getChildAt(position), listView);
-                            item.setX(item.getX() + 50);
-                        }
+                if (swipeDetector.swipeDetected()) {
+                    if (swipeDetector.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
+                        Log.i("swipe", "unpin el " + position);
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(baseContext, "unpinned", duration);
+                        toast.show();
+                        animator.swipeToLeft(listView.getChildAt(position + 1), position);
+                        Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(position))).removeTodo();
+                    } else if (swipeDetector.getAction().equals(SwipeDetector.Action.CLICK)) {
+                        // open email
+                        Log.i("swipe", "open el " + position);
+                        Intent intent = new Intent(Todo.this, ReadMail.class);
+                        int index = position;
+                        intent.putExtra("index", index);
+                        startActivity(intent);
+                    } else if (swipeDetector.getAction().equals(SwipeDetector.Action.LR_BACK)) {
+                        Log.i("swipe", "back su el " + position);
+                        //go back
+                        animator.resetView(listView.getChildAt(position + 1));
+                    } else if (swipeDetector.getAction().equals(SwipeDetector.Action.RL_BACK)) {
+                        Log.i("swipe", "back su el " + position);
+                        //go back
+                        animator.resetView(listView.getChildAt(position + 1));
                     }
-                    else {
-                        if (swipeDetector.getAction().equals(SwipeDetector.Action.LR)) {
-                            int duration = Toast.LENGTH_SHORT;
-                            Toast toast = Toast.makeText(baseContext, "pinned", duration);
-                            toast.show();
-                            Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(position))).addTodo();
-                            adapter.notifyDataSetChanged();
-                        }
-                        else if (swipeDetector.getAction().equals(SwipeDetector.Action.RL)) {
-                            int duration = Toast.LENGTH_SHORT;
-                            Toast toast = Toast.makeText(baseContext, "archieved", duration);
-                            toast.show();
-                            Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(position))).setSeen();
-                            todo_list.remove(position);
-                            UpdateMailTask update_task = new UpdateMailTask(Todo.this);
-                            update_task.execute(Mailbox.emailList.get(position).ID);
-                            adapter.notifyDataSetChanged();
-                            checkEmpty();
-                        }
+                    else if (swipeDetector.getAction().equals(SwipeDetector.Action.RL_TRIGGER)) {
+                        Log.i("swipe", "rl su el " + position);
+                        //go back
+                        animator.resetView(listView.getChildAt(position + 1));
                     }
-                } else {
-                    Intent intent = new Intent(Todo.this, ReadMail.class);
-                // TODO: trovare indice dentro a Mailbox.emailList [non e' il primo dito della tua mano]
-                    int pos = Mailbox.emailList.indexOf(todo_list.get(position));
-                    intent.putExtra("index", pos);
-                    startActivity(intent);
-
+//                    else {
+//                        if (swipeDetector.getAction().equals(SwipeDetector.Action.RL_TRIGGER)) {
+//                            int duration = Toast.LENGTH_SHORT;
+//                            Toast toast = Toast.makeText(baseContext, "pinned", duration);
+//                            toast.show();
+//                            Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(position))).addTodo();
+//                            adapter.notifyDataSetChanged();
+//                        }
+//                        else if (swipeDetector.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
+//                            int duration = Toast.LENGTH_SHORT;
+//                            Toast toast = Toast.makeText(baseContext, "archieved", duration);
+//                            toast.show();
+//                            Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(position))).setSeen();
+//                            todo_list.remove(position);
+//                            UpdateMailTask update_task = new UpdateMailTask(Todo.this);
+//                            update_task.execute(Mailbox.emailList.get(position).ID);
+//                            adapter.notifyDataSetChanged();
+//                        }
+//                    }
+//                } else {
+//                    Intent intent = new Intent(Todo.this, ReadMail.class);
+//                    int pos = Mailbox.emailList.indexOf(todo_list.get(position));
+//                    intent.putExtra("index", pos);
+//                    startActivity(intent);
+//
+//                }
                 }
             }
         });
@@ -264,7 +264,6 @@ public class Todo extends Activity {
             else {}
         }
         adapter.notifyDataSetChanged();
-        checkEmpty();
         mDrawerLayout.closeDrawers();
     }
 
@@ -311,15 +310,6 @@ public class Todo extends Activity {
             }
         }
         adapter.notifyDataSetChanged();
-    }
-
-    public static void checkEmpty() {
-        if (todo_list.isEmpty()) {
-            refresh_button.setVisibility(View.VISIBLE);
-        }
-        else {
-            refresh_button.setVisibility(View.GONE);
-        }
     }
 }
 

@@ -102,10 +102,6 @@
                 android:layout_height="fill_parent"
                 android:id="@+id/array_button">
             </TableLayout>
-
         </LinearLayout>
-
-
     </ScrollView>
-
 </RelativeLayout>

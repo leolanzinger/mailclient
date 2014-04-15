@@ -108,9 +108,7 @@ public class ReadMail extends Activity {
          *  display it as styled HTML text
          */
         body_content = "";
-        body_content_html = "<style type='text/css'>\n" +
-                "       body {margin: 0 !important;} img {max-width: 100% !important;height:initial;} div,p,span,a {max-width: 100% !important;}\n" +
-                "       </style>";
+        body_content_html = "";
         for (int i=0; i<email.body.size(); i++) {
             body_content = body_content.concat(email.body.get(i));
             body_content_html = body_content_html.concat(email.body.get(i));
@@ -136,6 +134,7 @@ public class ReadMail extends Activity {
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflator.inflate(R.layout.topbar_readmail, null);
@@ -167,7 +166,8 @@ public class ReadMail extends Activity {
                 ll.setOrientation(LinearLayout.VERTICAL);
 
                 Button btn = new Button(this);
-                btn.setText(email.attachmentPath.get(i));
+                btn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.view_attachment,0,0,0);
+                btn.setText(new File(email.attachmentPath.get(i)).getName());
                 btn.setLayoutParams(params);
                 btn.setId(i);
                 final int indice = i;
@@ -196,14 +196,18 @@ public class ReadMail extends Activity {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.read_mail, menu);
+
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+            case android.R.id.home:
+                this.finish();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -45,6 +45,7 @@ public class Inbox extends Activity {
     public static SmoothProgressBar mPocketBar;
     public static PullToRefreshListView listView;
     public static Button refresh_button;
+    private Animator animator;
 
     /*
      *  Drawer menu variables
@@ -122,14 +123,7 @@ public class Inbox extends Activity {
          */
         adapter = new EmailAdapter(this, R.id.list_subject, Mailbox.emailList);
         listView.setAdapter(adapter);
-
-        /*
-         *  Set refresh button if email list is empty
-         */
-        if (adapter.isEmpty() || adapter == null) {
-            refresh_button = (Button) findViewById(R.id.refresh_button);
-            refresh_button.setVisibility(View.VISIBLE);
-        }
+        listView.setEmptyView(findViewById(R.id.empty_email));
 
         /*
          *  Istantiate progress bar and hide it
@@ -142,46 +136,67 @@ public class Inbox extends Activity {
         mPocketBar.setVisibility(View.GONE);
         mPocketBar.progressiveStop();
 
-        /*
-        this stuff is from http://stackoverflow.com/questions/4373485/android-swipe-on-list/9340202#9340202
-        and it should help us somehow to swipe stuff here and there.
-        */
-        //    final ListView listView = getListView();
+
         final SwipeDetector swipeDetector = new SwipeDetector();
         listView.setOnTouchListener(swipeDetector);
+
+        animator = new Animator();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (swipeDetector.swipeDetected()){
-                    // do the onSwipe action
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(baseContext, "pinned", duration);
-                    toast.show();
-                    Mailbox.emailList.get(position).addTodo();
-                } else {
-                    // do the onItemClick action
-                    Intent intent = new Intent(Inbox.this, ReadMail.class);
-                    int index = position;
-                    intent.putExtra("index", index);
-                    startActivity(intent);
-
+                    if (swipeDetector.getAction().equals(SwipeDetector.Action.RL_TRIGGER)) {
+                        // do the onSwipe action
+                        Log.i("swipe", "pinned su el " + position);
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(baseContext, "pinned", duration);
+                        toast.show();
+                        Mailbox.emailList.get(position).addTodo();
+                        animator.resetView(listView.getChildAt(position+1));
+                    }
+                    else if (swipeDetector.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
+                        Log.i("swipe", "delete su el " + position);
+                        // eliminare
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(baseContext, "deleted", duration);
+                        toast.show();
+                        animator.resetView(listView.getChildAt(position+1));
+                    }
+                    else if (swipeDetector.getAction().equals(SwipeDetector.Action.CLICK)) {
+                        // open email
+                        Log.i("swipe", "open el " + position);
+                        Intent intent = new Intent(Inbox.this, ReadMail.class);
+                        int index = position;
+                        intent.putExtra("index", index);
+                        startActivity(intent);
+                    }
+                    else if (swipeDetector.getAction().equals(SwipeDetector.Action.LR_BACK)) {
+                        Log.i("swipe", "back su el " + position);
+                        //go back
+                        animator.resetView(listView.getChildAt(position+1));
+                    }
+                    else if (swipeDetector.getAction().equals(SwipeDetector.Action.RL_BACK)) {
+                        Log.i("swipe", "back su el " + position);
+                        //go back
+                        animator.resetView(listView.getChildAt(position+1));
+                    }
                 }
             }
         });
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view,int position, long id) {
-                if (swipeDetector.swipeDetected()){
-                    // do the onSwipe action
-                    Log.i("suaipa","suaipa");
-                    return true;
-
-                } else {
-                    // do the onItemLongClick action
-                    Log.i("onItemLongClick","onItemLongClick");
-                    return true;
-                }
-            }
-        });
+//        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> parent, View view,int position, long id) {
+//                if (swipeDetector.swipeDetected()){
+//                    // do the onSwipe action
+//                    Log.i("suaipa","suaipa");
+//                    return true;
+//
+//                } else {
+//                    // do the onItemLongClick action
+//                    Log.i("onItemLongClick","onItemLongClick");
+//                    return true;
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -256,6 +271,7 @@ public class Inbox extends Activity {
     }
 
     public void receiveMail(View view) {
+        refresh_button = (Button) findViewById(R.id.empty_email);
         refresh_button.setVisibility(View.GONE);
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
