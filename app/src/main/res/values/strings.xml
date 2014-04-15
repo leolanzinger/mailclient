@@ -10,8 +10,11 @@
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
     <string name="new_mail">New Mail</string>
-    <string name="attachments">Empty</string>
+    <string name="attachments"></string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="view">View</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
