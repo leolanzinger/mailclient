@@ -12,11 +12,13 @@ import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
 import android.widget.ListView;
 
+import eu.erikw.PullToRefreshListView;
+
 
 // Like the name of the class suggests this helps you to detect if you are swiping things.
 // It return stuff on the console but one day it will do real things
 
-public class SwipeDetector implements ListView.OnTouchListener {
+public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
 
     public static enum Action {
         LR_TRIGGER,
@@ -24,21 +26,26 @@ public class SwipeDetector implements ListView.OnTouchListener {
         RL_TRIGGER,
         RL_BACK,
         CLICK,
-        None // when no action was detected
+        RESET,
+        REFRESH,
+        None// when no action was detected
     }
 
     private static final String logTag = "SwipeDetector";
     private static final int MIN_DISTANCE = 100;
-    private float downY, upX, upY;
+    private float downY, upX, upY, listY;
     private Action mSwipeDetected = Action.None;
     private View cur_item;
     private float downX = 0;
-    private float distancePercentage = 0;
-    private float distance = 0;
+    private float distanceX = 0;
+    private float distanceY = 0;
     private float curX = 0;
     private float curY = 0;
+    private int  move_count = 0;
     private float baseX = 0;
-    private int screen_width, SWIPE_THRESHOLD, BLOCK_THRESHOLD, position;
+    private int screen_width, BLOCK_THRESHOLD, position;
+    private boolean scrolling = false;
+    private ListView list;
 
     public boolean is_todo = false;
 
@@ -59,13 +66,20 @@ public class SwipeDetector implements ListView.OnTouchListener {
         switch (event.getAction()) {
 
             case MotionEvent.ACTION_DOWN:
+
                 downX = event.getX();
                 downY = event.getY();
                 mSwipeDetected = Action.None;
 
+                distanceX = 0;
+                distanceY = 0;
+
+                curX = 0;
+
                 // get current pressed item
                 Rect rect = new Rect();
-                ListView list = (ListView) v;
+                list = (ListView) v;
+                listY = list.getY();
                 int childCount = list.getChildCount();
                 int[] listViewCoords = new int[2];
                 v.getLocationOnScreen(listViewCoords);
@@ -76,12 +90,13 @@ public class SwipeDetector implements ListView.OnTouchListener {
                     child = list.getChildAt(i);
                     child.getHitRect(rect);
                     if (rect.contains(x, y)) {
-                        position = i;
                         cur_item = child; // This is your down view
                         break;
                     }
                 }
                 baseX = cur_item.getX();
+                move_count = 0;
+                scrolling = false;
 
                 //find the display size
                 WindowManager wm = (WindowManager) cur_item.getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -89,7 +104,6 @@ public class SwipeDetector implements ListView.OnTouchListener {
                 Point size = new Point();
                 display.getSize(size);
                 screen_width = size.x;
-                SWIPE_THRESHOLD = screen_width/100*65;
                 BLOCK_THRESHOLD = screen_width/100*35;
 
                 return false; // allow other events like Click to be processed
@@ -99,57 +113,48 @@ public class SwipeDetector implements ListView.OnTouchListener {
                 curX = event.getX();
                 curY = event.getY();
                 //Relative distance to move the slider
-                distance = (curX - downX);
-                //Add it to starting x position of item
-                if (!is_todo) {
-                    if (Math.abs(curY - downY) < 25) {
-                        if (Math.abs(distance) > BLOCK_THRESHOLD && distance < 0) {
-                            //COMMENTO PORTANTE, NON RIMUOVERE
-                            //                    Log.i(logTag, "distance: " + distance + " screen width threshold: " + screen_width/100*30);
-                        } else {
-                            if (Math.abs(distance) < 25) {
+                distanceX = (curX - downX);
+                distanceY = (curY - downY);
 
-                            } else {
-                                cur_item.setX(baseX + distance);
-                            }
-                        }
-                    } else {
-
+                //if first move and set scrolling or swiping
+                if (move_count == 0) {
+                    if (Math.abs(distanceX) < Math.abs(distanceY) ) {
+                        scrolling = true;
                     }
+                    else {
+                        scrolling = false;
+                        list.setScrollContainer(false);
+                    }
+                }
+                move_count++;
+                //scroll disables swipe
+                if (scrolling) {
                 }
                 else {
-                    if ((baseX + distance) > baseX) {
-                        if (Math.abs(curY - downY) < 25) {
-                            if (Math.abs(distance) > BLOCK_THRESHOLD && distance < 0) {
-                                //COMMENTO PORTANTE, NON RIMUOVERE
-                                //                    Log.i(logTag, "distance: " + distance + " screen width threshold: " + screen_width/100*30);
-                            } else {
-                                if (Math.abs(distance) < 25) {
+                    if (Math.abs(distanceX) < BLOCK_THRESHOLD) {
+                        if (is_todo) {
+                            if (distanceX < 0) {
 
-                                } else {
-                                    cur_item.setX(baseX + distance);
-                                }
+                            } else {
+                                cur_item.setX(baseX + distanceX);
                             }
                         } else {
-
+                            cur_item.setX(baseX + distanceX);
                         }
                     }
                 }
-
                 return false;
 
             case MotionEvent.ACTION_UP:
+
                 upX = event.getX();
                 upY = event.getY();
-
-                distance = 0;
-                curX = 0;
 
                 float deltaX = upX - downX;
                 float deltaY = downY - upY;
 
-                if( Math.abs(deltaX) > 25 && Math.abs(deltaY) < 25) {
-                    //You can define something to do after a certain threshold
+                if( Math.abs(deltaX) > 25 && !scrolling) {
+                    //Swipe action
                     if (Math.abs(deltaX) > BLOCK_THRESHOLD) {
                         if ( deltaX < 0 ) {
                             mSwipeDetected = Action.RL_TRIGGER;
@@ -159,12 +164,6 @@ public class SwipeDetector implements ListView.OnTouchListener {
                             mSwipeDetected = Action.LR_TRIGGER;
                             Log.i(logTag, "lr trigger");
                         }
-    //                    Log.i(logTag, "il valore e' : " + cur_item.getX());
-    //                    //width - deltaX finds how far you have to animate the swipe
-    //                    TranslateAnimation anim = new TranslateAnimation(0, screen_width - deltaX, 0, 0);
-    //                    anim.setFillAfter(true);
-    //                    anim.setDuration(500);
-    //                    cur_item.startAnimation(anim);
                     } else {
                         if ( deltaX < 0 ) {
                             mSwipeDetected = Action.RL_BACK;
@@ -174,31 +173,24 @@ public class SwipeDetector implements ListView.OnTouchListener {
                             mSwipeDetected = Action.LR_BACK;
                             Log.i(logTag, "lr back");
                         }
-    //                    Log.i(logTag, "il valore e' : " + cur_item.getX());
-    //                    //else you return where you were before
-    //                    TranslateAnimation anim = new TranslateAnimation(0, -cur_item.getX(), 0, 0);
-    //                    anim.setFillAfter(true);
-    //                    anim.setDuration(500);
-    //                    cur_item.startAnimation(anim);
-
                     }
                 }
                 else {
-                    if (Math.abs(deltaY) > 25) {
-                        mSwipeDetected = Action.None;
-                    }
-                    else {
-                        Log.i(logTag, "click");
+                    if (Math.abs(deltaY) < 25) {
                         mSwipeDetected = Action.CLICK;
                     }
+                    else {
+                        Log.i(logTag, "none");
+                        mSwipeDetected = Action.RESET;
+                    }
                 }
-            getResults(position);
+            getResults();
             return false;
         }
         return false;
     }
 
-    public void getResults(int position) {
+    public void getResults() {
 
     }
 }

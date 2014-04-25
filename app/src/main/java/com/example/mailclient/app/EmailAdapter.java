@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -25,7 +26,34 @@ import javax.mail.internet.InternetAddress;
 /*
  *  Custom adapter that displays two TextView in each row
  */
-public class EmailAdapter extends ArrayAdapter<Email> {
+public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchListener {
+
+    //swipe variables
+    public static enum Action {
+        LR_TRIGGER,
+        LR_BACK,
+        RL_TRIGGER,
+        RL_BACK,
+        CLICK,
+        RESET,
+        REFRESH,
+        None// when no action was detected
+    }
+
+    private float downY, upX, upY;
+    private Action mSwipeDetected = Action.None;
+    private View cur_item;
+    private float downX = 0;
+    private float distanceX = 0;
+    private float distanceY = 0;
+    private float curX = 0;
+    private float curY = 0;
+    private int  move_count = 0;
+    private float baseX = 0;
+    private int screen_width, BLOCK_THRESHOLD, position;
+    private boolean scrolling = false;
+
+
 
     private Context context;
 
@@ -87,6 +115,17 @@ public class EmailAdapter extends ArrayAdapter<Email> {
                 view.setBackgroundResource(R.drawable.seen);
             }
         }
+        view.setOnTouchListener(this);
         return view;
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent event) {
+        processPosition(view);
+        return false;
+    }
+
+    public void processPosition(View view) {
+
     }
 }

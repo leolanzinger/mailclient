@@ -126,7 +126,7 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
 
             Todo.updateList(result.size());
             Todo.mPocketBar.progressiveStop();
-            Todo.listView.onRefreshComplete();
+//            Todo.listView.onRefreshComplete();
             Todo.mPocketBar.setVisibility(View.GONE);
         }
         else if (receiveMailActivity instanceof Inbox) {
@@ -138,7 +138,7 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
             Mailbox.save(Mailbox.emailList);
 
             Inbox.mPocketBar.progressiveStop();
-            Inbox.listView.onRefreshComplete();
+//            Inbox.listView.onRefreshComplete();
             Inbox.mPocketBar.setVisibility(View.GONE);
         }
         super.onPostExecute(result);

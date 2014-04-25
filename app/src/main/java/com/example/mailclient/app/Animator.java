@@ -43,6 +43,9 @@ public class Animator {
         v.startAnimation(anim);
     }
 
+    /*
+     * Used only for to do items (for now - to be fixed )
+     */
     public void swipeToLeft(final View v, final int pos) {
         WindowManager wm = (WindowManager) v.getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
