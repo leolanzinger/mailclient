@@ -130,7 +130,6 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                     }
                     else {
                         scrolling = false;
-                        list.setScrollContainer(false);
                         if (is_todo) {
                             //going leftwards
                             if (distanceX < 0) {
@@ -161,6 +160,8 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                 move_count++;
                 //scroll disables swipe
                 if (scrolling) {
+                    // do not handle dispatch -> pass touch event to scroll listener
+                    return false;
                 }
                 else {
                     if (Math.abs(distanceX) < BLOCK_THRESHOLD) {
@@ -178,8 +179,9 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                             cur_item.setX(baseX + distanceX);
                         }
                     }
+                    // handle touch event -> do not pass to scroll
+                    return true;
                 }
-                return false;
 
             case MotionEvent.ACTION_UP:
 
