@@ -127,6 +127,28 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                     else {
                         scrolling = false;
                         list.setScrollContainer(false);
+                        if (is_todo) {
+                            //going leftwards
+                            if (distanceX < 0) {
+
+                            }
+                            //going rightwards
+                            else {
+                                //set green background (unpin item background)
+                                cur_item_background.setBackgroundResource(R.drawable.unpin_background);
+                            }
+                        } else {
+                            //going leftwards
+                            if (distanceX < 0) {
+                                //set yellow background (pin item background)
+                                cur_item_background.setBackgroundResource(R.drawable.pin_background);
+                            }
+                            //going rightwards
+                            else {
+                                //set red background (delete item background)
+                                cur_item_background.setBackgroundResource(R.drawable.delete_background);
+                            }
+                        }
                     }
                 }
                 move_count++;
@@ -147,16 +169,6 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                             }
                         } else {
                             cur_item.setX(baseX + distanceX);
-                            //going leftwards
-                            if (distanceX < 0) {
-                                //set green background (delete item background)
-                                cur_item_background.setBackgroundColor(R.color.green);
-                            }
-                            //going rightwards
-                            else {
-                                //set yellow background (pin item background)
-                                cur_item_background.setBackgroundColor(R.color.yellow);
-                            }
                         }
                     }
                 }
