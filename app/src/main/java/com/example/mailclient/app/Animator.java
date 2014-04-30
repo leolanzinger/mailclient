@@ -20,7 +20,8 @@ public class Animator {
 
     public void resetView(final View v) {
         // reset della view a posizione iniziale
-        ObjectAnimator anim = ObjectAnimator.ofFloat(v, "translationX", v.getX(), 0);
+        View content = v.findViewById(R.id.list_content);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(content, "translationX", content.getX(), 0);
 
         anim.setDuration(500);
         anim.start();
@@ -30,6 +31,7 @@ public class Animator {
      * Used only for to do items (for now - to be fixed )
      */
     public void swipeToLeft(final View v, final int pos) {
+        final View content = v.findViewById(R.id.list_content);
         WindowManager wm = (WindowManager) v.getContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
@@ -37,7 +39,7 @@ public class Animator {
         int screen_width = size.x;
 
         // elimina la view
-        ObjectAnimator anim = ObjectAnimator.ofFloat(v, "translationX", v.getX(), screen_width);
+        ObjectAnimator anim = ObjectAnimator.ofFloat(content, "translationX", content.getX(), screen_width);
         anim.addListener(new AnimatorListenerAdapter() {
 
             @Override
@@ -49,7 +51,7 @@ public class Animator {
             public void onAnimationEnd(android.animation.Animator animator) {
                 Todo.todo_list.remove(pos);
                 Todo.adapter.notifyDataSetChanged();
-                v.setX(0);
+                content.setX(0);
             }
 
             @Override

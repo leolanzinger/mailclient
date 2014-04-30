@@ -40,6 +40,7 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
         None// when no action was detected
     }
 
+    private TextView subjectView;
     private float downY, upX, upY;
     private Action mSwipeDetected = Action.None;
     private View cur_item;
@@ -72,7 +73,7 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
 
         Email item = getItem(position);
         if (item != null) {
-            TextView subjectView = (TextView) view.findViewById(R.id.list_subject);
+            subjectView = (TextView) view.findViewById(R.id.list_subject);
             String subject_excerpt;
             if( item.subject.length() > 15 ) {
                 subject_excerpt = item.subject.substring(0, 15);

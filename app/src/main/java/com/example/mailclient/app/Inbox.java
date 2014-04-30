@@ -54,7 +54,7 @@ public class Inbox extends Activity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-    int touch_position;
+    int list_position, list_visible_position;
 
     public Inbox() {
     }
@@ -125,8 +125,9 @@ public class Inbox extends Activity {
         adapter = new EmailAdapter(this, R.id.list_subject, Mailbox.emailList){
             @Override
             public void processPosition(View view) {
-                touch_position = listView.getPositionForView(view);
-                Log.i("swipe", "processPosition returned " + touch_position);
+                list_position = listView.getPositionForView(view);
+                list_visible_position = list_position - listView.getFirstVisiblePosition();
+                Log.i("swipe", "processPosition returned " + list_position);
             }
         };
         listView.setAdapter(adapter);
@@ -152,51 +153,40 @@ public class Inbox extends Activity {
 
                     if (this.getAction().equals(SwipeDetector.Action.RL_TRIGGER)) {
                         // do the onSwipe action
-                        Log.i("swipe", "pinned su el " + touch_position);
+                        Log.i("swipe", "pinned su el " + list_position);
                         int duration = Toast.LENGTH_SHORT;
                         Toast toast = Toast.makeText(baseContext, "pinned", duration);
                         toast.show();
-                        Mailbox.emailList.get(touch_position - 1).addTodo();
-//                        Log.i("swipe", listView.getChildAt(touch_position).toString());
-                        for (int i = 0; i < listView.getChildCount(); i++) {
-                            animator.resetView(listView.getChildAt(i));
-                        }
+                        Mailbox.emailList.get(list_position- 1).addTodo();
+                        animator.resetView(listView.getChildAt(list_visible_position));
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
-                        Log.i("swipe", "delete su el " + touch_position);
+                        Log.i("swipe", "delete su el " + list_position);
                         // eliminare
                         int duration = Toast.LENGTH_SHORT;
                         Toast toast = Toast.makeText(baseContext, "deleted", duration);
                         toast.show();
-                        for (int i = 0; i < listView.getChildCount(); i++) {
-                            animator.resetView(listView.getChildAt(i));
-                        }
+                        animator.resetView(listView.getChildAt(list_visible_position));
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.CLICK)) {
                         // open email
-                        Log.i("swipe", "open el " + touch_position);
+                        Log.i("swipe", "open el " + list_position);
                         Intent intent = new Intent(Inbox.this, ReadMail.class);
-                        int index = touch_position - 1;
+                        int index = list_position- 1;
                         intent.putExtra("index", index);
                         startActivity(intent);
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.LR_BACK)) {
-                        Log.i("swipe", "back su el " + touch_position);
-                        for (int i = 0; i < listView.getChildCount(); i++) {
-                            animator.resetView(listView.getChildAt(i));
-                        }
+                        Log.i("swipe", "back su el " + list_position);
+                        animator.resetView(listView.getChildAt(list_visible_position));
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.RL_BACK)) {
-                        Log.i("swipe", "back su el " + touch_position);
+                        Log.i("swipe", "back su el " + list_position);
                         //go back
-                        for (int i = 0; i < listView.getChildCount(); i++) {
-                            animator.resetView(listView.getChildAt(i));
-                        }
+                        animator.resetView(listView.getChildAt(list_visible_position));
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.RESET)){
-                        for (int i = 0; i < listView.getChildCount(); i++) {
-                            animator.resetView(listView.getChildAt(i));
-                        }
+                        animator.resetView(listView.getChildAt(list_visible_position));
                     }
                 }
             }

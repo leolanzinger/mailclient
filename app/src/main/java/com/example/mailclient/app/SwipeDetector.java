@@ -35,7 +35,7 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
     private static final int MIN_DISTANCE = 100;
     private float downY, upX, upY, listY;
     private Action mSwipeDetected = Action.None;
-    private View cur_item;
+    private View cur_item, cur_item_background;
     private float downX = 0;
     private float distanceX = 0;
     private float distanceY = 0;
@@ -90,7 +90,10 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                     child = list.getChildAt(i);
                     child.getHitRect(rect);
                     if (rect.contains(x, y)) {
-                        cur_item = child; // This is your down view
+//                        cur_item = child;
+//                        Log.i("rootView" , String.valueOf(cur_item.getParent().getClass().getName())); // This returns ListView
+                        cur_item = child.findViewById(R.id.list_content); //this is our item content view
+                        cur_item_background = child.findViewById(R.id.list_background); // this is our item background
                         break;
                     }
                 }
@@ -133,13 +136,27 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                 else {
                     if (Math.abs(distanceX) < BLOCK_THRESHOLD) {
                         if (is_todo) {
+                            //going leftwards
                             if (distanceX < 0) {
 
-                            } else {
+                            }
+                            //going rightwards
+                            else {
                                 cur_item.setX(baseX + distanceX);
+
                             }
                         } else {
                             cur_item.setX(baseX + distanceX);
+                            //going leftwards
+                            if (distanceX < 0) {
+                                //set green background (delete item background)
+                                cur_item_background.setBackgroundColor(R.color.green);
+                            }
+                            //going rightwards
+                            else {
+                                //set yellow background (pin item background)
+                                cur_item_background.setBackgroundColor(R.color.yellow);
+                            }
                         }
                     }
                 }

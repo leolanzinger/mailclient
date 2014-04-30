@@ -1,63 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="20dip"
-    android:paddingRight="20dip"
-    android:paddingBottom="5dip"
-    >
+    android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:orientation="horizontal"
+    <LinearLayout
+        android:id="@+id/list_background"
+        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="1">
+        android:layout_height="match_parent"
+        android:paddingLeft="20dip"
+        android:paddingRight="20dip"
+        android:paddingBottom="5dip"
+        android:background="@color/green"
+        android:layout_gravity="top"
+        >
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/list_content"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="20dip"
+        android:paddingRight="20dip"
+        android:paddingBottom="5dip"
+        android:background="@color/white"
+        android:layout_gravity="top"
+        >
+
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="subject"
+                android:id="@+id/list_subject"
+                android:textSize="25dip"
+                android:layout_weight="0.18"
+                android:textColor="@color/black"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:text="date"
+                android:textSize="16dip"
+                android:id="@+id/list_date"
+                android:layout_gravity="right"
+                android:textColor="@color/black"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="0dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp" />
+
+        </RelativeLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="subject"
-            android:id="@+id/list_subject"
-            android:textSize="25dip"
-            android:layout_weight="0.18"
-            android:textColor="@color/black"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="0dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="0dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="bottom"
-            android:text="date"
+            android:id="@+id/list_from"
             android:textSize="16dip"
-            android:id="@+id/list_date"
-            android:layout_gravity="right"
-            android:textColor="@color/black"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="0dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="0dp" />
+            android:text="mail@mail.com"
+            android:textColor="@color/black"/>
 
-    </RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="excerpt"
+            android:textSize="12dip"
+            android:id="@+id/list_excerpt"
+            android:textColor="@color/grey"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/list_from"
-        android:textSize="16dip"
-        android:text="mail@mail.com"
-        android:textColor="@color/black"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="excerpt"
-        android:textSize="12dip"
-        android:id="@+id/list_excerpt"
-        android:textColor="@color/grey"/>
-
-</LinearLayout>
+    </LinearLayout>
+</FrameLayout>
