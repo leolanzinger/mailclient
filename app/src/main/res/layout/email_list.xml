@@ -3,18 +3,41 @@
     android:layout_width="fill_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/list_background"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="20dip"
-        android:paddingRight="20dip"
-        android:paddingBottom="5dip"
         android:background="@color/green"
         android:layout_gravity="top"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         >
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/pin_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/pin_list"
+            android:visibility="gone"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"/>
+        <ImageView
+            android:id="@+id/unpin_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/unpin_list"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:layout_alignParentLeft="true"/>
+        <ImageView
+            android:id="@+id/delete_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/delete_list"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            android:layout_alignParentLeft="true"/>
+    </RelativeLayout>
     <LinearLayout
         android:id="@+id/list_content"
         android:orientation="vertical"

@@ -49,7 +49,7 @@ public class Todo extends Activity {
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
 
-    int touch_position;
+    int list_position, list_visible_position;
     View child_focused;
 
     public Todo() {
@@ -125,7 +125,8 @@ public class Todo extends Activity {
         adapter = new EmailAdapter(this, R.id.list_subject, todo_list){
             @Override
             public void processPosition(View view) {
-                touch_position = listView.getPositionForView(view);
+                list_position = listView.getPositionForView(view);
+                list_visible_position = list_position - listView.getFirstVisiblePosition();
                 child_focused = view;
             }
         };
@@ -153,32 +154,28 @@ public class Todo extends Activity {
                 if (this.swipeDetected()){
                     if (this.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
                         // do the onSwipe action
-                        Log.i("swipe", "pinned su el " + touch_position);
+                        Log.i("swipe", "pinned su el " + list_position);
                         int duration = Toast.LENGTH_SHORT;
                         Toast toast = Toast.makeText(baseContext, "unpinned", duration);
                         toast.show();
-                        animator.swipeToLeft(child_focused, touch_position - 1);
-                        Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(touch_position - 1))).removeTodo();
+                        animator.swipeToLeft(child_focused, list_position - 1);
+                        Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(list_position - 1))).removeTodo();
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.CLICK)) {
                         // open email
-                        Log.i("swipe", "open el " + touch_position);
+                        Log.i("swipe", "open el " + list_position);
                         Intent intent = new Intent(Todo.this, ReadMail.class);
-                        int index = touch_position - 1;
+                        int index = list_position - 1;
                         intent.putExtra("index", index);
                         startActivity(intent);
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.LR_BACK)) {
-                        Log.i("swipe", "back su el " + touch_position);
+                        Log.i("swipe", "back su el " + list_position);
                         //go back
-                        for (int i = 0; i < listView.getChildCount(); i++) {
-                            animator.resetView(listView.getChildAt(i));
-                        }
+                        animator.resetView(listView.getChildAt(list_visible_position));
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.RESET)){
-                        for (int i = 0; i < listView.getChildCount(); i++) {
-                            animator.resetView(listView.getChildAt(i));
-                        }
+                        animator.resetView(listView.getChildAt(list_visible_position));
                     }
                 }
             }

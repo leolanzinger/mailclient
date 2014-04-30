@@ -109,6 +109,10 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                 screen_width = size.x;
                 BLOCK_THRESHOLD = screen_width/100*35;
 
+                cur_item_background.findViewById(R.id.unpin_icon).setVisibility(View.GONE);
+                cur_item_background.findViewById(R.id.pin_icon).setVisibility(View.GONE);
+                cur_item_background.findViewById(R.id.delete_icon).setVisibility(View.GONE);
+
                 return false; // allow other events like Click to be processed
 
             // triggered every finger movement
@@ -136,17 +140,20 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                             else {
                                 //set green background (unpin item background)
                                 cur_item_background.setBackgroundResource(R.drawable.unpin_background);
+                                cur_item_background.findViewById(R.id.unpin_icon).setVisibility(View.VISIBLE);
                             }
                         } else {
                             //going leftwards
                             if (distanceX < 0) {
                                 //set yellow background (pin item background)
                                 cur_item_background.setBackgroundResource(R.drawable.pin_background);
+                                cur_item_background.findViewById(R.id.pin_icon).setVisibility(View.VISIBLE);
                             }
                             //going rightwards
                             else {
                                 //set red background (delete item background)
                                 cur_item_background.setBackgroundResource(R.drawable.delete_background);
+                                cur_item_background.findViewById(R.id.delete_icon).setVisibility(View.VISIBLE);
                             }
                         }
                     }
