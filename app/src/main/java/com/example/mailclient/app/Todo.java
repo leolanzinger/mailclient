@@ -159,7 +159,13 @@ public class Todo extends Activity {
                         Toast toast = Toast.makeText(baseContext, "unpinned", duration);
                         toast.show();
                         animator.swipeToLeft(child_focused, list_position - 1);
-                        Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(list_position - 1))).removeTodo();
+                        Email email = Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(list_position - 1)));
+                        email.removeTodo();
+                        if (!email.seen) {
+                            UpdateMailTask update_task = new UpdateMailTask(Todo.this);
+                            update_task.execute(email.ID);
+                            email.seen = true;
+                        }
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.CLICK)) {
                         // open email

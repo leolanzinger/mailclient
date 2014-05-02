@@ -105,15 +105,15 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
                 subjectView.setTypeface(null, Typeface.BOLD);
                 fromView.setTypeface(null, Typeface.BOLD);
                 dateView.setTypeface(null, Typeface.BOLD);
-
-                view.setBackgroundResource(R.drawable.unseen);
+                View frontground = view.findViewById(R.id.list_content);
+                frontground.setBackgroundResource(R.drawable.unseen);
             }
             else {
                 subjectView.setTypeface(null, Typeface.NORMAL);
                 fromView.setTypeface(null, Typeface.NORMAL);
                 dateView.setTypeface(null, Typeface.NORMAL);
-
-                view.setBackgroundResource(R.drawable.seen);
+                View frontground = view.findViewById(R.id.list_content);
+                frontground.setBackgroundResource(R.drawable.seen);
             }
         }
         view.setOnTouchListener(this);

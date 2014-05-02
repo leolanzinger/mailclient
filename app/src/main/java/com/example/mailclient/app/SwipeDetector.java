@@ -94,24 +94,29 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
 //                        Log.i("rootView" , String.valueOf(cur_item.getParent().getClass().getName())); // This returns ListView
                         cur_item = child.findViewById(R.id.list_content); //this is our item content view
                         cur_item_background = child.findViewById(R.id.list_background); // this is our item background
+
+                        //prevent null pointer - not our case, but who knows what the future will bring to us?
+                        if (cur_item != null) {
+                            baseX = cur_item.getX();
+
+                            //find the display size
+                            WindowManager wm = (WindowManager) cur_item.getContext().getSystemService(Context.WINDOW_SERVICE);
+                            Display display = wm.getDefaultDisplay();
+                            Point size = new Point();
+                            display.getSize(size);
+                            screen_width = size.x;
+                            BLOCK_THRESHOLD = screen_width/100*35;
+
+                            cur_item_background.findViewById(R.id.unpin_icon).setVisibility(View.GONE);
+                            cur_item_background.findViewById(R.id.pin_icon).setVisibility(View.GONE);
+                            cur_item_background.findViewById(R.id.delete_icon).setVisibility(View.GONE);
+                        }
                         break;
                     }
                 }
-                baseX = cur_item.getX();
                 move_count = 0;
                 scrolling = false;
 
-                //find the display size
-                WindowManager wm = (WindowManager) cur_item.getContext().getSystemService(Context.WINDOW_SERVICE);
-                Display display = wm.getDefaultDisplay();
-                Point size = new Point();
-                display.getSize(size);
-                screen_width = size.x;
-                BLOCK_THRESHOLD = screen_width/100*35;
-
-                cur_item_background.findViewById(R.id.unpin_icon).setVisibility(View.GONE);
-                cur_item_background.findViewById(R.id.pin_icon).setVisibility(View.GONE);
-                cur_item_background.findViewById(R.id.delete_icon).setVisibility(View.GONE);
 
                 return false; // allow other events like Click to be processed
 
