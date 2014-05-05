@@ -7,13 +7,17 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -116,9 +120,21 @@ public class ReadMail extends Activity {
 //        body.loadData(body_content_html, "text/html", "UTF-8");
         body.loadDataWithBaseURL(null, body_content_html, "text/html", "utf-8", null);
 
+//        body.setWebViewClient(new myWebViewClient());
+
+        body.setWebChromeClient(new WebChromeClient());
         body.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         body.getSettings().setJavaScriptEnabled(true);
         body.requestFocus(View.FOCUS_DOWN);
+        body.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                WebView.HitTestResult hr = ((WebView)v).getHitTestResult();
+                // in hr.getxtra ci sarà il link collegato all'elemento nella webview premuta, questo ontouch è per vedere a cosa linka
+                Log.i("Check", "getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType());
+                return false;
+            }
+        });
 
         /*
          *  Notify IMAP server that the mail is read
@@ -188,7 +204,27 @@ public class ReadMail extends Activity {
             }
         }
 }
-
+    private class myWebViewClient extends WebViewClient {
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (url.startsWith("mailto:")) {
+//                MailTo mt = MailTo.parse(url);
+//                TODO: handle mailto aprendo una SendMailActivity compilata
+//                Intent i = newEmailIntent(MyActivity.this, mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
+//                startActivity(i);
+                view.reload();
+                return true;
+            } else if (url.startsWith("http:") ||  (url.startsWith("https:"))) {
+//              Open browser with simple links
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(browserIntent);
+            }
+            else {
+                Log.d("Check", "check url: " +url);
+                view.loadUrl(url);
+            }
+            return true;
+        }
+    }
 
     //inflate the menu with custom actions
     @Override
