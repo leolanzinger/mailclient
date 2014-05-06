@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -126,15 +125,6 @@ public class ReadMail extends Activity {
         body.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         body.getSettings().setJavaScriptEnabled(true);
         body.requestFocus(View.FOCUS_DOWN);
-        body.setOnTouchListener(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                WebView.HitTestResult hr = ((WebView)v).getHitTestResult();
-                // in hr.getxtra ci sarà il link collegato all'elemento nella webview premuta, questo ontouch è per vedere a cosa linka
-                Log.i("Check", "getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType());
-                return false;
-            }
-        });
 
         /*
          *  Notify IMAP server that the mail is read
