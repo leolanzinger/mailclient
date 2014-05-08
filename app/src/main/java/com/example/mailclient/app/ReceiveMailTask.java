@@ -65,7 +65,8 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
                 email.setSubject(msg[i].getSubject());
                 email.setDate(msg[i].getSentDate());
                 email.setFrom(msg[i].getFrom());
-                email.setTo(msg[i].getAllRecipients());
+                email.setTo(msg[i].getRecipients(Message.RecipientType.TO));
+                email.setCC(msg[i].getRecipients(Message.RecipientType.CC));
 
                 String ID = msg[i].getHeader("Message-Id")[0];
 

@@ -67,6 +67,29 @@
                     android:layout_toRightOf="@+id/to_holder" />
             </RelativeLayout>
 
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/read_cc_wrapper"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/read_from_wrapper">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="Cc: "
+                    android:id="@+id/cc_holder" />
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="cc@email.com"
+                    android:id="@+id/read_cc"
+                    android:textColor="@color/blue"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@+id/cc_holder" />
+            </RelativeLayout>
+
             <TextView
                 android:id="@+id/read_subject"
                 android:layout_width="fill_parent"

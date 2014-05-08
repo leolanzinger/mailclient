@@ -31,7 +31,7 @@ public class Email implements Serializable {
     String subject;
     Date date;
     ArrayList<String> body, body_temp, attachmentPath;
-    Address[] from,to;
+    Address[] from,to,cc;
     String excerpt;
     String ID;
 
@@ -77,6 +77,12 @@ public class Email implements Serializable {
         to = new Address[addr.length];
         for (int i = 0; i < addr.length; i++) {
             to[i] = addr[i];
+        }
+    }
+    public void setCC(Address[] addr) {
+        cc = new Address[addr.length];
+        for (int i = 0; i < addr.length; i++) {
+            cc[i] = addr[i];
         }
     }
 
