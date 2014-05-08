@@ -28,6 +28,7 @@ public class Email implements Serializable {
 
     boolean todo;
     boolean seen;
+    boolean deleted;
     String subject;
     Date date;
     ArrayList<String> body, body_temp, attachmentPath;
@@ -44,6 +45,7 @@ public class Email implements Serializable {
         seen = false;
         attachmentPath= new ArrayList<String>();
         todo = false;
+        deleted = false;
     }
 
     /*

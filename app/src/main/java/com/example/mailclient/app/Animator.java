@@ -90,7 +90,7 @@ public class Animator {
 
             @Override
             public void onAnimationEnd(android.animation.Animator animator) {
-                Mailbox.emailList.remove(pos);
+                Mailbox.emailList.get(pos).deleted = true;
                 Inbox.adapter.notifyDataSetChanged();
                 content.setX(0);
             }

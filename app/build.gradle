@@ -20,7 +20,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
     compile project(':pulltorefresh')
     compile files('libs/android-support-v13.jar')
+    compile 'com.android.support:appcompat-v7:19.+'
 }

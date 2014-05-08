@@ -62,35 +62,40 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
         for (int i=0; i < msg.length; i++) {
             Email email = new Email();
             try {
-                // check if email is not deleted
+                // check if email is deleted and set its Email.deleted value to true
                 Flags deleted = new Flags(Flags.Flag.DELETED);
-                FlagTerm deletedFlagTerm = new FlagTerm(deleted, false);
+                FlagTerm deletedFlagTerm = new FlagTerm(deleted, true);
                 if (deletedFlagTerm.match(msg[i])) {
-                    email.setSubject(msg[i].getSubject());
-                    email.setDate(msg[i].getSentDate());
-                    email.setFrom(msg[i].getFrom());
-                    email.setTo(msg[i].getAllRecipients());
+                    email.deleted = true;
+                }
+                else {
+                    email.deleted = false;
+                }
 
-                    String ID = msg[i].getHeader("Message-Id")[0];
+                email.setSubject(msg[i].getSubject());
+                email.setDate(msg[i].getSentDate());
+                email.setFrom(msg[i].getFrom());
+                email.setTo(msg[i].getAllRecipients());
 
-                    Flags seen = new Flags(Flags.Flag.SEEN);
-                    FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
-                    if (unseenFlagTerm.match(msg[i])) {
-                        email.setUnSeen();
-                        unread_mess_ID.add(ID);
-                    } else {
-                        email.setSeen();
-                    }
+                String ID = msg[i].getHeader("Message-Id")[0];
 
-                    email.todo = false;
+                Flags seen = new Flags(Flags.Flag.SEEN);
+                FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
+                if (unseenFlagTerm.match(msg[i])) {
+                    email.setUnSeen();
+                    unread_mess_ID.add(ID);
+                } else {
+                    email.setSeen();
+                }
 
-                    email.setID(ID);
+                email.todo = false;
 
-                    try {
-                        email.setContent(msg[i]);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                email.setID(ID);
+
+                try {
+                    email.setContent(msg[i]);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             } catch (MessagingException e) {
                 e.printStackTrace();
