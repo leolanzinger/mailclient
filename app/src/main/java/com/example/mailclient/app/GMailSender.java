@@ -87,19 +87,21 @@ public class GMailSender {
         emailMessage.setFrom(new InternetAddress(fromEmail, fromEmail));
         for (String toEmail : toEmailList) {
             Log.i("GMailSender","toEmail: "+toEmail);
-            emailMessage.addRecipient(Message.RecipientType.TO,
-                    new InternetAddress(toEmail));
+            emailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
         }
-        for (String toEmail : ccEmailList) {
-            Log.i("GMailSender","ccEmail: "+toEmail);
-            emailMessage.addRecipient(Message.RecipientType.CC,
-                    new InternetAddress(toEmail));
+        if (ccEmailList.get(0)!="") {
+            for (String toEmail : ccEmailList) {
+                Log.i("GMailSender","ccEmail: "+toEmail);
+                emailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(toEmail));
+            }
         }
-        for (String toEmail : bccEmailList) {
-            Log.i("GMailSender","ccEmail: "+toEmail);
-            emailMessage.addRecipient(Message.RecipientType.BCC,
-                    new InternetAddress(toEmail));
+        if (bccEmailList.get(0)!=""){
+            for (String toEmail : bccEmailList) {
+                Log.i("GMailSender","bccEmail: "+toEmail);
+                emailMessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(toEmail));
+            }
         }
+
         emailMessage.setSubject(emailSubject);
 
         // create the message part

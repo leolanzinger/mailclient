@@ -178,12 +178,10 @@ public class SendMailActivity extends Activity {
                 .split("\\s*,\\s*"));
 
         if (ccEmails != null || ccEmails != "") {
-            ccEmailList = Arrays.asList(ccEmails
-                    .split("\\s*,\\s*"));
+            ccEmailList = Arrays.asList(ccEmails.split("\\s*,\\s*"));
         }
         if (bccEmails != null || bccEmails != "") {
-            bccEmailList = Arrays.asList(bccEmails
-                    .split("\\s*,\\s*"));
+            bccEmailList = Arrays.asList(bccEmails.split("\\s*,\\s*"));
         }
         Log.i("SendMailActivity", "To List: " + toEmailList);
         String emailSubject = subjectEmailText.getText().toString();
