@@ -9,10 +9,12 @@
         android:title="reply all"
         android:icon="@drawable/replyall"
         android:showAsAction="ifRoom"
+        android:onClick="replyAll"
         />
     <item android:id="@+id/forward"
         android:title="forward"
         android:icon="@drawable/forward"
         android:showAsAction="ifRoom"
+        android:onClick="forwardMail"
         />
 </menu>

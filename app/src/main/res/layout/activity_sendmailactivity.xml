@@ -47,6 +47,23 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
+
+            <EditText
+                android:id="@+id/send_bcc_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:hint="Bcc"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
             <EditText
                 android:id="@+id/send_subject_edit"
                 android:layout_width="match_parent"

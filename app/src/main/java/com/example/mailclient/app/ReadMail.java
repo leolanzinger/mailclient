@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -38,9 +37,10 @@ public class ReadMail extends Activity {
     Email email;
     String from_addresses = "";
     String to_addresses = "";
+    String cc_addresses = "";
     String body_content;
     String body_content_html;
-    TextView subject,date,from,to;
+    TextView subject,date,from,to,cc;
     WebView body;
     ImageButton todoButton;
     int mail_index;
@@ -57,7 +57,7 @@ public class ReadMail extends Activity {
         from = (TextView) findViewById(R.id.read_from);
         to = (TextView) findViewById(R.id.read_to);
         body = (WebView) findViewById(R.id.read_body);
-
+        cc = (TextView) findViewById(R.id.read_cc);
 
         /*
          *  Set contents for the TextViews
@@ -107,6 +107,23 @@ public class ReadMail extends Activity {
         }
         to.setText(to_addresses);
 
+         /*
+         *  Fill up cc address fields
+         */
+        for (int i=0; i<email.cc.length; i++) {
+            if (i == 0) {
+                String s = email.cc == null ? null : ((InternetAddress) email.cc[i]).getAddress();
+                cc_addresses = cc_addresses.concat(s);
+
+            }
+            else {
+                cc_addresses = cc_addresses.concat(", ");
+                String s = email.cc == null ? null : ((InternetAddress) email.cc[i]).getAddress();
+                cc_addresses = cc_addresses.concat(s);
+            }
+        }
+        cc.setText(cc_addresses);
+
         /*
          *  Parse body content from HTML String and
          *  display it as styled HTML text
@@ -117,12 +134,9 @@ public class ReadMail extends Activity {
             body_content = body_content.concat(email.body.get(i));
             body_content_html = body_content_html.concat(email.body.get(i));
         }
-//        body.loadData(body_content_html, "text/html", "UTF-8");
-        body.loadDataWithBaseURL(null, body_content_html, "text/html", "utf-8", null);
+        body.loadDataWithBaseURL("", body_content_html, "text/html", "utf-8", "");
 
-//        body.setWebViewClient(new myWebViewClient());
-
-        body.setWebChromeClient(new WebChromeClient());
+        body.setWebViewClient(new myWebViewClient());
         body.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         body.getSettings().setJavaScriptEnabled(true);
         body.requestFocus(View.FOCUS_DOWN);
@@ -160,9 +174,6 @@ public class ReadMail extends Activity {
 
         actionBar.setCustomView(v);
 
-
-        //TODO: handle multiple attachments
-
         if (email.attachmentPath.size()!=0){
             final TableLayout lm = (TableLayout) findViewById(R.id.array_button);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -194,7 +205,9 @@ public class ReadMail extends Activity {
 
             }
         }
-    }
+}
+
+
     private class myWebViewClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if (url.startsWith("mailto:")) {
@@ -242,7 +255,7 @@ public class ReadMail extends Activity {
     /*
      *  Launch new ReplyActivity
      *  that sends an email back to
-     *  "from" addressess
+     *  "from" addresses
      */
     public void replyMail(MenuItem menu) {
         Intent intent = new Intent(this, ReplyActivity.class);
@@ -253,7 +266,34 @@ public class ReadMail extends Activity {
         intent.putExtra("to",from_addresses);
         startActivity(intent);
     }
+    /*
+    *  Launch new ReplyActivity
+    *  that sends an email back to
+    *  "from" addresses and to all "cc" ones
+    */
+    public void replyAll(MenuItem item) {
+        Intent intent = new Intent(this, ReplyActivity.class);
+        intent.putExtra("fromEmail", Mailbox.account_email);
+        intent.putExtra("password", Mailbox.account_password);
+        intent.putExtra("subject","Re: "+ email.subject);
+        intent.putExtra("body",""+Html.fromHtml(body_content).toString()); //DA INDENTARE
+        intent.putExtra("to",from_addresses);
+        intent.putExtra("cc",cc_addresses);
+        startActivity(intent);
+    }
 
+    /*
+    *  Launch new ReplyActivity
+    *  that forward an email
+    */
+    public void forwardMail(MenuItem item) {
+        Intent intent = new Intent(this, ReplyActivity.class);
+        intent.putExtra("fromEmail", Mailbox.account_email);
+        intent.putExtra("password", Mailbox.account_password);
+        intent.putExtra("subject","I: "+ email.subject);
+        intent.putExtra("body",""+Html.fromHtml(body_content).toString()); //DA INDENTARE
+        startActivity(intent);
+    }
 
     /*
      *  Sets the to do variable or unset it if the email is already pinned

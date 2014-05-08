@@ -41,10 +41,10 @@ public class SendMailTask extends AsyncTask {
             publishProgress("Processing input....");
 
 
-            if (args.length==5){
+            if (args.length==7){
                 GMailSender androidEmail = new GMailSender(args[0].toString(),
                         args[1].toString(), (List) args[2], args[3].toString(),
-                        args[4].toString());
+                        args[4].toString(), (List) args[5], (List) args[6]);
                 publishProgress("Preparing mail message....");
                 androidEmail.createEmailMessage();
                 publishProgress("Sending email....");
@@ -55,7 +55,7 @@ public class SendMailTask extends AsyncTask {
             else{
                 GMailSender androidEmail = new GMailSender(args[0].toString(),
                         args[1].toString(), (List) args[2], args[3].toString(),
-                        args[4].toString(), (ArrayList) args[5]);
+                        args[4].toString(), (List) args[5], (List) args[6], (ArrayList) args[7]);
                 publishProgress("Preparing mail message....");
                 androidEmail.createEmailMessage();
                 publishProgress("Sending email....");

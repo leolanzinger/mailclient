@@ -43,7 +43,7 @@ public class ReplyActivity extends Activity {
     private static final int OLDERVERSION = 0;
     private static final int NEWVERSION = 1;
     ArrayList<String> selectedImagePath,attachmentList;
-    EditText toEmailText, ccEmailText, subjectEmailText, bodyEmailText;
+    EditText toEmailText, ccEmailText, bccEmailText, subjectEmailText, bodyEmailText;
     TextView attachmentView;
     LinearLayout.LayoutParams params;
     TableLayout lm;
@@ -56,6 +56,8 @@ public class ReplyActivity extends Activity {
 
         toEmailText = (EditText) this.findViewById(R.id.send_to_edit);
         ccEmailText = (EditText) this.findViewById(R.id.send_cc_edit);
+        bccEmailText = (EditText) this.findViewById(R.id.send_bcc_edit);
+
         subjectEmailText = (EditText) this.findViewById(R.id.send_subject_edit);
         bodyEmailText = (EditText) this.findViewById(R.id.send_body);
         selectedImagePath = new ArrayList<String>();
@@ -63,6 +65,8 @@ public class ReplyActivity extends Activity {
         final Intent intent = getIntent();
         subjectEmailText.setText(intent.getStringExtra("subject"));
         toEmailText.setText(intent.getStringExtra("to"));
+        ccEmailText.setText(intent.getStringExtra("cc"));
+        bccEmailText.setText(intent.getStringExtra("bcc"));
 
         /*
          *  Set quoted original message
@@ -193,13 +197,21 @@ public class ReplyActivity extends Activity {
 
         toEmailText = (EditText) this.findViewById(R.id.send_to_edit);
         ccEmailText = (EditText) this.findViewById(R.id.send_cc_edit);
+        bccEmailText = (EditText) this.findViewById(R.id.send_bcc_edit);
+
         subjectEmailText = (EditText) this.findViewById(R.id.send_subject_edit);
         bodyEmailText = (EditText) this.findViewById(R.id.send_body);
 
         String fromEmail = Mailbox.account_email;
         String fromPassword = Mailbox.account_password;
         String toEmails = toEmailText.getText().toString();
+        String ccEmails = ccEmailText.getText().toString();
+        String bccEmails = bccEmailText.getText().toString();
         List<String> toEmailList = Arrays.asList(toEmails
+                .split("\\s*,\\s*"));
+        List<String> ccEmailList = Arrays.asList(ccEmails
+                .split("\\s*,\\s*"));
+        List<String> bccEmailList = Arrays.asList(bccEmails
                 .split("\\s*,\\s*"));
         Log.i("SendMailActivity", "To List: " + toEmailList);
         String emailSubject = subjectEmailText.getText().toString();
@@ -208,9 +220,9 @@ public class ReplyActivity extends Activity {
 
         Log.i("Check", "stampiamo la size della lista: " + selectedImagePath.size());
         if (selectedImagePath.size() == 0) {
-            new SendMailTask(ReplyActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody);
+            new SendMailTask(ReplyActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, ccEmailList, bccEmailList);
         } else {
-            new SendMailTask(ReplyActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
+            new SendMailTask(ReplyActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, ccEmailList, bccEmailList, selectedImagePath);
         }
     }
 
