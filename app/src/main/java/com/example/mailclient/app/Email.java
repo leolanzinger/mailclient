@@ -34,6 +34,7 @@ public class Email implements Serializable {
     Address[] from,to;
     String excerpt;
     String ID;
+    boolean deleted;
 
     public Email() {
         subject = new String();
@@ -44,6 +45,7 @@ public class Email implements Serializable {
         seen = false;
         attachmentPath= new ArrayList<String>();
         todo = false;
+        deleted = false;
     }
 
     /*

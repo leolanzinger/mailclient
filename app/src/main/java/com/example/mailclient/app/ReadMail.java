@@ -43,13 +43,14 @@ public class ReadMail extends Activity {
     TextView subject,date,from,to;
     WebView body;
     ImageButton todoButton;
+    int mail_index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_mail);
         Bundle extras = getIntent().getExtras();
-        final int index = extras.getInt("index", 0);
+        mail_index = extras.getInt("index", 0);
 
         subject = (TextView) findViewById(R.id.read_subject);
         date = (TextView) findViewById(R.id.read_date);
@@ -63,7 +64,7 @@ public class ReadMail extends Activity {
          *  (subject, date, sender and content)
          */
 
-        email = Mailbox.emailList.get(index);
+        email = Mailbox.emailList.get(mail_index);
         subject.setText(email.subject);
 
         /*
@@ -193,7 +194,7 @@ public class ReadMail extends Activity {
 
             }
         }
-}
+    }
     private class myWebViewClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if (url.startsWith("mailto:")) {
@@ -268,5 +269,15 @@ public class ReadMail extends Activity {
             todoButton.setBackgroundResource(R.drawable.pinned);
         }
         Mailbox.save(Mailbox.emailList);
+    }
+
+    public void deleteMail(View view) {
+        if (email.todo) {
+            Todo.todo_list.remove(Todo.todo_list.indexOf(email));
+        }
+        Mailbox.emailList.get(mail_index).deleted = true;
+        UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(ReadMail.this);
+        update_deleted_task.execute(email.ID);
+        this.finish();
     }
 }
