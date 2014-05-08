@@ -55,6 +55,7 @@ public class Inbox extends Activity {
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     int list_position, list_visible_position;
+    View child_focused;
 
     public Inbox() {
     }
@@ -128,6 +129,7 @@ public class Inbox extends Activity {
                 list_position = listView.getPositionForView(view);
                 list_visible_position = list_position - listView.getFirstVisiblePosition();
                 Log.i("swipe", "processPosition returned " + list_position);
+                child_focused = view;
             }
         };
         listView.setAdapter(adapter);
@@ -166,7 +168,10 @@ public class Inbox extends Activity {
                         int duration = Toast.LENGTH_SHORT;
                         Toast toast = Toast.makeText(baseContext, "deleted", duration);
                         toast.show();
-                        animator.resetView(listView.getChildAt(list_visible_position));
+                        Email email = Mailbox.emailList.get(list_position - 1);
+                        animator.swipeDelete(child_focused, list_position - 1);
+                        UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(Inbox.this);
+                        update_deleted_task.execute(email.ID);
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.CLICK)) {
                         // open email

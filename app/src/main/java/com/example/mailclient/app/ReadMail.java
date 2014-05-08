@@ -130,7 +130,7 @@ public class ReadMail extends Activity {
          *  Notify IMAP server that the mail is read
          */
         if (!email.seen) {
-            UpdateMailTask update_task = new UpdateMailTask(this);
+            UpdateSeenMailTask update_task = new UpdateSeenMailTask(this);
             update_task.execute(email.ID);
             email.seen = true;
         }

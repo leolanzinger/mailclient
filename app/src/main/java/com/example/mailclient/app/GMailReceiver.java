@@ -11,14 +11,14 @@ import javax.mail.search.FlagTerm;
 *  protocol over gmail servers
 */
 
-public class GMailReader extends javax.mail.Authenticator {
-    private static final String TAG = "GMailReader";
+public class GMailReceiver extends javax.mail.Authenticator {
+    private static final String TAG = "GMailReceiver";
 
     private String mailhost = "imap.gmail.com";
     private Session session;
     private Store store;
 
-    public GMailReader(String user, String password) {
+    public GMailReceiver(String user, String password) {
 
         Properties props = System.getProperties();
         if (props == null){

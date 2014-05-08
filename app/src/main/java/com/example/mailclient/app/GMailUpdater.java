@@ -62,11 +62,11 @@ public class GMailUpdater extends javax.mail.Authenticator {
     }
 
     /*
-     *  Update INBOX folder status:
+     *  Update INBOX folder status for mail seen flag:
      *  seen == true -> set it seen
      *  seen == false -> set it unseen
      */
-    public synchronized void updateGmail(ArrayList<String> messages, boolean seen) throws Exception {
+    public synchronized void updateSeenGmail(ArrayList<String> messages, boolean seen) throws Exception {
         try {
             Folder folder = store.getFolder("Inbox");
             folder.open(Folder.READ_WRITE);
@@ -78,6 +78,30 @@ public class GMailUpdater extends javax.mail.Authenticator {
                 }
                 else {
                     folder.setFlags(uns_msg, new Flags(Flags.Flag.SEEN), false);
+                }
+            }
+        }
+        catch (Exception e) {
+        }
+    }
+
+    /*
+     *  Update INBOX folder status for mail deleted flag:
+     *  deleted == true -> set it deleted
+     *  deleted == false -> set it not deleted
+     */
+    public synchronized void updateDeletedGmail(ArrayList<String> messages, boolean deleted) throws Exception {
+        try {
+            Folder folder = store.getFolder("Inbox");
+            folder.open(Folder.READ_WRITE);
+
+            for (String unseen : messages) {
+                Message[] uns_msg = folder.search(new MessageIDTerm(unseen));
+                if ( deleted ) {
+                    folder.setFlags(uns_msg, new Flags(Flags.Flag.DELETED), true);
+                }
+                else {
+                    folder.setFlags(uns_msg, new Flags(Flags.Flag.DELETED), false);
                 }
             }
         }

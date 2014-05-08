@@ -10,11 +10,11 @@ import java.util.ArrayList;
 *   Async task to sync messages flags - not used yet
 */
 
-public class UpdateMailTask extends AsyncTask {
+public class UpdateSeenMailTask extends AsyncTask {
 
     private Activity sendMailActivity;
 
-    public UpdateMailTask(Activity activity) {
+    public UpdateSeenMailTask(Activity activity) {
         sendMailActivity = activity;
 
     }
@@ -28,12 +28,12 @@ public class UpdateMailTask extends AsyncTask {
             /*
              *  Updates INBOX status of updated Emails
              */
-            Log.i("UpdateMailTask", "About to instantiate GMailUpdater...");
+            Log.i("UpdateSeenMailTask", "About to instantiate GMailUpdater...");
             GMailUpdater updater = new GMailUpdater(Mailbox.account_email, Mailbox.account_password);
             try {
                 ArrayList<String> seen = new ArrayList<String>();
                 seen.add((String) args[0]);
-                updater.updateGmail(seen, true);
+                updater.updateSeenGmail(seen, true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
