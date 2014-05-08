@@ -46,6 +46,7 @@ public class Inbox extends Activity {
     public static PullToRefreshListView listView;
     public static Button refresh_button;
     private Animator animator;
+    public static ArrayList<Email> inbox_email_list;
 
     /*
      *  Drawer menu variables
@@ -86,6 +87,12 @@ public class Inbox extends Activity {
                 else if (i == 1) {
                     mDrawerLayout.closeDrawers();
                 }
+                else if (i == 3) {
+                    Intent intent;
+                    intent = new Intent(Todo.baseContext, TrashBin.class);
+                    startActivity(intent);
+                    finish();
+                }
                 else {
                 }
             }
@@ -123,7 +130,13 @@ public class Inbox extends Activity {
         /*
          *  Instantiate list adapter
          */
-        adapter = new EmailAdapter(this, R.id.list_subject, Mailbox.emailList){
+        inbox_email_list = new ArrayList<Email>();
+        for (int i=0; i<Mailbox.emailList.size(); i++) {
+            if (!Mailbox.emailList.get(i).deleted) {
+                inbox_email_list.add(Mailbox.emailList.get(i));
+            }
+        }
+        adapter = new EmailAdapter(this, R.id.list_subject, inbox_email_list){
             @Override
             public void processPosition(View view) {
                 list_position = listView.getPositionForView(view);
@@ -159,7 +172,7 @@ public class Inbox extends Activity {
                         int duration = Toast.LENGTH_SHORT;
                         Toast toast = Toast.makeText(baseContext, "pinned", duration);
                         toast.show();
-                        Mailbox.emailList.get(list_position- 1).addTodo();
+                        Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo();
                         animator.resetView(listView.getChildAt(list_visible_position));
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
@@ -168,8 +181,11 @@ public class Inbox extends Activity {
                         int duration = Toast.LENGTH_SHORT;
                         Toast toast = Toast.makeText(baseContext, "deleted", duration);
                         toast.show();
-                        Email email = Mailbox.emailList.get(list_position - 1);
+                        Log.i("droidrage", "size di inbox_email_list è " + inbox_email_list.size());
+                        Email email = Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1)));
+                        email.removeTodo();
                         animator.swipeDelete(child_focused, list_position - 1);
+                        Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).deleted = true;
                         UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(Inbox.this);
                         update_deleted_task.execute(email.ID);
                     }
@@ -177,7 +193,7 @@ public class Inbox extends Activity {
                         // open email
                         Log.i("swipe", "open el " + list_position);
                         Intent intent = new Intent(Inbox.this, ReadMail.class);
-                        int index = list_position- 1;
+                        int index = Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1));
                         intent.putExtra("index", index);
                         startActivity(intent);
                     }

@@ -76,13 +76,12 @@ public class ReadMail extends Activity {
         /*
          *  Fill up from address fields
          */
-        for (int i=0; i<email.from.length; i++) {
+        for (int i = 0; i < email.from.length; i++) {
             if (i == 0) {
                 String s = email.from == null ? null : ((InternetAddress) email.from[i]).getAddress();
                 from_addresses = from_addresses.concat(s);
 
-            }
-            else {
+            } else {
                 from_addresses = from_addresses.concat(", ");
                 String s = email.from == null ? null : ((InternetAddress) email.from[i]).getAddress();
                 from_addresses = from_addresses.concat(s);
@@ -93,13 +92,12 @@ public class ReadMail extends Activity {
         /*
          *  Fill up to address fields
          */
-        for (int i=0; i<email.to.length; i++) {
+        for (int i = 0; i < email.to.length; i++) {
             if (i == 0) {
                 String s = email.to == null ? null : ((InternetAddress) email.to[i]).getAddress();
                 to_addresses = to_addresses.concat(s);
 
-            }
-            else {
+            } else {
                 to_addresses = to_addresses.concat(", ");
                 String s = email.from == null ? null : ((InternetAddress) email.to[i]).getAddress();
                 to_addresses = to_addresses.concat(s);
@@ -110,13 +108,12 @@ public class ReadMail extends Activity {
          /*
          *  Fill up cc address fields
          */
-        for (int i=0; i<email.cc.length; i++) {
+        for (int i = 0; i < email.cc.length; i++) {
             if (i == 0) {
                 String s = email.cc == null ? null : ((InternetAddress) email.cc[i]).getAddress();
                 cc_addresses = cc_addresses.concat(s);
 
-            }
-            else {
+            } else {
                 cc_addresses = cc_addresses.concat(", ");
                 String s = email.cc == null ? null : ((InternetAddress) email.cc[i]).getAddress();
                 cc_addresses = cc_addresses.concat(s);
@@ -130,7 +127,7 @@ public class ReadMail extends Activity {
          */
         body_content = "";
         body_content_html = "";
-        for (int i=0; i<email.body.size(); i++) {
+        for (int i = 0; i < email.body.size(); i++) {
             body_content = body_content.concat(email.body.get(i));
             body_content_html = body_content_html.concat(email.body.get(i));
         }
@@ -167,14 +164,14 @@ public class ReadMail extends Activity {
         todoButton = (ImageButton) v.findViewById(R.id.readMail_pin);
         if (email.todo) {
             todoButton.setBackgroundResource(R.drawable.pinned);
-        }
-        else {
+        } else {
             todoButton.setBackgroundResource(R.drawable.not_pinned);
         }
 
         actionBar.setCustomView(v);
 
-        if (email.attachmentPath.size()!=0){
+        if (email.attachmentPath.size() != 0) {
+
             final TableLayout lm = (TableLayout) findViewById(R.id.array_button);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             for (int i = 0; i < email.attachmentPath.size(); i++) {
@@ -184,7 +181,7 @@ public class ReadMail extends Activity {
                 ll.setOrientation(LinearLayout.VERTICAL);
 
                 Button btn = new Button(this);
-                btn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.view_attachment,0,0,0);
+                btn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.view_attachment, 0, 0, 0);
                 btn.setText(new File(email.attachmentPath.get(i)).getName());
                 btn.setLayoutParams(params);
                 btn.setId(i);
@@ -211,14 +208,14 @@ public class ReadMail extends Activity {
     private class myWebViewClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if (url.startsWith("mailto:")) {
-//                MailTo mt = MailTo.parse(url);
-//                TODO: handle mailto aprendo una SendMailActivity compilata
-//                Intent i = newEmailIntent(MyActivity.this, mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
-//                startActivity(i);
+    //                MailTo mt = MailTo.parse(url);
+    //                TODO: handle mailto aprendo una SendMailActivity compilata
+    //                Intent i = newEmailIntent(MyActivity.this, mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
+    //                startActivity(i);
                 view.reload();
                 return true;
             } else if (url.startsWith("http:") ||  (url.startsWith("https:"))) {
-//              Open browser with simple links
+    //              Open browser with simple links
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(browserIntent);
             }
@@ -314,8 +311,13 @@ public class ReadMail extends Activity {
     public void deleteMail(View view) {
         if (email.todo) {
             Todo.todo_list.remove(Todo.todo_list.indexOf(email));
+            Inbox.inbox_email_list.remove(email);
+        }
+        else {
+            Inbox.inbox_email_list.remove(email);
         }
         Mailbox.emailList.get(mail_index).deleted = true;
+        email.removeTodo();
         UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(ReadMail.this);
         update_deleted_task.execute(email.ID);
         this.finish();

@@ -8,39 +8,39 @@
     android:background="@color/white"
     android:weightSum="100">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
 
-            <EditText
-                android:id="@+id/send_to_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textEmailAddress"
-                android:hint="To"
-                />
+        <EditText
+            android:id="@+id/send_to_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            android:hint="To"
+            />
 
-        </LinearLayout>
+    </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
 
-            <EditText
-                android:id="@+id/send_cc_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textEmailAddress"
-                android:hint="Cc"
-                />
+        <EditText
+            android:id="@+id/send_cc_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            android:hint="Cc"
+            />
 
-        </LinearLayout>
+    </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
@@ -59,55 +59,56 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/send_subject_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Subject"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/send_subject_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Subject"
             />
 
-        </LinearLayout>
+    </LinearLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/send_body"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textMultiLine"
-                android:hint="Your email"
-                />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
+        <EditText
+            android:id="@+id/send_body"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:hint="Your email"
+            />
 
-            <!--<TextView-->
-                <!--android:id="@+id/attachment"-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/attachments"-->
-                <!--android:ems="10"-->
-                <!--/>-->
-            <TableLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/array_button">
-            </TableLayout>
-            <!--TODO: fare una lista più carina degli allegati-->
-        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!--<TextView-->
+        <!--android:id="@+id/attachment"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/attachments"-->
+        <!--android:ems="10"-->
+        <!--/>-->
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/array_button">
+        </TableLayout>
+        <!--TODO: fare una lista più carina degli allegati-->
+    </LinearLayout>
 
 </LinearLayout>

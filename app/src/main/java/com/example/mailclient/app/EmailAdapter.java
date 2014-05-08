@@ -38,11 +38,13 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
         super(context, resource,  items);
         this.context = context;
 
-        if (context.equals(TrashBin.class)) {
+        if (context instanceof TrashBin) {
             trash = true;
+            Log.i("trash", "siamo in trash");
         }
         else {
             trash = false;
+            Log.i("trash", "non siamo in trash");
         }
     }
 
@@ -50,124 +52,59 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
     public View getView(int position, View convertView, ViewGroup parent) {
 
 
-        if (trash) {
-            Email item = getItem(position);
-            if (item != null && item.deleted == true) {
-                View view = convertView;
-                if (view == null) {
-                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    view = inflater.inflate(R.layout.email_list, null);
-                }
+        View view = convertView;
 
-                if (item != null) {
-                    subjectView = (TextView) view.findViewById(R.id.list_subject);
-                    String subject_excerpt;
-                    if (item.subject.length() > 15) {
-                        subject_excerpt = item.subject.substring(0, 15);
-                        subject_excerpt += "...";
-                    } else {
-                        subject_excerpt = item.subject;
-                    }
-                    subjectView.setText(subject_excerpt);
+        Email item = getItem(position);
 
-                    TextView fromView = (TextView) view.findViewById(R.id.list_from);
-                    String email = item.from == null ? null : ((InternetAddress) item.from[0]).getPersonal();
-                    if (email == null || email.isEmpty()) {
-                        email = item.from == null ? null : ((InternetAddress) item.from[0]).getAddress();
-                    }
-                    fromView.setText(email);
-
-                    TextView dateView = (TextView) view.findViewById(R.id.list_date);
-                    String date_format = new SimpleDateFormat("dd MMM").format(item.date.getTime());
-                    dateView.setText(date_format);
-
-                    TextView excerptView = (TextView) view.findViewById(R.id.list_excerpt);
-                    excerptView.setText(item.excerpt);
-
-                /*
-                 *  Set bold if email not read
-                 */
-                    if (!item.seen) {
-                        subjectView.setTypeface(null, Typeface.BOLD);
-                        fromView.setTypeface(null, Typeface.BOLD);
-                        dateView.setTypeface(null, Typeface.BOLD);
-                        View frontground = view.findViewById(R.id.list_content);
-                        frontground.setBackgroundResource(R.drawable.unseen);
-                    } else {
-                        subjectView.setTypeface(null, Typeface.NORMAL);
-                        fromView.setTypeface(null, Typeface.NORMAL);
-                        dateView.setTypeface(null, Typeface.NORMAL);
-                        View frontground = view.findViewById(R.id.list_content);
-                        frontground.setBackgroundResource(R.drawable.seen);
-                    }
-                }
-                view.setOnTouchListener(this);
-                return view;
-            }
-            else {
-                return null;
-            }
+        if (view == null) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            view = inflater.inflate(R.layout.email_list, null);
         }
 
-        else {
-
-            Email item = getItem(position);
-            if (item != null && item.deleted == true) {
-                return null;
+        if (item != null) {
+            subjectView = (TextView) view.findViewById(R.id.list_subject);
+            String subject_excerpt;
+            if (item.subject.length() > 15) {
+                subject_excerpt = item.subject.substring(0, 15);
+                subject_excerpt += "...";
+            } else {
+                subject_excerpt = item.subject;
             }
-            else {
-                View view = convertView;
-                if (view == null) {
-                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    view = inflater.inflate(R.layout.email_list, null);
-                }
+            subjectView.setText(subject_excerpt);
 
-                if (item != null) {
-                    subjectView = (TextView) view.findViewById(R.id.list_subject);
-                    String subject_excerpt;
-                    if (item.subject.length() > 15) {
-                        subject_excerpt = item.subject.substring(0, 15);
-                        subject_excerpt += "...";
-                    } else {
-                        subject_excerpt = item.subject;
-                    }
-                    subjectView.setText(subject_excerpt);
+            TextView fromView = (TextView) view.findViewById(R.id.list_from);
+            String email = item.from == null ? null : ((InternetAddress) item.from[0]).getPersonal();
+            if (email == null || email.isEmpty()) {
+                email = item.from == null ? null : ((InternetAddress) item.from[0]).getAddress();
+            }
+            fromView.setText(email);
 
-                    TextView fromView = (TextView) view.findViewById(R.id.list_from);
-                    String email = item.from == null ? null : ((InternetAddress) item.from[0]).getPersonal();
-                    if (email == null || email.isEmpty()) {
-                        email = item.from == null ? null : ((InternetAddress) item.from[0]).getAddress();
-                    }
-                    fromView.setText(email);
+            TextView dateView = (TextView) view.findViewById(R.id.list_date);
+            String date_format = new SimpleDateFormat("dd MMM").format(item.date.getTime());
+            dateView.setText(date_format);
 
-                    TextView dateView = (TextView) view.findViewById(R.id.list_date);
-                    String date_format = new SimpleDateFormat("dd MMM").format(item.date.getTime());
-                    dateView.setText(date_format);
+            TextView excerptView = (TextView) view.findViewById(R.id.list_excerpt);
+            excerptView.setText(item.excerpt);
 
-                    TextView excerptView = (TextView) view.findViewById(R.id.list_excerpt);
-                    excerptView.setText(item.excerpt);
-
-                    /*
-                     *  Set bold if email not read
-                     */
-                    if (!item.seen) {
-                        subjectView.setTypeface(null, Typeface.BOLD);
-                        fromView.setTypeface(null, Typeface.BOLD);
-                        dateView.setTypeface(null, Typeface.BOLD);
-                        View frontground = view.findViewById(R.id.list_content);
-                        frontground.setBackgroundResource(R.drawable.unseen);
-                    } else {
-                        subjectView.setTypeface(null, Typeface.NORMAL);
-                        fromView.setTypeface(null, Typeface.NORMAL);
-                        dateView.setTypeface(null, Typeface.NORMAL);
-                        View frontground = view.findViewById(R.id.list_content);
-                        frontground.setBackgroundResource(R.drawable.seen);
-                    }
-                }
-                view.setOnTouchListener(this);
-                return view;
+            /*
+             *  Set bold if email not read
+             */
+            if (!item.seen) {
+                subjectView.setTypeface(null, Typeface.BOLD);
+                fromView.setTypeface(null, Typeface.BOLD);
+                dateView.setTypeface(null, Typeface.BOLD);
+                View frontground = view.findViewById(R.id.list_content);
+                frontground.setBackgroundResource(R.drawable.unseen);
+            } else {
+                subjectView.setTypeface(null, Typeface.NORMAL);
+                fromView.setTypeface(null, Typeface.NORMAL);
+                dateView.setTypeface(null, Typeface.NORMAL);
+                View frontground = view.findViewById(R.id.list_content);
+                frontground.setBackgroundResource(R.drawable.seen);
             }
         }
+        view.setOnTouchListener(this);
+        return view;
     }
 
     @Override

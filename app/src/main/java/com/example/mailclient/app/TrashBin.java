@@ -2,6 +2,7 @@ package com.example.mailclient.app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -13,6 +14,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+
+import java.util.ArrayList;
 
 import eu.erikw.PullToRefreshListView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -33,6 +36,7 @@ public class TrashBin extends Activity {
     public static PullToRefreshListView listView;
     public static Button refresh_button;
     private Animator animator;
+    public static ArrayList<Email> trash_email_list;
 
     /*
      *  Drawer menu variables
@@ -70,6 +74,12 @@ public class TrashBin extends Activity {
                     finish();
                 }
                 else if (i == 1) {
+                    Intent intent;
+                    intent = new Intent(Todo.baseContext, Inbox.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if (i == 3) {
                     mDrawerLayout.closeDrawers();
                 }
                 else {
@@ -109,7 +119,13 @@ public class TrashBin extends Activity {
         /*
          *  Instantiate list adapter
          */
-        adapter = new EmailAdapter(this, R.id.list_subject, Mailbox.emailList){
+        trash_email_list = new ArrayList<Email>();
+        for (int i=0; i<Mailbox.emailList.size(); i++) {
+            if (Mailbox.emailList.get(i).deleted) {
+                trash_email_list.add(Mailbox.emailList.get(i));
+            }
+        }
+        adapter = new EmailAdapter(this, R.id.list_subject, trash_email_list){
             @Override
             public void processPosition(View view) {
                 list_position = listView.getPositionForView(view);
@@ -177,12 +193,30 @@ public class TrashBin extends Activity {
     }
 
     /*
+     *  Triggered from send email button:
+     *  call send email activity
+     */
+    public void sendEmail(MenuItem menu) {
+        Intent intent = new Intent(this, SendMailActivity.class);
+        startActivity(intent);
+    }
+
+    /*
      *  Execute receive mail async task
      *  and triggers progress bar.
      *  The firs is triggered from main activity,
      *  the second is triggered from refresh_button
      */
     public void receiveEmail() {
+        mPocketBar.setVisibility(View.VISIBLE);
+        mPocketBar.progressiveStart();
+        ReceiveMailTask receive_task = new ReceiveMailTask(TrashBin.this);
+        receive_task.execute(Mailbox.account_email, Mailbox.account_password);
+    }
+
+    public void receiveMail(View view) {
+        refresh_button = (Button) findViewById(R.id.empty_email);
+        refresh_button.setVisibility(View.GONE);
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
         ReceiveMailTask receive_task = new ReceiveMailTask(TrashBin.this);

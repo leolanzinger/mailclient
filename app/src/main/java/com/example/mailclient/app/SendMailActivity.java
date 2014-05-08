@@ -63,7 +63,7 @@ public class SendMailActivity extends Activity {
             Uri selectedImageUri = data.getData();
             selectedImagePath.add(getPath(selectedImageUri));
 
-          //Show toast with "name of file" added
+            //Show toast with "name of file" added
             File file = new File(getPath(selectedImageUri));
             String fileName=file.getName();
             int duration = Toast.LENGTH_SHORT;
@@ -120,9 +120,9 @@ public class SendMailActivity extends Activity {
                 ll.addView(btn);
                 //Add button to LinearLayout defined in XML
                 lm.addView(ll);
-                }
             }
         }
+    }
 
 
     @Override
@@ -173,12 +173,18 @@ public class SendMailActivity extends Activity {
         String toEmails = toEmailText.getText().toString();
         String ccEmails = ccEmailText.getText().toString();
         String bccEmails = bccEmailText.getText().toString();
+        List<String> ccEmailList = null, bccEmailList = null;
         List<String> toEmailList = Arrays.asList(toEmails
                 .split("\\s*,\\s*"));
-        List<String> ccEmailList = Arrays.asList(ccEmails
-                .split("\\s*,\\s*"));
-        List<String> bccEmailList = Arrays.asList(bccEmails
-                .split("\\s*,\\s*"));
+
+        if (ccEmails != null || ccEmails != "") {
+            ccEmailList = Arrays.asList(ccEmails
+                    .split("\\s*,\\s*"));
+        }
+        if (bccEmails != null || bccEmails != "") {
+            bccEmailList = Arrays.asList(bccEmails
+                    .split("\\s*,\\s*"));
+        }
         Log.i("SendMailActivity", "To List: " + toEmailList);
         String emailSubject = subjectEmailText.getText().toString();
         String emailBody = bodyEmailText.getText().toString();

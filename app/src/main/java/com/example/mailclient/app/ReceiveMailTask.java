@@ -72,7 +72,14 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
                 email.setDate(msg[i].getSentDate());
                 email.setFrom(msg[i].getFrom());
                 email.setTo(msg[i].getRecipients(Message.RecipientType.TO));
-                email.setCC(msg[i].getRecipients(Message.RecipientType.CC));
+
+                //super hack yeee
+                if (msg[i].getRecipients(Message.RecipientType.CC) != null) {
+                    email.setCC(msg[i].getRecipients(Message.RecipientType.CC));
+                }
+                else {
+                    email.setNoCC();
+                }
 
                 String ID = msg[i].getHeader("Message-Id")[0];
 
@@ -121,16 +128,19 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
          *  Notify adapter of the retrieved mails,
          *  store them into cache and hide progress
          *  bar
+         *  NB: insert into adapters other than list in reverse order
          */
 
         if (receiveMailActivity instanceof Todo ) {
-
             for (Email em : result) {
-                Mailbox.emailList.add(0,em);
+                if (!em.seen) {
+                    Todo.adapter.insert(em, 0);
+                }
+                Mailbox.emailList.add(0, em);
             }
+            Todo.adapter.notifyDataSetChanged();
             Mailbox.save(Mailbox.emailList);
 
-            Todo.updateList(result.size());
             Todo.mPocketBar.progressiveStop();
             Todo.listView.onRefreshComplete();
             Todo.mPocketBar.setVisibility(View.GONE);
@@ -138,7 +148,10 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
         else if (receiveMailActivity instanceof Inbox) {
 
             for (Email em : result) {
-                Inbox.adapter.insert(em, 0);
+                if (!em.deleted) {
+                    Inbox.adapter.insert(em, 0);
+                }
+                Mailbox.emailList.add(0, em);
             }
             Inbox.adapter.notifyDataSetChanged();
             Mailbox.save(Mailbox.emailList);
@@ -146,6 +159,21 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
             Inbox.mPocketBar.progressiveStop();
             Inbox.listView.onRefreshComplete();
             Inbox.mPocketBar.setVisibility(View.GONE);
+        }
+        else if (receiveMailActivity instanceof TrashBin) {
+
+            for (Email em : result) {
+                if (em.deleted) {
+                    TrashBin.adapter.insert(em, 0);
+                }
+                Mailbox.emailList.add(0, em);
+            }
+            TrashBin.adapter.notifyDataSetChanged();
+            Mailbox.save(Mailbox.emailList);
+
+            TrashBin.mPocketBar.progressiveStop();
+            TrashBin.listView.onRefreshComplete();
+            TrashBin.mPocketBar.setVisibility(View.GONE);
         }
         super.onPostExecute(result);
     }

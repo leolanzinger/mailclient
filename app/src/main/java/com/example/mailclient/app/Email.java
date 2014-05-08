@@ -2,6 +2,7 @@ package com.example.mailclient.app;
 
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -86,6 +87,11 @@ public class Email implements Serializable {
         for (int i = 0; i < addr.length; i++) {
             cc[i] = addr[i];
         }
+    }
+
+    //Hack yuppppyeeee
+    public void setNoCC() {
+        cc = new Address[0];
     }
 
     /*
