@@ -75,13 +75,18 @@ public class Todo extends Activity {
         mDrawerList.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 1) {
+                if (i == 0) {
+                    mDrawerLayout.closeDrawers();
+                }
+                else if (i == 1) {
                     Intent intent;
                     intent = new Intent(Todo.this, Inbox.class);
                     startActivity(intent);
                 }
-                else if (i == 0) {
-                    mDrawerLayout.closeDrawers();
+                else if (i == 3) {
+                    Intent intent;
+                    intent = new Intent(Todo.this, TrashBin.class);
+                    startActivity(intent);
                 }
                 else {
                 }
@@ -117,7 +122,7 @@ public class Todo extends Activity {
          */
         todo_list = new ArrayList<Email>();
         for (int i=0; i<Mailbox.emailList.size(); i++) {
-            if (Mailbox.emailList.get(i).todo || !Mailbox.emailList.get(i).seen) {
+            if ((Mailbox.emailList.get(i).todo || !Mailbox.emailList.get(i).seen) && (!Mailbox.emailList.get(i).deleted)) {
                 todo_list.add(Mailbox.emailList.get(i));
             }
             else {}
@@ -275,13 +280,14 @@ public class Todo extends Activity {
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 
-    public static void updateList(int new_emails) {
-        for(int i=0; i<new_emails; i++) {
-            if (!Mailbox.emailList.get(i).seen) {
-                adapter.insert(Mailbox.emailList.get(i), 0);
-            }
-        }
-        adapter.notifyDataSetChanged();
-    }
+//    not used anymore
+//    public static void updateList(int new_emails) {
+//        for(int i=0; i<new_emails; i++) {
+//            if (!Mailbox.emailList.get(i).seen) {
+//                adapter.insert(Mailbox.emailList.get(i), 0);
+//            }
+//        }
+//        adapter.notifyDataSetChanged();
+//    }
 }
 

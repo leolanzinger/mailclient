@@ -35,7 +35,7 @@ public class SendMailActivity extends Activity {
 
     private static final int SELECT_PICTURE = 1;
     ArrayList<String> selectedImagePath,attachmentList;
-    EditText toEmailText, ccEmailText, subjectEmailText, bodyEmailText;
+    EditText toEmailText, ccEmailText, bccEmailText, subjectEmailText, bodyEmailText;
     TextView attachmentView;
     LinearLayout.LayoutParams params;
     TableLayout lm;
@@ -63,7 +63,7 @@ public class SendMailActivity extends Activity {
             Uri selectedImageUri = data.getData();
             selectedImagePath.add(getPath(selectedImageUri));
 
-          //Show toast with "name of file" added
+            //Show toast with "name of file" added
             File file = new File(getPath(selectedImageUri));
             String fileName=file.getName();
             int duration = Toast.LENGTH_SHORT;
@@ -120,9 +120,9 @@ public class SendMailActivity extends Activity {
                 ll.addView(btn);
                 //Add button to LinearLayout defined in XML
                 lm.addView(ll);
-                }
             }
         }
+    }
 
 
     @Override
@@ -164,25 +164,37 @@ public class SendMailActivity extends Activity {
     public void sendEmail(MenuItem menu) {
         toEmailText = (EditText) this.findViewById(R.id.send_to_edit);
         ccEmailText = (EditText) this.findViewById(R.id.send_cc_edit);
+        bccEmailText = (EditText) this.findViewById(R.id.send_bcc_edit);
         subjectEmailText = (EditText) this.findViewById(R.id.send_subject_edit);
         bodyEmailText = (EditText) this.findViewById(R.id.send_body);
 
         String fromEmail = Mailbox.account_email;
         String fromPassword = Mailbox.account_password;
         String toEmails = toEmailText.getText().toString();
+        String ccEmails = ccEmailText.getText().toString();
+        String bccEmails = bccEmailText.getText().toString();
+        List<String> ccEmailList = null, bccEmailList = null;
         List<String> toEmailList = Arrays.asList(toEmails
                 .split("\\s*,\\s*"));
+
+        if (ccEmails != null || ccEmails != "") {
+            ccEmailList = Arrays.asList(ccEmails
+                    .split("\\s*,\\s*"));
+        }
+        if (bccEmails != null || bccEmails != "") {
+            bccEmailList = Arrays.asList(bccEmails
+                    .split("\\s*,\\s*"));
+        }
         Log.i("SendMailActivity", "To List: " + toEmailList);
         String emailSubject = subjectEmailText.getText().toString();
         String emailBody = bodyEmailText.getText().toString();
 
 
         Log.i("Check", "stampiamo la size della lista: "+ selectedImagePath.size());
-        if (selectedImagePath.size()==0){
-            new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody);
-        }
-        else {
-            new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, selectedImagePath);
+        if (selectedImagePath.size() == 0) {
+            new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, ccEmailList, bccEmailList);
+        } else {
+            new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, ccEmailList, bccEmailList, selectedImagePath);
         }
 
         attachmentList.clear();

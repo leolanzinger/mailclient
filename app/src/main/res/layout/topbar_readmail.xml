@@ -15,6 +15,7 @@
         android:layout_alignParentRight="true"
         android:src="@drawable/delete"
         android:background="@drawable/seen"
+        android:onClick="deleteMail"
         />
 
     <ImageButton

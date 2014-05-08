@@ -36,7 +36,7 @@ public class GMailSender {
 
     String fromEmail;
     String fromPassword;
-    List<String> toEmailList;
+    List<String> toEmailList, ccEmailList, bccEmailList;
     String emailSubject;
     String emailBody;
     ArrayList<String> fileName = new ArrayList<String>();
@@ -45,10 +45,12 @@ public class GMailSender {
     Session mailSession;
     MimeMessage emailMessage;
 
-    public GMailSender(String fromEmail, String fromPassword, List<String> toEmailList, String emailSubject, String emailBody) {
+    public GMailSender(String fromEmail, String fromPassword, List<String> toEmailList, String emailSubject, String emailBody, List<String> ccEmailList, List<String> bccEmailList) {
         this.fromEmail = fromEmail;
         this.fromPassword = fromPassword;
         this.toEmailList = toEmailList;
+        this.ccEmailList = ccEmailList;
+        this.bccEmailList = bccEmailList;
         this.emailSubject = emailSubject;
         this.emailBody = emailBody;
 
@@ -59,11 +61,13 @@ public class GMailSender {
         Log.i("GMailSender", "Mail server properties set.");
     }
 
-    public GMailSender(String fromEmail, String fromPassword, List<String> toEmailList, String emailSubject, String emailBody, ArrayList<String> fileName) {
+    public GMailSender(String fromEmail, String fromPassword, List<String> toEmailList, String emailSubject, String emailBody, List<String> ccEmailList, List<String> bccEmailList, ArrayList<String> fileName) {
 
         this.fromEmail = fromEmail;
         this.fromPassword = fromPassword;
         this.toEmailList = toEmailList;
+        this.ccEmailList = ccEmailList;
+        this.bccEmailList = bccEmailList;
         this.emailSubject = emailSubject;
         this.emailBody = emailBody;
         this.fileName =fileName;
@@ -84,6 +88,16 @@ public class GMailSender {
         for (String toEmail : toEmailList) {
             Log.i("GMailSender","toEmail: "+toEmail);
             emailMessage.addRecipient(Message.RecipientType.TO,
+                    new InternetAddress(toEmail));
+        }
+        for (String toEmail : ccEmailList) {
+            Log.i("GMailSender","ccEmail: "+toEmail);
+            emailMessage.addRecipient(Message.RecipientType.CC,
+                    new InternetAddress(toEmail));
+        }
+        for (String toEmail : bccEmailList) {
+            Log.i("GMailSender","ccEmail: "+toEmail);
+            emailMessage.addRecipient(Message.RecipientType.BCC,
                     new InternetAddress(toEmail));
         }
         emailMessage.setSubject(emailSubject);
