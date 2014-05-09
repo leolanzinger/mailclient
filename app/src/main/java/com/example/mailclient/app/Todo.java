@@ -181,7 +181,7 @@ public class Todo extends Activity {
                     else if (this.getAction().equals(SwipeDetector.Action.CLICK)) {
                         // open email
                         Intent intent = new Intent(Todo.this, ReadMail.class);
-                        int index = list_position - 1;
+                        int index = Mailbox.emailList.indexOf(todo_list.get(list_position - 1));
                         intent.putExtra("index", index);
                         startActivity(intent);
                     }

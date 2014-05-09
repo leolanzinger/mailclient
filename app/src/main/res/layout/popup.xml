@@ -2,16 +2,64 @@
     android:id="@+id/popup_element"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    android:padding="10sp" >
+    android:orientation="vertical">
 
 
-    <Button
-        android:id="@+id/btn_pin_popup"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Pin it" />
+        android:background="@drawable/popup_container"
+        android:padding="1px"
+        >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="25dip"
+            android:text="Scadenza:"
+            android:id="@+id/popup_title"
+            android:gravity="center_horizontal"
+            android:padding="15sp"
+            android:textColor="@color/white"
+            android:background="@color/yellow" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="nessuna"
+            android:textSize="18dip"
+            android:id="@+id/popup_nessuna"
+            android:gravity="center_horizontal"
+            android:padding="12sp"
+            android:background="@drawable/popup_element"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="oggi"
+            android:textSize="18dip"
+            android:id="@+id/popup_oggi"
+            android:gravity="center_horizontal"
+            android:padding="12sp"
+            android:background="@drawable/popup_element"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="domani"
+            android:textSize="18dip"
+            android:id="@+id/popup_domani"
+            android:gravity="center_horizontal"
+            android:padding="12sp"
+            android:background="@drawable/popup_element"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="scegli data"
+            android:textSize="18dip"
+            android:id="@+id/popup_data"
+            android:gravity="center_horizontal"
+            android:padding="12sp"
+            android:background="@color/white"/>
+    </LinearLayout>
 
 </LinearLayout>

@@ -20,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -177,7 +178,6 @@ public class Inbox extends Activity {
             public void getResults() {
                 if (this.swipeDetected()){
                     if (this.getAction().equals(SwipeDetector.Action.RL_TRIGGER)) {
-                        animator.resetView(listView.getChildAt(list_visible_position));
                         /*
                          * Istantiate popup window for pin options
                          */
@@ -307,29 +307,27 @@ public class Inbox extends Activity {
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 
-
-    void initiatePopupWindow() {
+    /*
+     * Istantiate popup window and set click listeners
+     * perform animation after pinning element
+     */
+    public void initiatePopupWindow() {
         try {
-            // We need to get the instance of the LayoutInflater
-            LayoutInflater inflater = (LayoutInflater) Inbox.this
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View layout = inflater.inflate(R.layout.popup,
-                    (ViewGroup) findViewById(R.id.popup_element));
-            popup = new PopupWindow(layout, 300, 370, true);
+            LayoutInflater inflater = (LayoutInflater) Inbox.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View layout = inflater.inflate(R.layout.popup, (ViewGroup) findViewById(R.id.popup_element));
+            popup = new PopupWindow(layout, 360, 400, true);
             popup.setBackgroundDrawable(new BitmapDrawable());
-            popup.showAtLocation(layout, Gravity.CENTER, 0, 0);
-            Button btnClosePopup = (Button) layout.findViewById(R.id.btn_pin_popup);
-            btnClosePopup.setOnClickListener(new View.OnClickListener() {
+            popup.showAtLocation(layout, Gravity.CENTER, 0, -10);
+            TextView popup_nessuna = (TextView) layout.findViewById(R.id.popup_nessuna);
+            popup_nessuna.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     // pin
                     Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo();
                     popup.dismiss();
+                    animator.resetView(listView.getChildAt(list_visible_position));
                 }
             });
-
-//            btnClosePopup = (Button) layout.findViewById(R.id.btn_close_popup);
-//            btnClosePopup.setOnClickListener(cancel_button_click_listener);
 
         } catch (Exception e) {
             e.printStackTrace();
