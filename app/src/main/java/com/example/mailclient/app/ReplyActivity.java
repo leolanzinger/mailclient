@@ -68,6 +68,7 @@ public class ReplyActivity extends Activity {
         ccEmailText.setText(intent.getStringExtra("cc"));
         bccEmailText.setText(intent.getStringExtra("bcc"));
 
+        this.setTitle(intent.getStringExtra("replyType"));
         /*
          *  Set quoted original message
          */

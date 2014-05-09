@@ -261,6 +261,8 @@ public class ReadMail extends Activity {
         intent.putExtra("subject","Re: "+ email.subject);
         intent.putExtra("body",""+Html.fromHtml(body_content).toString()); //DA INDENTARE
         intent.putExtra("to",from_addresses);
+        intent.putExtra("replyType", "Reply");
+
         startActivity(intent);
     }
     /*
@@ -276,6 +278,7 @@ public class ReadMail extends Activity {
         intent.putExtra("body",""+Html.fromHtml(body_content).toString()); //DA INDENTARE
         intent.putExtra("to",from_addresses);
         intent.putExtra("cc",cc_addresses);
+        intent.putExtra("replyType", "ReplyAll");
         startActivity(intent);
     }
 
@@ -289,6 +292,7 @@ public class ReadMail extends Activity {
         intent.putExtra("password", Mailbox.account_password);
         intent.putExtra("subject","I: "+ email.subject);
         intent.putExtra("body",""+Html.fromHtml(body_content).toString()); //DA INDENTARE
+        intent.putExtra("replyType", "Forward");
         startActivity(intent);
     }
 
