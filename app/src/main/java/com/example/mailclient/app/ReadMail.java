@@ -4,21 +4,25 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -46,6 +50,8 @@ public class ReadMail extends Activity {
     ImageButton todoButton;
     int mail_index;
     boolean call_from_sent;
+
+    PopupWindow popup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -324,9 +330,7 @@ public class ReadMail extends Activity {
                 email.removeTodo();
                 todoButton.setBackgroundResource(R.drawable.not_pinned);
             } else {
-                email.addTodo();
-                todoButton.setBackgroundColor(R.color.yellow);
-                todoButton.setBackgroundResource(R.drawable.pinned);
+                initiatePopupWindow();
             }
             Mailbox.save(Mailbox.emailList);
         }
@@ -345,6 +349,34 @@ public class ReadMail extends Activity {
             UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(ReadMail.this, true);
             update_deleted_task.execute(email.ID);
             this.finish();
+        }
+    }
+
+    /*
+     * Istantiate popup window and set click listeners
+     * perform animation after pinning element
+     */
+    public void initiatePopupWindow() {
+        try {
+            LayoutInflater inflater = (LayoutInflater) ReadMail.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View layout = inflater.inflate(R.layout.popup, (ViewGroup) findViewById(R.id.popup_element));
+            popup = new PopupWindow(layout, 360, 400, true);
+            popup.setBackgroundDrawable(new BitmapDrawable());
+            popup.showAtLocation(layout, Gravity.CENTER, 0, -10);
+            TextView popup_nessuna = (TextView) layout.findViewById(R.id.popup_nessuna);
+            popup_nessuna.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // pin
+                    email.addTodo();
+                    todoButton.setBackgroundColor(R.color.yellow);
+                    todoButton.setBackgroundResource(R.drawable.pinned);
+                    popup.dismiss();
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

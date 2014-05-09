@@ -230,7 +230,17 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                             else {
                                 cur_item.setX(baseX + distanceX);
                             }
-                        } else {
+                        }
+                        if (is_trash) {
+                            //going leftwards
+                            if (distanceX < 0) {
+                            }
+                            //going rightwards
+                            else {
+                                cur_item.setX(baseX + distanceX);
+                            }
+                        }
+                        else {
                             cur_item.setX(baseX + distanceX);
                         }
                     }
