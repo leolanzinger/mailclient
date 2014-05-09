@@ -112,27 +112,13 @@ public class ReceiveSentMailTask extends AsyncTask<Object, Object, ArrayList<Ema
          *  NB: insert into adapters other than list in reverse order
          */
 
-        /*if (receiveMailActivity instanceof Sent ) {
-            for (Email em : result) {
-                if (!em.seen) {
-                    Todo.adapter.insert(em, 0);
-                }
-                Mailbox.emailList.add(0, em);
-            }
-            Todo.adapter.notifyDataSetChanged();
-            Mailbox.save(Mailbox.emailList);
-
-            Todo.mPocketBar.progressiveStop();
-            Todo.listView.onRefreshComplete();
-            Todo.mPocketBar.setVisibility(View.GONE);
-        }
-        else */
-
         for (Email em : result) {
             Mailbox.sentList.add(0, em);
             Mailbox.saveSent(Mailbox.sentList);
         }
-
+        if (receiveMailActivity instanceof Sent ) {
+            Sent.adapter.notifyDataSetChanged();
+        }
 
         super.onPostExecute(result);
     }

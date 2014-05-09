@@ -179,6 +179,16 @@ public class ReceiveInboxTask extends AsyncTask<Object, Object, ArrayList<Email>
             TrashBin.listView.onRefreshComplete();
             TrashBin.mPocketBar.setVisibility(View.GONE);
         }
+        else if (receiveMailActivity instanceof Sent) {
+            for (Email em : result) {
+                Mailbox.emailList.add(0, em);
+            }
+            Mailbox.save(Mailbox.emailList);
+
+            Sent.mPocketBar.progressiveStop();
+            Sent.listView.onRefreshComplete();
+            Sent.mPocketBar.setVisibility(View.GONE);
+        }
         super.onPostExecute(result);
     }
 

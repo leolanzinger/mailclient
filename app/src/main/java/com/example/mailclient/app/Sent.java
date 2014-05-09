@@ -3,11 +3,9 @@ package com.example.mailclient.app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,10 +21,10 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 
-/*
- *  Activity that displays the inbox
+/**
+ * Created by Leo on 08/05/14.
  */
-public class Inbox extends Activity {
+public class Sent extends Activity {
 
     /*
     *   Set main variables
@@ -36,8 +34,6 @@ public class Inbox extends Activity {
     public static SmoothProgressBar mPocketBar;
     public static PullToRefreshListView listView;
     public static Button refresh_button;
-    private Animator animator;
-    public static ArrayList<Email> inbox_email_list;
 
     /*
      *  Drawer menu variables
@@ -46,13 +42,12 @@ public class Inbox extends Activity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
+
+    /*
+     *  Touch listener variables
+     */
     int list_position, list_visible_position;
     View child_focused;
-
-    public Inbox() {
-    }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,21 +71,19 @@ public class Inbox extends Activity {
                     finish();
                 }
                 else if (i == 1) {
-                    mDrawerLayout.closeDrawers();
-                }
-                else if (i == 2) {
                     Intent intent;
-                    intent = new Intent(Todo.baseContext, Sent.class);
+                    intent = new Intent(Todo.baseContext, Inbox.class);
                     startActivity(intent);
                     finish();
+                }
+                else if (i == 2) {
+                    mDrawerLayout.closeDrawers();
                 }
                 else if (i == 3) {
                     Intent intent;
                     intent = new Intent(Todo.baseContext, TrashBin.class);
                     startActivity(intent);
                     finish();
-                }
-                else {
                 }
             }
         });
@@ -127,13 +120,7 @@ public class Inbox extends Activity {
         /*
          *  Instantiate list adapter
          */
-        inbox_email_list = new ArrayList<Email>();
-        for (int i=0; i<Mailbox.emailList.size(); i++) {
-            if (!Mailbox.emailList.get(i).deleted) {
-                inbox_email_list.add(Mailbox.emailList.get(i));
-            }
-        }
-        adapter = new EmailAdapter(this, R.id.list_subject, inbox_email_list){
+        adapter = new EmailAdapter(this, R.id.list_subject, Mailbox.sentList){
             /*
              * Used to get visible position of the list item in the adapter
              * (different from actual position in the list) !
@@ -142,7 +129,6 @@ public class Inbox extends Activity {
             public void processPosition(View view) {
                 list_position = listView.getPositionForView(view);
                 list_visible_position = list_position - listView.getFirstVisiblePosition();
-                Log.i("swipe", "processPosition returned " + list_position);
                 child_focused = view;
             }
         };
@@ -160,50 +146,7 @@ public class Inbox extends Activity {
         mPocketBar.setVisibility(View.GONE);
         mPocketBar.progressiveStop();
 
-        animator = new Animator();
 
-        listView.setOnTouchListener(new SwipeDetector(1) {
-            @Override
-            public void getResults() {
-                if (this.swipeDetected()){
-
-                    if (this.getAction().equals(SwipeDetector.Action.RL_TRIGGER)) {
-                        // pin
-                        Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo();
-                        animator.resetView(listView.getChildAt(list_visible_position));
-                    }
-                    else if (this.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
-                        // delete
-                        Email email = Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1)));
-                        email.removeTodo();
-                        animator.swipeDelete(child_focused, list_position - 1);
-                        Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).deleted = true;
-                        // update deletion
-                        UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(Inbox.this, true);
-                        update_deleted_task.execute(email.ID);
-                    }
-                    else if (this.getAction().equals(SwipeDetector.Action.CLICK)) {
-                        // open email
-                        Intent intent = new Intent(Inbox.this, ReadMail.class);
-                        int index = Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1));
-                        intent.putExtra("index", index);
-                        startActivity(intent);
-                    }
-                    else if (this.getAction().equals(SwipeDetector.Action.LR_BACK)) {
-                        //go back
-                        animator.resetView(listView.getChildAt(list_visible_position));
-                    }
-                    else if (this.getAction().equals(SwipeDetector.Action.RL_BACK)) {
-                        //go back
-                        animator.resetView(listView.getChildAt(list_visible_position));
-                    }
-                    else if (this.getAction().equals(SwipeDetector.Action.RESET)){
-                        //reset view
-                        animator.resetView(listView.getChildAt(list_visible_position));
-                    }
-                }
-            }
-        });
     }
 
     @Override
@@ -213,21 +156,12 @@ public class Inbox extends Activity {
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    //inflate the menu with custom actions
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
+        // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_activity_actions, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -251,7 +185,7 @@ public class Inbox extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        Mailbox.save(Mailbox.emailList);
+        Mailbox.save(Mailbox.sentList);
     }
 
     /*
@@ -272,10 +206,10 @@ public class Inbox extends Activity {
     public void receiveEmail() {
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
-        ReceiveSentMailTask receive_sent_task = new ReceiveSentMailTask(Inbox.this);
-        receive_sent_task.execute(Mailbox.account_email, Mailbox.account_password);
-        ReceiveInboxTask receive_task = new ReceiveInboxTask(Inbox.this);
+        ReceiveSentMailTask receive_task = new ReceiveSentMailTask(Sent.this);
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
+        ReceiveInboxTask receive_inbox_task = new ReceiveInboxTask(Sent.this);
+        receive_inbox_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 
     public void receiveMail(View view) {
@@ -283,9 +217,9 @@ public class Inbox extends Activity {
         refresh_button.setVisibility(View.GONE);
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
-        ReceiveSentMailTask receive_sent_task = new ReceiveSentMailTask(Inbox.this);
-        receive_sent_task.execute(Mailbox.account_email, Mailbox.account_password);
-        ReceiveInboxTask receive_task = new ReceiveInboxTask(Inbox.this);
+        ReceiveSentMailTask receive_task = new ReceiveSentMailTask(Sent.this);
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
+        ReceiveInboxTask receive_inbox_task = new ReceiveInboxTask(Sent.this);
+        receive_inbox_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 }

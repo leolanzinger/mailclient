@@ -37,6 +37,10 @@ public class GMailReceiver extends javax.mail.Authenticator {
             store = session.getStore("imaps");
             store.connect(mailhost, user, password);
             Log.i(TAG, "Store: "+store.toString());
+            Folder[] folderList = store.getFolder("[Gmail]").list();
+            for (int i = 0; i < folderList.length; i++) {
+                Log.i("gmsend", folderList[i].getFullName());
+            }
         } catch (NoSuchProviderException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -113,7 +117,7 @@ public class GMailReceiver extends javax.mail.Authenticator {
     // TODO: implement receivedSentMail() and add the result list to ReceiveInboxTask and add emails to Mailbox.sentList
     public synchronized Message[] readSentMails() throws Exception {
         try {
-            Folder folder = store.getFolder("[Gmail]/Sent Mail");
+            Folder folder = store.getFolder("[Gmail]/Posta inviata");
             folder.open(Folder.READ_WRITE);
             int already_count = 1;
             int mess_count = folder.getMessageCount();
@@ -150,6 +154,7 @@ public class GMailReceiver extends javax.mail.Authenticator {
             }
 
         } catch (Exception e) {
+            Log.i("GmailReceiver", "exception su sent");
             return null;
         }
     }

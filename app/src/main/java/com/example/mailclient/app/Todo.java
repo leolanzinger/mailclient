@@ -81,6 +81,12 @@ public class Todo extends Activity {
                     intent = new Intent(Todo.this, Inbox.class);
                     startActivity(intent);
                 }
+                else if (i == 2) {
+                    Intent intent;
+                    intent = new Intent(Todo.this, Sent.class);
+                    startActivity(intent);
+                    finish();
+                }
                 else if (i == 3) {
                     Intent intent;
                     intent = new Intent(Todo.this, TrashBin.class);
@@ -264,6 +270,8 @@ public class Todo extends Activity {
     public void receiveEmail() {
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
+        ReceiveSentMailTask receive_sent_task = new ReceiveSentMailTask(Todo.this);
+        receive_sent_task.execute(Mailbox.account_email, Mailbox.account_password);
         ReceiveInboxTask receive_task = new ReceiveInboxTask(Todo.this);
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
@@ -272,6 +280,8 @@ public class Todo extends Activity {
         refresh_button.setVisibility(View.GONE);
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
+        ReceiveSentMailTask receive_sent_task = new ReceiveSentMailTask(Todo.this);
+        receive_sent_task.execute(Mailbox.account_email, Mailbox.account_password);
         ReceiveInboxTask receive_task = new ReceiveInboxTask(Todo.this);
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }

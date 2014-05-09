@@ -30,6 +30,10 @@
             android:label="trash bin" >
         </activity>
         <activity
+            android:name="Sent"
+            android:label="sent mail" >
+        </activity>
+        <activity
             android:name="com.example.mailclient.app.Todo"
             android:label="to do">
             <intent-filter android:label="@string/app_name">
