@@ -25,6 +25,10 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 /**
  * Created by Leo on 08/05/14.
  */
+
+/*
+ *  Activity that displays the sent emails folder
+ */
 public class Sent extends Activity {
 
     /*
@@ -149,6 +153,9 @@ public class Sent extends Activity {
         mPocketBar.setVisibility(View.GONE);
         mPocketBar.progressiveStop();
 
+        /*
+         * Add listener to open mail from listview
+         */
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

@@ -11,6 +11,7 @@ import java.util.List;
 /*
 *   Async Task to perform forwarding
 *   operation of mails using GMailSender.java class
+*   TODO: comment code
 */
 
 public class SendMailTask extends AsyncTask {

@@ -27,6 +27,9 @@ import javax.mail.Part;
  */
 public class Email implements Serializable {
 
+    /*
+     * Email variables
+     */
     boolean todo;
     boolean seen;
     String subject;
@@ -50,7 +53,7 @@ public class Email implements Serializable {
     }
 
     /*
-     *  Fill up Email object
+     *  Email filler methods
      */
 
     public void setSeen() {
@@ -89,25 +92,25 @@ public class Email implements Serializable {
         }
     }
 
-    //Hack yuppppyeeee
+    /*
+     * This is a hack to avoid empty cc emails
+     */
     public void setNoCC() {
         cc = new Address[0];
     }
 
     /*
-     *  Store body content
+     *  Set body content
      */
     public void setContent(Message msg) throws MessagingException, IOException {
-        // TODO: call getContent sul message
         getContent(msg);
         if (body_temp != null && body_temp.size() != 0) {
             body.add(body_temp.get(body_temp.size() - 1));
         }
-        // TODO: FINALLY CALL setExcerpt()
         setExcerpt();
     }
 
-    /**
+    /*
      * Return the primary content of the message.
      */
     private void getContent(Part p) throws MessagingException, IOException {

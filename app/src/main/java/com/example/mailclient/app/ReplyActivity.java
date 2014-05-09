@@ -36,6 +36,7 @@ import java.util.List;
 *   Send and receive emails activity.
 *   Async tasks are used because Android doesn't
 *   allow Network operation in the main thread.
+*   TODO: comment code
 */
 
 public class ReplyActivity extends Activity {

@@ -14,7 +14,7 @@ import javax.mail.MessagingException;
 import javax.mail.search.FlagTerm;
 
 /*
-*   Async Task to perform retrieving
+*   Async Task to perform retrieving Sent Mail
 *   operation of mails using GMailSender.java class
 */
 
@@ -38,7 +38,6 @@ public class ReceiveSentMailTask extends AsyncTask<Object, Object, ArrayList<Ema
     protected ArrayList<Email> doInBackground(Object... args) {
         Message[] sent_msg = null;
         try {
-            Log.i("ReceiveInboxTask", "About to instantiate GMailSender...");
             GMailReceiver reader = new GMailReceiver(args[0].toString(),
                     args[1].toString());
             try {
@@ -70,7 +69,7 @@ public class ReceiveSentMailTask extends AsyncTask<Object, Object, ArrayList<Ema
                     email.setFrom(sent_msg[i].getFrom());
                     email.setTo(sent_msg[i].getRecipients(Message.RecipientType.TO));
 
-                    //super hack yeee
+                    //avoid null pointer on cc
                     if (sent_msg[i].getRecipients(Message.RecipientType.CC) != null) {
                         email.setCC(sent_msg[i].getRecipients(Message.RecipientType.CC));
                     } else {
@@ -104,11 +103,10 @@ public class ReceiveSentMailTask extends AsyncTask<Object, Object, ArrayList<Ema
 
     @Override
     public void onPostExecute(ArrayList<Email> result) {
-
         /*
          *  Notify adapter of the retrieved mails,
-         *  store them into cache and hide progress
-         *  bar
+         *  store them into cache. Here we don't hide progress bar
+         *  because it's hidden by ReceiveInboxTask
          *  NB: insert into adapters other than list in reverse order
          */
 

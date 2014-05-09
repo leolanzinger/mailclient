@@ -30,6 +30,7 @@ import javax.mail.internet.InternetAddress;
 /*
  *  Activity that displays a single email
  *  - is triggered from main activity
+ *  TODO: comment code
  */
 
 public class ReadMail extends Activity {
@@ -52,6 +53,11 @@ public class ReadMail extends Activity {
         setContentView(R.layout.activity_read_mail);
         Bundle extras = getIntent().getExtras();
         mail_index = extras.getInt("index", 0);
+
+        /*
+         * We need this to avoid pinning and deleting
+         * of sent emails
+         */
         call_from_sent = false;
         call_from_sent = extras.getBoolean("sent");
 
@@ -63,10 +69,10 @@ public class ReadMail extends Activity {
         cc = (TextView) findViewById(R.id.read_cc);
 
         /*
-         *  Set contents for the TextViews
-         *  (subject, date, sender and content)
+         *  If the caller activity is Sent Folder
+         *  get email from Mailbox.sentList, otherwise
+         *  from Mailbox.emailList
          */
-
         if ( call_from_sent ) {
             email = Mailbox.sentList.get(mail_index);
         }
@@ -74,6 +80,10 @@ public class ReadMail extends Activity {
             email = Mailbox.emailList.get(mail_index);
         }
 
+        /*
+         *  Set contents for the TextViews
+         *  (subject, date, sender and content)
+         */
         subject.setText(email.subject);
 
         /*

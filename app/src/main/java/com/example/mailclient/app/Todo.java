@@ -159,8 +159,11 @@ public class Todo extends Activity {
 
         animator = new Animator();
 
+        /*
+         * Add touch listener to swipe and unpin
+         * email from the listview
+         */
         listView.setOnTouchListener(new SwipeDetector(0) {
-
             @Override
             public void getResults() {
                 if (this.swipeDetected()){
@@ -183,7 +186,7 @@ public class Todo extends Activity {
                         startActivity(intent);
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.LR_BACK)) {
-                        //go back
+                        // reset view
                         animator.resetView(listView.getChildAt(list_visible_position));
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.RESET)){

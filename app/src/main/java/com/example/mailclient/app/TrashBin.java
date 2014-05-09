@@ -24,6 +24,10 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 /**
  * Created by Leo on 08/05/14.
  */
+
+/*
+ *  Activity that displays the trash folder
+ */
 public class TrashBin extends Activity {
 
     /*
@@ -158,6 +162,10 @@ public class TrashBin extends Activity {
 
         animator = new Animator();
 
+        /*
+         * Add touch listener to swipe and restore
+         * deleted mails from trash folder
+         */
         listView.setOnTouchListener(new SwipeDetector(2) {
             @Override
             public void getResults() {
@@ -167,7 +175,7 @@ public class TrashBin extends Activity {
                         email.removeTodo();
                         animator.swipeRestore(child_focused, list_position - 1);
                         Mailbox.emailList.get(Mailbox.emailList.indexOf(trash_email_list.get(list_position - 1))).deleted = false;
-                        // update deletion
+                        // update restore
                         UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(TrashBin.this, false);
                         update_deleted_task.execute(email.ID);
                     }

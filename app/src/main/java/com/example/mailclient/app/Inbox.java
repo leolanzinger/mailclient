@@ -162,11 +162,14 @@ public class Inbox extends Activity {
 
         animator = new Animator();
 
+        /*
+         * Add touch listener to delete and pin
+         * email from the list
+         */
         listView.setOnTouchListener(new SwipeDetector(1) {
             @Override
             public void getResults() {
                 if (this.swipeDetected()){
-
                     if (this.getAction().equals(SwipeDetector.Action.RL_TRIGGER)) {
                         // pin
                         Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo();

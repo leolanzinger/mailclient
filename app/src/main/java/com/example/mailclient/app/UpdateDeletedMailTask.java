@@ -7,12 +7,12 @@ import android.util.Log;
 import java.util.ArrayList;
 
 /*
-*   Async task to sync messages flags - not used yet
+*   Async task to sync deleted message flag
 */
 
 public class UpdateDeletedMailTask extends AsyncTask {
 
-    private Activity sendMailActivity;
+    Activity sendMailActivity;
     private boolean deleted_check;
 
     public UpdateDeletedMailTask(Activity activity, boolean deleted) {
@@ -28,9 +28,8 @@ public class UpdateDeletedMailTask extends AsyncTask {
     protected Object doInBackground(Object... args) {
         try {
             /*
-             *  Updates INBOX status of updated Emails
+             *  Updates INBOX status of updated deleted Emails
              */
-            Log.i("UpdateSeenMailTask", "About to instantiate GMailUpdater...");
             GMailUpdater updater = new GMailUpdater(Mailbox.account_email, Mailbox.account_password);
             try {
                 ArrayList<String> deleted = new ArrayList<String>();

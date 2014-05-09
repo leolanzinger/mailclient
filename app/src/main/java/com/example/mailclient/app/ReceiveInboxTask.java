@@ -14,7 +14,7 @@ import javax.mail.MessagingException;
 import javax.mail.search.FlagTerm;
 
 /*
-*   Async Task to perform retrieving
+*   Async Task to perform retrieving Inbox folder
 *   operation of mails using GMailSender.java class
 */
 
@@ -38,12 +38,10 @@ public class ReceiveInboxTask extends AsyncTask<Object, Object, ArrayList<Email>
         Message[] msg = null;
         Message[] sent_msg = null;
         try {
-            Log.i("ReceiveInboxTask", "About to instantiate GMailSender...");
             GMailReceiver reader = new GMailReceiver(args[0].toString(),
                     args[1].toString());
             try {
                 msg = reader.readLastMails();
-                //TODO: add sent_msg = reader.readSentMails();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -77,7 +75,7 @@ public class ReceiveInboxTask extends AsyncTask<Object, Object, ArrayList<Email>
                     email.setFrom(msg[i].getFrom());
                     email.setTo(msg[i].getRecipients(Message.RecipientType.TO));
 
-                    //super hack yeee
+                    // avoid null pointer on cc
                     if (msg[i].getRecipients(Message.RecipientType.CC) != null) {
                         email.setCC(msg[i].getRecipients(Message.RecipientType.CC));
                     } else {
@@ -131,7 +129,7 @@ public class ReceiveInboxTask extends AsyncTask<Object, Object, ArrayList<Email>
         /*
          *  Notify adapter of the retrieved mails,
          *  store them into cache and hide progress
-         *  bar
+         *  bar. Check which adapter to fill.
          *  NB: insert into adapters other than list in reverse order
          */
 

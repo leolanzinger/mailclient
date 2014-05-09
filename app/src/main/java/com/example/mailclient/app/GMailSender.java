@@ -25,6 +25,7 @@ import javax.mail.internet.MimeMultipart;
 /*
 *  GMailSender Java class to send emails using smtp
 *  protocol over gmail servers
+*  TODO: comment code
 */
 
 public class GMailSender {

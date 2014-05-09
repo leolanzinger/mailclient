@@ -22,7 +22,7 @@ import javax.mail.internet.InternetAddress;
  */
 
 /*
- *  Custom adapter that displays two TextView in each row
+ *  Adapter that displays the layout of the left menu drawer
  */
 public class DrawerAdapter extends ArrayAdapter<String> {
 

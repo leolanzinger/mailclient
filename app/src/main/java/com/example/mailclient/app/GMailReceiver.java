@@ -22,30 +22,29 @@ public class GMailReceiver extends javax.mail.Authenticator {
 
         Properties props = System.getProperties();
         if (props == null){
-            Log.e(TAG, "Properties are null !!");
         }else{
             props.setProperty("mail.store.protocol", "imaps");
-
-            Log.d(TAG, "Transport: "+props.getProperty("mail.transport.protocol"));
-            Log.d(TAG, "Store: "+props.getProperty("mail.store.protocol"));
-            Log.d(TAG, "Host: "+props.getProperty("mail.imap.host"));
-            Log.d(TAG, "Authentication: "+props.getProperty("mail.imap.auth"));
-            Log.d(TAG, "Port: "+props.getProperty("mail.imap.port"));
+//            Log.d(TAG, "Transport: "+props.getProperty("mail.transport.protocol"));
+//            Log.d(TAG, "Store: "+props.getProperty("mail.store.protocol"));
+//            Log.d(TAG, "Host: "+props.getProperty("mail.imap.host"));
+//            Log.d(TAG, "Authentication: "+props.getProperty("mail.imap.auth"));
+//            Log.d(TAG, "Port: "+props.getProperty("mail.imap.port"));
         }
         try {
             session = Session.getDefaultInstance(props, null);
             store = session.getStore("imaps");
             store.connect(mailhost, user, password);
-            Log.i(TAG, "Store: "+store.toString());
-            Folder[] folderList = store.getFolder("[Gmail]").list();
-            for (int i = 0; i < folderList.length; i++) {
-                Log.i("gmsend", folderList[i].getFullName());
-            }
+            /*
+             * Call this method to list all the avaiable folders:
+             *
+             *   Folder[] folderList = store.getFolder("[Gmail]").list();
+             *   for (int i = 0; i < folderList.length; i++) {
+             *      Log.i("gmsend", folderList[i].getFullName());
+             *   }
+             */
         } catch (NoSuchProviderException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (MessagingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -53,6 +52,7 @@ public class GMailReceiver extends javax.mail.Authenticator {
     /*
      *  Reads only unread mails
      *  and marks them as read
+     *  NOT USED ANYMORE
      */
     public synchronized Message[] readNewMail() throws Exception {
         try {
@@ -91,11 +91,9 @@ public class GMailReceiver extends javax.mail.Authenticator {
                             already_count = mess_count;
                         }
                     }
-
                 }
             }
             else {
-                Log.i("GmailReceiver", "casella mail read vuota");
                 if (mess_count > 30) {
                     already_count = 30;
                 } else {
@@ -109,12 +107,14 @@ public class GMailReceiver extends javax.mail.Authenticator {
                 return new Message[0];
             }
         } catch (Exception e) {
-            Log.i("GmailReceiver", "exception");
             return null;
         }
     }
 
-    // TODO: implement receivedSentMail() and add the result list to ReceiveInboxTask and add emails to Mailbox.sentList
+    /*
+     * Method that reads sent messages from [Gmail]/Posta Inviata
+     * IMAP folder. Does not download already stored emails
+     */
     public synchronized Message[] readSentMails() throws Exception {
         try {
             Folder folder = store.getFolder("[Gmail]/Posta inviata");
@@ -135,11 +135,9 @@ public class GMailReceiver extends javax.mail.Authenticator {
                             already_count = mess_count;
                         }
                     }
-
                 }
             }
             else {
-                Log.i("GmailReceiver", "casella mail sent vuota");
                 if (mess_count > 30) {
                     already_count = 30;
                 } else {
@@ -154,7 +152,6 @@ public class GMailReceiver extends javax.mail.Authenticator {
             }
 
         } catch (Exception e) {
-            Log.i("GmailReceiver", "exception su sent");
             return null;
         }
     }

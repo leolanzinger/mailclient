@@ -20,10 +20,6 @@ public final class InternalStorage {
 
     InternalStorage() {}
 
-    /*
-     * TODO: Is this working for saving sent mails?
-     */
-
     public static void writeObject(Context context, String key, Object object) throws IOException {
         FileOutputStream fos = context.openFileOutput(key, Context.MODE_PRIVATE);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
