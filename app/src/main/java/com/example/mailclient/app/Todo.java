@@ -85,7 +85,6 @@ public class Todo extends Activity {
                     Intent intent;
                     intent = new Intent(Todo.this, Sent.class);
                     startActivity(intent);
-                    finish();
                 }
                 else if (i == 3) {
                     Intent intent;

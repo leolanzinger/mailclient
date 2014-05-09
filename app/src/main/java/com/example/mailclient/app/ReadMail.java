@@ -44,6 +44,7 @@ public class ReadMail extends Activity {
     WebView body;
     ImageButton todoButton;
     int mail_index;
+    boolean call_from_sent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +52,8 @@ public class ReadMail extends Activity {
         setContentView(R.layout.activity_read_mail);
         Bundle extras = getIntent().getExtras();
         mail_index = extras.getInt("index", 0);
+        call_from_sent = false;
+        call_from_sent = extras.getBoolean("sent");
 
         subject = (TextView) findViewById(R.id.read_subject);
         date = (TextView) findViewById(R.id.read_date);
@@ -64,7 +67,13 @@ public class ReadMail extends Activity {
          *  (subject, date, sender and content)
          */
 
-        email = Mailbox.emailList.get(mail_index);
+        if ( call_from_sent ) {
+            email = Mailbox.sentList.get(mail_index);
+        }
+        else {
+            email = Mailbox.emailList.get(mail_index);
+        }
+
         subject.setText(email.subject);
 
         /*
@@ -300,30 +309,32 @@ public class ReadMail extends Activity {
      *  Sets the to do variable or unset it if the email is already pinned
      */
     public void setToDo(View view) {
-        if (email.todo) {
-            email.removeTodo();
-            todoButton.setBackgroundResource(R.drawable.not_pinned);
+        if (!call_from_sent) {
+            if (email.todo) {
+                email.removeTodo();
+                todoButton.setBackgroundResource(R.drawable.not_pinned);
+            } else {
+                email.addTodo();
+                todoButton.setBackgroundColor(R.color.yellow);
+                todoButton.setBackgroundResource(R.drawable.pinned);
+            }
+            Mailbox.save(Mailbox.emailList);
         }
-        else {
-            email.addTodo();
-            todoButton.setBackgroundColor(R.color.yellow);
-            todoButton.setBackgroundResource(R.drawable.pinned);
-        }
-        Mailbox.save(Mailbox.emailList);
     }
 
     public void deleteMail(View view) {
-        if (email.todo) {
-            Todo.todo_list.remove(Todo.todo_list.indexOf(email));
-            Inbox.inbox_email_list.remove(email);
+        if (!call_from_sent) {
+            if (email.todo) {
+                Todo.todo_list.remove(Todo.todo_list.indexOf(email));
+                Inbox.inbox_email_list.remove(email);
+            } else {
+                Inbox.inbox_email_list.remove(email);
+            }
+            Mailbox.emailList.get(mail_index).deleted = true;
+            email.removeTodo();
+            UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(ReadMail.this, true);
+            update_deleted_task.execute(email.ID);
+            this.finish();
         }
-        else {
-            Inbox.inbox_email_list.remove(email);
-        }
-        Mailbox.emailList.get(mail_index).deleted = true;
-        email.removeTodo();
-        UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(ReadMail.this, true);
-        update_deleted_task.execute(email.ID);
-        this.finish();
     }
 }

@@ -78,6 +78,12 @@ public class TrashBin extends Activity {
                     startActivity(intent);
                     finish();
                 }
+                else if (i == 2) {
+                    Intent intent;
+                    intent = new Intent(Todo.baseContext, Sent.class);
+                    startActivity(intent);
+                    finish();
+                }
                 else if (i == 3) {
                     mDrawerLayout.closeDrawers();
                 }

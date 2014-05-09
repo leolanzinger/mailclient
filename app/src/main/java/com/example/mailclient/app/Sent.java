@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -91,10 +92,11 @@ public class Sent extends Activity {
         /*
          *  Drawer adapter and list
          */
-        mDrawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout, R.drawable.ic_drawer , R.string.drawer_open, R.string.drawer_close){
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close) {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
             }
+
             public void onDrawerOpened(View view) {
                 super.onDrawerOpened(view);
             }
@@ -120,7 +122,7 @@ public class Sent extends Activity {
         /*
          *  Instantiate list adapter
          */
-        adapter = new EmailAdapter(this, R.id.list_subject, Mailbox.sentList){
+        adapter = new EmailAdapter(this, R.id.list_subject, Mailbox.sentList) {
             /*
              * Used to get visible position of the list item in the adapter
              * (different from actual position in the list) !
@@ -142,11 +144,20 @@ public class Sent extends Activity {
         mPocketBar.setSmoothProgressDrawableBackgroundDrawable(
                 SmoothProgressBarUtils.generateDrawableWithColors(
                         getResources().getIntArray(R.array.pocket_background_colors),
-                        ((SmoothProgressDrawable) mPocketBar.getIndeterminateDrawable()).getStrokeWidth()));
+                        ((SmoothProgressDrawable) mPocketBar.getIndeterminateDrawable()).getStrokeWidth())
+        );
         mPocketBar.setVisibility(View.GONE);
         mPocketBar.progressiveStop();
 
-
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(Sent.this, ReadMail.class);
+                intent.putExtra("index", list_position - 1);
+                intent.putExtra("sent", true);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
