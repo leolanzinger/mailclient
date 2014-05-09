@@ -161,7 +161,7 @@ public class Inbox extends Activity {
 
         animator = new Animator();
 
-        listView.setOnTouchListener(new SwipeDetector(false) {
+        listView.setOnTouchListener(new SwipeDetector(1) {
             @Override
             public void getResults() {
                 if (this.swipeDetected()){

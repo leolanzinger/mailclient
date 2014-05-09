@@ -48,9 +48,28 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
     private ListView list;
 
     public boolean is_todo = false;
+    public boolean is_inbox = false;
+    public boolean is_trash = false;
 
-    public SwipeDetector(boolean istodo) {
-        is_todo = istodo;
+    /*
+     *  activity == 0 -> todolist
+     *  activity == 1 -> inboxlist
+     *  activity == 2 -> trashlist
+     */
+    public SwipeDetector(int activity) {
+        switch (activity) {
+            case 0:
+                is_todo = true;
+                break;
+            case 1:
+                is_inbox = true;
+                break;
+            case 2:
+                is_trash = true;
+                break;
+            default:
+                break;
+        }
     }
 
     public boolean swipeDetected() {
@@ -146,7 +165,8 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                                 cur_item_background.setBackgroundResource(R.drawable.unpin_background);
                                 cur_item_background.findViewById(R.id.unpin_icon).setVisibility(View.VISIBLE);
                             }
-                        } else {
+                        }
+                        else if (is_inbox) {
                             //going leftwards
                             if (distanceX < 0) {
                                 //set yellow background (pin item background)
@@ -158,6 +178,18 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                                 //set red background (delete item background)
                                 cur_item_background.setBackgroundResource(R.drawable.delete_background);
                                 cur_item_background.findViewById(R.id.delete_icon).setVisibility(View.VISIBLE);
+                            }
+                        }
+                        else if (is_trash) {
+                            //going leftwards
+                            if (distanceX < 0) {
+
+                            }
+                            //going rightwards
+                            else {
+                                //set green background (unpin item background)
+                                cur_item_background.setBackgroundResource(R.drawable.unpin_background);
+                                cur_item_background.findViewById(R.id.unpin_icon).setVisibility(View.VISIBLE);
                             }
                         }
                     }

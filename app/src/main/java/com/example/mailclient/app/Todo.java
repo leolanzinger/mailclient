@@ -152,7 +152,7 @@ public class Todo extends Activity {
 
         animator = new Animator();
 
-        listView.setOnTouchListener(new SwipeDetector(true) {
+        listView.setOnTouchListener(new SwipeDetector(0) {
 
             @Override
             public void getResults() {
