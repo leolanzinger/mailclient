@@ -197,6 +197,10 @@ public class SendMailActivity extends Activity {
         }
 
         attachmentList.clear();
+
+        ReceiveSentMailTask receive_sent_task = new ReceiveSentMailTask(new Sent());
+        receive_sent_task.execute(Mailbox.account_email, Mailbox.account_password);
+
     }
 
     public void addAttachment ( MenuItem menu ) {
