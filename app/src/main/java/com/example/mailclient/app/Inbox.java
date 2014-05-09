@@ -4,17 +4,22 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 
 import java.util.ArrayList;
 
@@ -38,6 +43,7 @@ public class Inbox extends Activity {
     public static Button refresh_button;
     private Animator animator;
     public static ArrayList<Email> inbox_email_list;
+    private PopupWindow popup;
 
     /*
      *  Drawer menu variables
@@ -171,9 +177,11 @@ public class Inbox extends Activity {
             public void getResults() {
                 if (this.swipeDetected()){
                     if (this.getAction().equals(SwipeDetector.Action.RL_TRIGGER)) {
-                        // pin
-                        Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo();
                         animator.resetView(listView.getChildAt(list_visible_position));
+                        /*
+                         * Istantiate popup window for pin options
+                         */
+                        initiatePopupWindow();
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
                         // delete
@@ -200,13 +208,12 @@ public class Inbox extends Activity {
                         //go back
                         animator.resetView(listView.getChildAt(list_visible_position));
                     }
-                    else if (this.getAction().equals(SwipeDetector.Action.RESET)){
-                        //reset view
-                        animator.resetView(listView.getChildAt(list_visible_position));
+                    else {
                     }
                 }
             }
         });
+
     }
 
     @Override
@@ -257,6 +264,14 @@ public class Inbox extends Activity {
         Mailbox.save(Mailbox.emailList);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (popup != null)
+            popup.dismiss();
+        else
+            super.onBackPressed();
+    }
+
     /*
      *  Triggered from send email button:
      *  call send email activity
@@ -290,5 +305,34 @@ public class Inbox extends Activity {
         receive_sent_task.execute(Mailbox.account_email, Mailbox.account_password);
         ReceiveInboxTask receive_task = new ReceiveInboxTask(Inbox.this);
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
+    }
+
+
+    void initiatePopupWindow() {
+        try {
+            // We need to get the instance of the LayoutInflater
+            LayoutInflater inflater = (LayoutInflater) Inbox.this
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View layout = inflater.inflate(R.layout.popup,
+                    (ViewGroup) findViewById(R.id.popup_element));
+            popup = new PopupWindow(layout, 300, 370, true);
+            popup.setBackgroundDrawable(new BitmapDrawable());
+            popup.showAtLocation(layout, Gravity.CENTER, 0, 0);
+            Button btnClosePopup = (Button) layout.findViewById(R.id.btn_pin_popup);
+            btnClosePopup.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // pin
+                    Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo();
+                    popup.dismiss();
+                }
+            });
+
+//            btnClosePopup = (Button) layout.findViewById(R.id.btn_close_popup);
+//            btnClosePopup.setOnClickListener(cancel_button_click_listener);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

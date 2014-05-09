@@ -179,9 +179,12 @@ public class TrashBin extends Activity {
                         UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(TrashBin.this, false);
                         update_deleted_task.execute(email.ID);
                     }
+                    else if (this.getAction().equals(SwipeDetector.Action.LR_BACK)) {
+                        animator.resetView(listView.getChildAt(list_visible_position));
+                    }
                     else {
                         //reset view
-                        animator.resetView(listView.getChildAt(list_visible_position));
+//                        animator.resetView(listView.getChildAt(list_visible_position - 1));
                     }
                 }
             }

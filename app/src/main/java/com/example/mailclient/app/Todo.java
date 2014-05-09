@@ -189,8 +189,8 @@ public class Todo extends Activity {
                         // reset view
                         animator.resetView(listView.getChildAt(list_visible_position));
                     }
-                    else if (this.getAction().equals(SwipeDetector.Action.RESET)){
-                        animator.resetView(listView.getChildAt(list_visible_position));
+                    else {
+
                     }
                 }
             }
