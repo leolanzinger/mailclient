@@ -97,12 +97,7 @@ public class GMailUpdater extends javax.mail.Authenticator {
 
             for (String unseen : messages) {
                 Message[] uns_msg = folder.search(new MessageIDTerm(unseen));
-                if ( deleted ) {
-                    folder.setFlags(uns_msg, new Flags(Flags.Flag.DELETED), true);
-                }
-                else {
-                    folder.setFlags(uns_msg, new Flags(Flags.Flag.DELETED), false);
-                }
+                folder.setFlags(uns_msg, new Flags(Flags.Flag.DELETED), deleted);
             }
         }
         catch (Exception e) {

@@ -318,7 +318,7 @@ public class ReadMail extends Activity {
         }
         Mailbox.emailList.get(mail_index).deleted = true;
         email.removeTodo();
-        UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(ReadMail.this);
+        UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(ReadMail.this, true);
         update_deleted_task.execute(email.ID);
         this.finish();
     }

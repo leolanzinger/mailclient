@@ -1,11 +1,7 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -19,18 +15,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import eu.erikw.PullToRefreshListView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBarUtils;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
-
-import com.example.mailclient.app.DrawerAdapter;
-
 
 /*
  *  Activity that displays the inbox
@@ -137,6 +128,10 @@ public class Inbox extends Activity {
             }
         }
         adapter = new EmailAdapter(this, R.id.list_subject, inbox_email_list){
+            /*
+             * Used to get visible position of the list item in the adapter
+             * (different from actual position in the list) !
+             */
             @Override
             public void processPosition(View view) {
                 list_position = listView.getPositionForView(view);
@@ -167,46 +162,37 @@ public class Inbox extends Activity {
                 if (this.swipeDetected()){
 
                     if (this.getAction().equals(SwipeDetector.Action.RL_TRIGGER)) {
-                        // do the onSwipe action
-                        Log.i("swipe", "pinned su el " + list_position);
-                        int duration = Toast.LENGTH_SHORT;
-                        Toast toast = Toast.makeText(baseContext, "pinned", duration);
-                        toast.show();
+                        // pin
                         Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo();
                         animator.resetView(listView.getChildAt(list_visible_position));
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
-                        Log.i("swipe", "delete su el " + list_position);
-                        // eliminare
-                        int duration = Toast.LENGTH_SHORT;
-                        Toast toast = Toast.makeText(baseContext, "deleted", duration);
-                        toast.show();
-                        Log.i("droidrage", "size di inbox_email_list è " + inbox_email_list.size());
+                        // delete
                         Email email = Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1)));
                         email.removeTodo();
                         animator.swipeDelete(child_focused, list_position - 1);
                         Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).deleted = true;
-                        UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(Inbox.this);
+                        // update deletion
+                        UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(Inbox.this, true);
                         update_deleted_task.execute(email.ID);
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.CLICK)) {
                         // open email
-                        Log.i("swipe", "open el " + list_position);
                         Intent intent = new Intent(Inbox.this, ReadMail.class);
                         int index = Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1));
                         intent.putExtra("index", index);
                         startActivity(intent);
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.LR_BACK)) {
-                        Log.i("swipe", "back su el " + list_position);
+                        //go back
                         animator.resetView(listView.getChildAt(list_visible_position));
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.RL_BACK)) {
-                        Log.i("swipe", "back su el " + list_position);
                         //go back
                         animator.resetView(listView.getChildAt(list_visible_position));
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.RESET)){
+                        //reset view
                         animator.resetView(listView.getChildAt(list_visible_position));
                     }
                 }
@@ -252,7 +238,6 @@ public class Inbox extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("on resume", "resumed");
         adapter.notifyDataSetChanged();
         mDrawerLayout.closeDrawers();
     }
@@ -275,13 +260,13 @@ public class Inbox extends Activity {
     /*
      *  Execute receive mail async task
      *  and triggers progress bar.
-     *  The firs is triggered from main activity,
+     *  The first is triggered from main activity,
      *  the second is triggered from refresh_button
      */
     public void receiveEmail() {
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
-        ReceiveMailTask receive_task = new ReceiveMailTask(Inbox.this);
+        ReceiveInboxTask receive_task = new ReceiveInboxTask(Inbox.this);
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 
@@ -290,7 +275,7 @@ public class Inbox extends Activity {
         refresh_button.setVisibility(View.GONE);
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
-        ReceiveMailTask receive_task = new ReceiveMailTask(Inbox.this);
+        ReceiveInboxTask receive_task = new ReceiveInboxTask(Inbox.this);
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 }

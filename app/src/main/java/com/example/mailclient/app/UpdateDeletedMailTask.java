@@ -13,9 +13,11 @@ import java.util.ArrayList;
 public class UpdateDeletedMailTask extends AsyncTask {
 
     private Activity sendMailActivity;
+    private boolean deleted_check;
 
-    public UpdateDeletedMailTask(Activity activity) {
+    public UpdateDeletedMailTask(Activity activity, boolean deleted) {
         sendMailActivity = activity;
+        deleted_check = deleted;
 
     }
 
@@ -33,7 +35,7 @@ public class UpdateDeletedMailTask extends AsyncTask {
             try {
                 ArrayList<String> deleted = new ArrayList<String>();
                 deleted.add((String) args[0]);
-                updater.updateDeletedGmail(deleted, true);
+                updater.updateDeletedGmail(deleted, deleted_check);
             } catch (Exception e) {
                 e.printStackTrace();
             }

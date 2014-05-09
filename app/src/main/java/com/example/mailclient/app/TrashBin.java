@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -126,11 +125,14 @@ public class TrashBin extends Activity {
             }
         }
         adapter = new EmailAdapter(this, R.id.list_subject, trash_email_list){
+            /*
+             * Used to get visible position of the list item in the adapter
+             * (different from actual position in the list) !
+             */
             @Override
             public void processPosition(View view) {
                 list_position = listView.getPositionForView(view);
                 list_visible_position = list_position - listView.getFirstVisiblePosition();
-                Log.i("swipe", "processPosition returned " + list_position);
                 child_focused = view;
             }
         };
@@ -150,6 +152,26 @@ public class TrashBin extends Activity {
 
         animator = new Animator();
 
+        listView.setOnTouchListener(new SwipeDetector(2) {
+            @Override
+            public void getResults() {
+                if (this.swipeDetected()) {
+                    if (this.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
+                        Email email = Mailbox.emailList.get(Mailbox.emailList.indexOf(trash_email_list.get(list_position - 1)));
+                        email.removeTodo();
+                        animator.swipeRestore(child_focused, list_position - 1);
+                        Mailbox.emailList.get(Mailbox.emailList.indexOf(trash_email_list.get(list_position - 1))).deleted = false;
+                        // update deletion
+                        UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(TrashBin.this, false);
+                        update_deleted_task.execute(email.ID);
+                    }
+                    else {
+                        //reset view
+                        animator.resetView(listView.getChildAt(list_visible_position));
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -181,7 +203,6 @@ public class TrashBin extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("on resume", "resumed");
         adapter.notifyDataSetChanged();
         mDrawerLayout.closeDrawers();
     }
@@ -210,7 +231,7 @@ public class TrashBin extends Activity {
     public void receiveEmail() {
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
-        ReceiveMailTask receive_task = new ReceiveMailTask(TrashBin.this);
+        ReceiveInboxTask receive_task = new ReceiveInboxTask(TrashBin.this);
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 
@@ -219,7 +240,7 @@ public class TrashBin extends Activity {
         refresh_button.setVisibility(View.GONE);
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
-        ReceiveMailTask receive_task = new ReceiveMailTask(TrashBin.this);
+        ReceiveInboxTask receive_task = new ReceiveInboxTask(TrashBin.this);
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 }

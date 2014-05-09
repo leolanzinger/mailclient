@@ -91,7 +91,7 @@ public class GMailReceiver extends javax.mail.Authenticator {
                 }
             }
             else {
-                Log.i("GmailReceiver", "casella mail vuota");
+                Log.i("GmailReceiver", "casella mail read vuota");
                 if (mess_count > 30) {
                     already_count = 30;
                 } else {
@@ -99,16 +99,57 @@ public class GMailReceiver extends javax.mail.Authenticator {
                 }
             }
             if ( (mess_count - already_count) != mess_count ) {
-                Message[] all_msgs = folder.getMessages( (mess_count - already_count) + 1, mess_count);
-//                folder.setFlags(all_msgs, new Flags(Flags.Flag.SEEN), true);
-                return all_msgs;
+                return folder.getMessages( (mess_count - already_count) + 1, mess_count);
             }
             else {
-                Message[] all_msg = new Message[0];
-                return  all_msg;
+                return new Message[0];
             }
         } catch (Exception e) {
             Log.i("GmailReceiver", "exception");
+            return null;
+        }
+    }
+
+    // TODO: implement receivedSentMail() and add the result list to ReceiveInboxTask and add emails to Mailbox.sentList
+    public synchronized Message[] readSentMails() throws Exception {
+        try {
+            Folder folder = store.getFolder("[Gmail]/Sent Mail");
+            folder.open(Folder.READ_WRITE);
+            int already_count = 1;
+            int mess_count = folder.getMessageCount();
+            if ( Mailbox.sentList.size() > 0 ) {
+                for (int i = 0; i < mess_count; i++) {
+                    String cur_ID = folder.getMessage(mess_count - i).getHeader("Message-Id")[0];
+                    if ( cur_ID.equals(Mailbox.sentList.get(0).ID) ) {
+                        already_count = i;
+                        i = mess_count + 1;
+                    } else {
+                        // set a number of max receivable mails
+                        if (mess_count > 30) {
+                            already_count = 30;
+                        } else {
+                            already_count = mess_count;
+                        }
+                    }
+
+                }
+            }
+            else {
+                Log.i("GmailReceiver", "casella mail sent vuota");
+                if (mess_count > 30) {
+                    already_count = 30;
+                } else {
+                    already_count = mess_count;
+                }
+            }
+            if ( (mess_count - already_count) != mess_count ) {
+                return folder.getMessages( (mess_count - already_count) + 1, mess_count);
+            }
+            else {
+                return new Message[0];
+            }
+
+        } catch (Exception e) {
             return null;
         }
     }

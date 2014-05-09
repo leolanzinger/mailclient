@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -128,6 +126,10 @@ public class Todo extends Activity {
             else {}
         }
         adapter = new EmailAdapter(this, R.id.list_subject, todo_list){
+            /*
+             * Used to get visible position of the list item in the adapter
+             * (different from actual position in the list) !
+             */
             @Override
             public void processPosition(View view) {
                 list_position = listView.getPositionForView(view);
@@ -159,10 +161,6 @@ public class Todo extends Activity {
                 if (this.swipeDetected()){
                     if (this.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
                         // do the onSwipe action
-                        Log.i("swipe", "pinned su el " + list_position);
-                        int duration = Toast.LENGTH_SHORT;
-                        Toast toast = Toast.makeText(baseContext, "unpinned", duration);
-                        toast.show();
                         animator.swipeTodo(child_focused, list_position - 1);
                         Email email = Mailbox.emailList.get(Mailbox.emailList.indexOf(todo_list.get(list_position - 1)));
                         email.removeTodo();
@@ -174,14 +172,12 @@ public class Todo extends Activity {
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.CLICK)) {
                         // open email
-                        Log.i("swipe", "open el " + list_position);
                         Intent intent = new Intent(Todo.this, ReadMail.class);
                         int index = list_position - 1;
                         intent.putExtra("index", index);
                         startActivity(intent);
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.LR_BACK)) {
-                        Log.i("swipe", "back su el " + list_position);
                         //go back
                         animator.resetView(listView.getChildAt(list_visible_position));
                     }
@@ -268,7 +264,7 @@ public class Todo extends Activity {
     public void receiveEmail() {
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
-        ReceiveMailTask receive_task = new ReceiveMailTask(Todo.this);
+        ReceiveInboxTask receive_task = new ReceiveInboxTask(Todo.this);
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 
@@ -276,18 +272,9 @@ public class Todo extends Activity {
         refresh_button.setVisibility(View.GONE);
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
-        ReceiveMailTask receive_task = new ReceiveMailTask(Todo.this);
+        ReceiveInboxTask receive_task = new ReceiveInboxTask(Todo.this);
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 
-//    not used anymore
-//    public static void updateList(int new_emails) {
-//        for(int i=0; i<new_emails; i++) {
-//            if (!Mailbox.emailList.get(i).seen) {
-//                adapter.insert(Mailbox.emailList.get(i), 0);
-//            }
-//        }
-//        adapter.notifyDataSetChanged();
-//    }
 }
 

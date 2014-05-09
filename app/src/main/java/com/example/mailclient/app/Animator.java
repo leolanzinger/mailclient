@@ -13,6 +13,11 @@ import android.view.animation.TranslateAnimation;
 /**
  * Created by Giulio on 15/04/14.
  */
+
+/*
+ *  Class that supports swiping animation
+ *  after the finger has performed its movement
+ */
 public class Animator {
     public Animator() {
 
@@ -92,6 +97,47 @@ public class Animator {
             public void onAnimationEnd(android.animation.Animator animator) {
                 Inbox.inbox_email_list.remove(pos);
                 Inbox.adapter.notifyDataSetChanged();
+                content.setX(0);
+            }
+
+            @Override
+            public void onAnimationCancel(android.animation.Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(android.animation.Animator animator) {
+
+            }
+        });
+        anim.setDuration(500);
+        anim.start();
+    }
+
+    /*
+     * Swipe away restored items
+     */
+    public void swipeRestore(final View v, final int pos) {
+        final View content = v.findViewById(R.id.list_content);
+        WindowManager wm = (WindowManager) v.getContext().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int screen_width = size.x;
+
+        // elimina la view
+        ObjectAnimator anim = ObjectAnimator.ofFloat(content, "translationX", content.getX(), screen_width);
+        anim.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationStart(android.animation.Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(android.animation.Animator animator) {
+                TrashBin.trash_email_list.remove(pos);
+                TrashBin.adapter.notifyDataSetChanged();
                 content.setX(0);
             }
 

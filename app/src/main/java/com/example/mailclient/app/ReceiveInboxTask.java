@@ -18,11 +18,11 @@ import javax.mail.search.FlagTerm;
 *   operation of mails using GMailSender.java class
 */
 
-public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>> {
+public class ReceiveInboxTask extends AsyncTask<Object, Object, ArrayList<Email>> {
 
     private Activity receiveMailActivity;
 
-    public ReceiveMailTask(Activity activity) {
+    public ReceiveInboxTask(Activity activity) {
         receiveMailActivity = activity;
 
     }
@@ -36,12 +36,14 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
     @Override
     protected ArrayList<Email> doInBackground(Object... args) {
         Message[] msg = null;
+        Message[] sent_msg = null;
         try {
-            Log.i("ReceiveMailTask", "About to instantiate GMailSender...");
+            Log.i("ReceiveInboxTask", "About to instantiate GMailSender...");
             GMailReceiver reader = new GMailReceiver(args[0].toString(),
                     args[1].toString());
             try {
                 msg = reader.readLastMails();
+                //TODO: add sent_msg = reader.readSentMails();
             } catch (Exception e) {
                 e.printStackTrace();
             }
