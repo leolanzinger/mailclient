@@ -91,6 +91,7 @@ public class GMailReceiver extends javax.mail.Authenticator {
                 }
             }
             else {
+                Log.i("GmailReceiver", "casella mail vuota");
                 if (mess_count > 30) {
                     already_count = 30;
                 } else {
@@ -107,6 +108,7 @@ public class GMailReceiver extends javax.mail.Authenticator {
                 return  all_msg;
             }
         } catch (Exception e) {
+            Log.i("GmailReceiver", "exception");
             return null;
         }
     }

@@ -59,59 +59,61 @@ public class ReceiveMailTask extends AsyncTask<Object, Object, ArrayList<Email>>
          */
         ArrayList<String> unread_mess_ID = new ArrayList<String> ();
         ArrayList<Email> list = new ArrayList<Email> ();
-        for (int i=0; i < msg.length; i++) {
-            Email email = new Email();
-            try {
-                // check if email is deleted
-                Flags deleted = new Flags(Flags.Flag.DELETED);
-                FlagTerm deletedFlagTerm = new FlagTerm(deleted, true);
-                if (deletedFlagTerm.match(msg[i])) {
-                    email.deleted = true;
-                }
-                email.setSubject(msg[i].getSubject());
-                email.setDate(msg[i].getSentDate());
-                email.setFrom(msg[i].getFrom());
-                email.setTo(msg[i].getRecipients(Message.RecipientType.TO));
 
-                //super hack yeee
-                if (msg[i].getRecipients(Message.RecipientType.CC) != null) {
-                    email.setCC(msg[i].getRecipients(Message.RecipientType.CC));
-                }
-                else {
-                    email.setNoCC();
-                }
-
-                String ID = msg[i].getHeader("Message-Id")[0];
-
-                Flags seen = new Flags(Flags.Flag.SEEN);
-                FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
-                if (unseenFlagTerm.match(msg[i])) {
-                    email.setUnSeen();
-                    unread_mess_ID.add(ID);
-                } else {
-                    email.setSeen();
-                }
-
-                email.todo = false;
-
-                email.setID(ID);
-
+        if (msg != null) {
+            for (int i = 0; i < msg.length; i++) {
+                Email email = new Email();
                 try {
-                    email.setContent(msg[i]);
-                } catch (IOException e) {
+                    // check if email is deleted
+                    Flags deleted = new Flags(Flags.Flag.DELETED);
+                    FlagTerm deletedFlagTerm = new FlagTerm(deleted, true);
+                    if (deletedFlagTerm.match(msg[i])) {
+                        email.deleted = true;
+                    }
+                    email.setSubject(msg[i].getSubject());
+                    email.setDate(msg[i].getSentDate());
+                    email.setFrom(msg[i].getFrom());
+                    email.setTo(msg[i].getRecipients(Message.RecipientType.TO));
+
+                    //super hack yeee
+                    if (msg[i].getRecipients(Message.RecipientType.CC) != null) {
+                        email.setCC(msg[i].getRecipients(Message.RecipientType.CC));
+                    } else {
+                        email.setNoCC();
+                    }
+
+                    String ID = msg[i].getHeader("Message-Id")[0];
+
+                    Flags seen = new Flags(Flags.Flag.SEEN);
+                    FlagTerm unseenFlagTerm = new FlagTerm(seen, false);
+                    if (unseenFlagTerm.match(msg[i])) {
+                        email.setUnSeen();
+                        unread_mess_ID.add(ID);
+                    } else {
+                        email.setSeen();
+                    }
+
+                    email.todo = false;
+
+                    email.setID(ID);
+
+                    try {
+                        email.setContent(msg[i]);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } catch (MessagingException e) {
                     e.printStackTrace();
                 }
-            } catch (MessagingException e) {
+                list.add(email);
+            }
+
+            GMailUpdater updater = new GMailUpdater(Mailbox.account_email, Mailbox.account_password);
+            try {
+                updater.updateSeenGmail(unread_mess_ID, false);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-            list.add(email);
-        }
-
-        GMailUpdater updater = new GMailUpdater(Mailbox.account_email, Mailbox.account_password);
-        try {
-            updater.updateSeenGmail(unread_mess_ID, false);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         return list;
