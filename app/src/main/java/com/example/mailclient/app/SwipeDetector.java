@@ -3,6 +3,7 @@ package com.example.mailclient.app;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -70,12 +71,15 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
         switch (activity) {
             case 0:
                 is_todo = true;
+                Log.i("scrolling", "todo");
                 break;
             case 1:
                 is_inbox = true;
+                Log.i("scrolling", "inbox");
                 break;
             case 2:
                 is_trash = true;
+                Log.i("scrolling", "trash");
                 break;
             default:
                 break;
@@ -131,7 +135,7 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                             baseX = cur_item.getX();
 
                             //find the display size
-                            WindowManager wm = (WindowManager) cur_item.getContext().getSystemService(Context.WINDOW_SERVICE);
+                            WindowManager wm = (WindowManager) MainActivity.baseContext.getSystemService(Context.WINDOW_SERVICE);
                             Display display = wm.getDefaultDisplay();
                             Point size = new Point();
                             display.getSize(size);
@@ -186,6 +190,7 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                             }
                         }
                         else if (is_inbox) {
+                            Log.i("scrolling", "inbox moving");
                             //going leftwards
                             if (distanceX < 0) {
                                 //set yellow background (pin item background)
@@ -200,6 +205,7 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                             }
                         }
                         else if (is_trash) {
+                            Log.i("scrolling", "trash moving");
                             //going leftwards
                             if (distanceX < 0) {
                             }
@@ -225,9 +231,11 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                         if (is_todo) {
                             //going leftwards
                             if (distanceX < 0) {
+                                Log.i("scrolling", "todo moving < 0");
                             }
                             //going rightwards
                             else {
+                                Log.i("scrolling", "todo moving > 0");
                                 cur_item.setX(baseX + distanceX);
                             }
                         }
@@ -240,7 +248,7 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                                 cur_item.setX(baseX + distanceX);
                             }
                         }
-                        else {
+                        else if (is_inbox) {
                             cur_item.setX(baseX + distanceX);
                         }
                     }

@@ -90,6 +90,12 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        Mailbox.save(Mailbox.emailList);
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
