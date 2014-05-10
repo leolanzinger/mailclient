@@ -1,5 +1,6 @@
 package com.example.mailclient.app;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -29,12 +30,14 @@ import javax.mail.internet.InternetAddress;
 public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchListener {
 
     private TextView subjectView;
-
+    Fragment sent_fragment;
     private Context context;
 
     public EmailAdapter(Context context, int resource, ArrayList<Email> items) {
         super(context, resource,  items);
         this.context = context;
+
+        sent_fragment = ((MainActivity) context).getFragmentManager().findFragmentByTag("SENT");
     }
 
     @Override
@@ -62,9 +65,20 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
             subjectView.setText(subject_excerpt);
 
             TextView fromView = (TextView) view.findViewById(R.id.list_from);
-            String email = item.from == null ? null : ((InternetAddress) item.from[0]).getPersonal();
-            if (email == null || email.isEmpty()) {
-                email = item.from == null ? null : ((InternetAddress) item.from[0]).getAddress();
+
+            // put recipient if we are in sent
+            String email;
+            if (sent_fragment != null && sent_fragment.isVisible()) {
+                email = item.to == null ? null : ((InternetAddress) item.to[0]).getPersonal();
+                if (email == null || email.isEmpty()) {
+                    email = item.to == null ? null : ((InternetAddress) item.to[0]).getAddress();
+                }
+            }
+            else {
+                email = item.from == null ? null : ((InternetAddress) item.from[0]).getPersonal();
+                if (email == null || email.isEmpty()) {
+                    email = item.from == null ? null : ((InternetAddress) item.from[0]).getAddress();
+                }
             }
             fromView.setText(email);
 

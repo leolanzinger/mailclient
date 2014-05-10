@@ -57,7 +57,6 @@ public class MainActivity extends Activity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setAdapter(new DrawerAdapter(this, R.layout.drawer_list, mDrawerLinks));
-        // TODO: complete the drawer listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
          /*
