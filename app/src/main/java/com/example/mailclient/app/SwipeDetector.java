@@ -259,35 +259,32 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                 float deltaX = upX - downX;
                 float deltaY = downY - upY;
 
-                if( Math.abs(deltaX) > 25 && !scrolling) {
-                    /*
-                     * if it is the case set the action
-                     * variables to the corrispondent
-                     * performed movement.
-                     */
-                    if (Math.abs(deltaX) > BLOCK_THRESHOLD) {
-                        if ( deltaX < 0 ) {
-                            mSwipeDetected = Action.RL_TRIGGER;
-                        }
-                        else {
-                            mSwipeDetected = Action.LR_TRIGGER;
+                if (!scrolling) {
+                    if (Math.abs(deltaX) > 0) {
+                        /*
+                         * if it is the case set the action
+                         * variables to the corrispondent
+                         * performed movement.
+                         */
+                        if (Math.abs(deltaX) > BLOCK_THRESHOLD) {
+                            if (deltaX < 0) {
+                                mSwipeDetected = Action.RL_TRIGGER;
+                            } else {
+                                mSwipeDetected = Action.LR_TRIGGER;
+                            }
+                        } else {
+                            if (deltaX < 0) {
+                                mSwipeDetected = Action.RL_BACK;
+                            } else {
+                                mSwipeDetected = Action.LR_BACK;
+                            }
                         }
                     } else {
-                        if ( deltaX < 0 ) {
-                            mSwipeDetected = Action.RL_BACK;
-                        }
-                        else {
-                            mSwipeDetected = Action.LR_BACK;
-                        }
+                        mSwipeDetected = Action.CLICK;
                     }
                 }
                 else {
-                    if (Math.abs(deltaY) < 25) {
-                        mSwipeDetected = Action.CLICK;
-                    }
-                    else {
-                        mSwipeDetected = Action.RESET;
-                    }
+                    mSwipeDetected = Action.None;
                 }
             getResults();
             return false;

@@ -11,40 +11,7 @@
         android:layout_height="fill_parent"
         android:background="@color/white">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="refresh"
-            android:id="@+id/empty_email"
-            android:layout_gravity="center_horizontal"
-            android:onClick="receiveMail"
-            android:visibility="gone"
-            android:background="@color/white"
-            android:clickable="true"
-            android:drawableStart="@drawable/refresh"
-            ></Button>
 
-        <ImageView
-            android:contentDescription="empty_todo_placeholder"
-            android:id="@+id/empty_todo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/empty_todo"
-            android:visibility="gone"
-            ></ImageView>
-
-
-        <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
-            android:id="@+id/pocket"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/PocketProgressBar"
-            android:indeterminate="true" />
-
-        <eu.erikw.PullToRefreshListView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/listView" />
 
     </LinearLayout>
 

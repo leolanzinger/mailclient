@@ -49,7 +49,7 @@ public class ReadMail extends Activity {
     WebView body;
     ImageButton todoButton;
     int mail_index;
-    boolean call_from_sent;
+    boolean call_from_sent, call_from_inbox, call_from_todo;
 
     PopupWindow popup;
 
@@ -66,6 +66,15 @@ public class ReadMail extends Activity {
          */
         call_from_sent = false;
         call_from_sent = extras.getBoolean("sent");
+
+        /*
+         *  We need those to know from which fragment
+         *  we are reading our mail
+         */
+        call_from_inbox = false;
+        call_from_todo = false;
+        call_from_inbox = extras.getBoolean("inbox");
+        call_from_todo = extras.getBoolean("todo");
 
         subject = (TextView) findViewById(R.id.read_subject);
         date = (TextView) findViewById(R.id.read_date);
@@ -338,11 +347,12 @@ public class ReadMail extends Activity {
 
     public void deleteMail(View view) {
         if (!call_from_sent) {
-            if (email.todo) {
-                Todo.todo_list.remove(Todo.todo_list.indexOf(email));
-                Inbox.inbox_email_list.remove(email);
-            } else {
-                Inbox.inbox_email_list.remove(email);
+            //find out which fragment is being displayed and remove from its list
+            if (call_from_todo) {
+                TodoFragment.todo_list.remove(email);
+            }
+            else if (call_from_inbox) {
+                InboxFragment.inbox_email_list.remove(email);
             }
             Mailbox.emailList.get(mail_index).deleted = true;
             email.removeTodo();

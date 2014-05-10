@@ -54,8 +54,8 @@ public class Animator {
             }
             @Override
             public void onAnimationEnd(android.animation.Animator animator) {
-                Todo.todo_list.remove(pos);
-                Todo.adapter.notifyDataSetChanged();
+                TodoFragment.todo_list.remove(pos);
+                TodoFragment.adapter.notifyDataSetChanged();
                 content.setX(0);
             }
             @Override
@@ -89,8 +89,8 @@ public class Animator {
             }
             @Override
             public void onAnimationEnd(android.animation.Animator animator) {
-                Inbox.inbox_email_list.remove(pos);
-                Inbox.adapter.notifyDataSetChanged();
+                InboxFragment.inbox_email_list.remove(pos);
+                InboxFragment.adapter.notifyDataSetChanged();
                 content.setX(0);
             }
             @Override
@@ -124,8 +124,8 @@ public class Animator {
             }
             @Override
             public void onAnimationEnd(android.animation.Animator animator) {
-                TrashBin.trash_email_list.remove(pos);
-                TrashBin.adapter.notifyDataSetChanged();
+                TrashBinFragment.trash_email_list.remove(pos);
+                TrashBinFragment.adapter.notifyDataSetChanged();
                 content.setX(0);
             }
             @Override

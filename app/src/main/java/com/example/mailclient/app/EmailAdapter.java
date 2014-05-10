@@ -28,8 +28,6 @@ import javax.mail.internet.InternetAddress;
  */
 public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchListener {
 
-    boolean trash;
-
     private TextView subjectView;
 
     private Context context;
@@ -37,15 +35,6 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
     public EmailAdapter(Context context, int resource, ArrayList<Email> items) {
         super(context, resource,  items);
         this.context = context;
-
-        if (context instanceof TrashBin) {
-            trash = true;
-            Log.i("trash", "siamo in trash");
-        }
-        else {
-            trash = false;
-            Log.i("trash", "non siamo in trash");
-        }
     }
 
     @Override

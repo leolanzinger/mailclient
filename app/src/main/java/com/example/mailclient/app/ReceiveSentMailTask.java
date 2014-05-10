@@ -1,6 +1,7 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -114,8 +115,10 @@ public class ReceiveSentMailTask extends AsyncTask<Object, Object, ArrayList<Ema
             Mailbox.sentList.add(0, em);
             Mailbox.saveSent(Mailbox.sentList);
         }
-        if (receiveMailActivity instanceof Sent ) {
-            Sent.adapter.notifyDataSetChanged();
+
+        Fragment sent_fragment = receiveMailActivity.getFragmentManager().findFragmentByTag("SENT");
+        if (sent_fragment != null && sent_fragment.isVisible()) {
+            SentFragment.adapter.notifyDataSetChanged();
         }
 
         super.onPostExecute(result);

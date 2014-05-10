@@ -1,6 +1,7 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -133,59 +134,62 @@ public class ReceiveInboxTask extends AsyncTask<Object, Object, ArrayList<Email>
          *  NB: insert into adapters other than list in reverse order
          */
 
-        if (receiveMailActivity instanceof Todo ) {
+        Fragment todo_fragment = receiveMailActivity.getFragmentManager().findFragmentByTag("TODO");
+        Fragment inbox_fragment = receiveMailActivity.getFragmentManager().findFragmentByTag("INBOX");
+        Fragment sent_fragment = receiveMailActivity.getFragmentManager().findFragmentByTag("SENT");
+        Fragment trash_fragment = receiveMailActivity.getFragmentManager().findFragmentByTag("TRASH");
+
+        if (todo_fragment != null && todo_fragment.isVisible()) {
             for (Email em : result) {
                 if (!em.seen) {
-                    Todo.adapter.insert(em, 0);
+                    TodoFragment.adapter.insert(em, 0);
                 }
                 Mailbox.emailList.add(0, em);
             }
-            Todo.adapter.notifyDataSetChanged();
+            TodoFragment.adapter.notifyDataSetChanged();
             Mailbox.save(Mailbox.emailList);
 
-            Todo.mPocketBar.progressiveStop();
-            Todo.listView.onRefreshComplete();
-            Todo.mPocketBar.setVisibility(View.GONE);
+            TodoFragment.mPocketBar.progressiveStop();
+            TodoFragment.listView.onRefreshComplete();
+            TodoFragment.mPocketBar.setVisibility(View.GONE);
         }
-        else if (receiveMailActivity instanceof Inbox) {
-
+        else if (inbox_fragment != null && inbox_fragment.isVisible()) {
             for (Email em : result) {
                 if (!em.deleted) {
-                    Inbox.adapter.insert(em, 0);
+                    InboxFragment.adapter.insert(em, 0);
                 }
                 Mailbox.emailList.add(0, em);
             }
-            Inbox.adapter.notifyDataSetChanged();
+            InboxFragment.adapter.notifyDataSetChanged();
             Mailbox.save(Mailbox.emailList);
 
-            Inbox.mPocketBar.progressiveStop();
-            Inbox.listView.onRefreshComplete();
-            Inbox.mPocketBar.setVisibility(View.GONE);
+            InboxFragment.mPocketBar.progressiveStop();
+            InboxFragment.listView.onRefreshComplete();
+            InboxFragment.mPocketBar.setVisibility(View.GONE);
         }
-        else if (receiveMailActivity instanceof TrashBin) {
+        else if (sent_fragment != null && sent_fragment.isVisible()) {
+            for (Email em : result) {
+                Mailbox.emailList.add(0, em);
+            }
+            Mailbox.save(Mailbox.emailList);
 
+            SentFragment.mPocketBar.progressiveStop();
+            SentFragment.listView.onRefreshComplete();
+            SentFragment.mPocketBar.setVisibility(View.GONE);
+        }
+        else if (trash_fragment != null && trash_fragment.isVisible()) {
             for (Email em : result) {
                 if (em.deleted) {
-                    TrashBin.adapter.insert(em, 0);
+                    TrashBinFragment.adapter.insert(em, 0);
                 }
                 Mailbox.emailList.add(0, em);
             }
-            TrashBin.adapter.notifyDataSetChanged();
+            TrashBinFragment.adapter.notifyDataSetChanged();
             Mailbox.save(Mailbox.emailList);
 
-            TrashBin.mPocketBar.progressiveStop();
-            TrashBin.listView.onRefreshComplete();
-            TrashBin.mPocketBar.setVisibility(View.GONE);
-        }
-        else if (receiveMailActivity instanceof Sent) {
-            for (Email em : result) {
-                Mailbox.emailList.add(0, em);
-            }
-            Mailbox.save(Mailbox.emailList);
-
-            Sent.mPocketBar.progressiveStop();
-            Sent.listView.onRefreshComplete();
-            Sent.mPocketBar.setVisibility(View.GONE);
+            TrashBinFragment.mPocketBar.progressiveStop();
+            TrashBinFragment.listView.onRefreshComplete();
+            TrashBinFragment.mPocketBar.setVisibility(View.GONE);
         }
         super.onPostExecute(result);
     }
