@@ -149,6 +149,7 @@ public class InboxFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setActionBarTitle("inbox");
             ((MainActivity) getActivity()).mDrawerLayout.closeDrawers();
         }
     }

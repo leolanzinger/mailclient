@@ -98,6 +98,7 @@ public class SentFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setActionBarTitle("sent emails");
             ((MainActivity) getActivity()).mDrawerLayout.closeDrawers();
         }
     }

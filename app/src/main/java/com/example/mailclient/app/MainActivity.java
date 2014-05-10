@@ -17,9 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
-import eu.erikw.PullToRefreshListView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 
@@ -30,8 +28,6 @@ public class MainActivity extends Activity {
     */
     public static Mailbox mailbox;
     public static Context baseContext;
-    public static SmoothProgressBar mPocketBar;
-    public static Button refresh_button;
     public static int current_fragment;
     public static String TAG;
 
@@ -154,6 +150,9 @@ public class MainActivity extends Activity {
         receive_task.execute(Mailbox.account_email, Mailbox.account_password);
     }
 
+    /*
+     * Drawer listener for click events
+     */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
@@ -161,6 +160,10 @@ public class MainActivity extends Activity {
         }
     }
 
+    /*
+     * This method is called when the user clicks
+     * on an item of the drawer pane
+     */
     private void selectItem(int position) {
         if (position == current_fragment) {
             mDrawerLayout.closeDrawers();
@@ -192,5 +195,13 @@ public class MainActivity extends Activity {
             ft.commit();
 
         }
+    }
+
+    /*
+     * Call this method from fragment to set
+     * panel title
+     */
+    public void setActionBarTitle(String title){
+        setTitle(title);
     }
 }

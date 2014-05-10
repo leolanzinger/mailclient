@@ -147,6 +147,7 @@ public class TodoFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setActionBarTitle("to do");
             ((MainActivity) getActivity()).mDrawerLayout.closeDrawers();
         }
     }

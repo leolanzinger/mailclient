@@ -122,6 +122,7 @@ public class TrashBinFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setActionBarTitle("trash");
             ((MainActivity) getActivity()).mDrawerLayout.closeDrawers();
         }
     }
