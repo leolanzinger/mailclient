@@ -3,7 +3,6 @@ package com.example.mailclient.app;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -62,8 +61,6 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
              * to avoid long text cropping.
              */
             String subject_excerpt;
-            Log.d("Check", "soggetto: " + item.subject);
-
             /*
              *  Check if there is no subject
              */

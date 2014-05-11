@@ -42,11 +42,12 @@ public class TodoFragment extends Fragment {
                 todo_list.add(Mailbox.emailList.get(i));
                 Collections.sort(todo_list,new Comparator<Email>() {
                     public int compare(Email a, Email b) {
-                        return a.expire_date.compareTo(b.expire_date);
+                        if (a.expire_date== null) return 1;
+                        else if (b.expire_date== null) return -1;
+                        else return a.expire_date.compareTo(b.expire_date);
                     }
                 });
             }
-            else {}
         }
 
         View view = inflater.inflate(R.layout.fragment_layout, container, false);
