@@ -1,6 +1,7 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -198,6 +200,15 @@ public class InboxFragment extends Fragment {
                         tomorrow_date.add(Calendar.DATE, 1);
                         Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo(tomorrow_date);
                         break;
+                    case 3:
+                        DialogFragment newFragment = new DatePickerFragment(){
+                                @Override
+                                public void onDateSet(DatePicker view, int year, int month, int day){
+                                    GregorianCalendar expire_date = new GregorianCalendar(year, month, day);
+                                    Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo(expire_date);
+                                }
+                        };
+                        newFragment.show(getActivity().getFragmentManager(), "datePicker");
                     default:
                         break;
                 }

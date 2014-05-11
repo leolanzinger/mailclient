@@ -2,11 +2,13 @@ package com.example.mailclient.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,6 +24,7 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -42,7 +45,7 @@ import javax.mail.internet.InternetAddress;
  *  TODO: comment code
  */
 
-public class ReadMail extends Activity {
+public class ReadMail extends FragmentActivity {
 
     Email email;
     String from_addresses = "";
@@ -403,6 +406,16 @@ public class ReadMail extends Activity {
                             GregorianCalendar tomorrow_date = new GregorianCalendar();
                             tomorrow_date.add(Calendar.DATE, 1);
                             email.addTodo(tomorrow_date);
+                            break;
+                        case 3:
+                            DialogFragment newFragment = new DatePickerFragment(){
+                                @Override
+                                public void onDateSet(DatePicker view, int year, int month, int day){
+                                    GregorianCalendar expire_date = new GregorianCalendar(year, month, day);
+                                    email.addTodo(expire_date);
+                                }
+                            };
+                            newFragment.show(getFragmentManager(), "datePicker");
                             break;
                         default:
                             break;
