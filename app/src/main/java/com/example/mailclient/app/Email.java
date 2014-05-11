@@ -11,7 +11,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.mail.Address;
 import javax.mail.Message;
@@ -32,14 +34,20 @@ public class Email implements Serializable {
      */
     boolean todo;
     boolean seen;
+    boolean deleted;
     String subject;
     Date date;
     ArrayList<String> body, body_temp, attachmentPath;
     Address[] from,to,cc;
     String excerpt;
     String ID;
-    boolean deleted;
+    GregorianCalendar expire_date;
 
+
+    /*
+     *  Initialize variables when istantiating
+     *  new Email object
+     */
     public Email() {
         subject = new String();
         date = new Date();
@@ -50,6 +58,7 @@ public class Email implements Serializable {
         attachmentPath= new ArrayList<String>();
         todo = false;
         deleted = false;
+        expire_date = null;
     }
 
     /*
@@ -165,6 +174,10 @@ public class Email implements Serializable {
         ID = s;
     }
 
+    /*
+     *  Save method to store attachment
+     *  to internal storage
+     */
     public void saveFile(InputStream uploadedInputStream, String serverLocation) {
         try {
             OutputStream outputStream;
@@ -181,11 +194,21 @@ public class Email implements Serializable {
         }
     }
 
-    public void addTodo() {
+    /*
+     * Public methods to set / unset
+     * Email object as TodoEmail Object
+     */
+    public void addTodo(GregorianCalendar date) {
+        setReminder(date);
         todo = true;
     }
 
     public void removeTodo() {
+        expire_date = null;
         todo = false;
+    }
+
+    public void setReminder(GregorianCalendar date) {
+        expire_date = date;
     }
 }

@@ -10,10 +10,16 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import eu.erikw.PullToRefreshListView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -160,25 +166,45 @@ public class InboxFragment extends Fragment {
      * perform animation after pinning element
      */
     public void initiatePopupWindow() {
-        try {
-            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View layout = inflater.inflate(R.layout.popup, (ViewGroup) getActivity().findViewById(R.id.popup_element));
-            popup = new PopupWindow(layout, 360, 400, true);
-            popup.setBackgroundDrawable(new BitmapDrawable());
-            popup.showAtLocation(layout, Gravity.CENTER, 0, -10);
-            TextView popup_nessuna = (TextView) layout.findViewById(R.id.popup_nessuna);
-            popup_nessuna.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // pin
-                    Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo();
-                    popup.dismiss();
-                    animator.resetView(listView.getChildAt(list_visible_position));
-                }
-            });
+        /*
+         *  Define popup layout
+         */
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.popup, (ViewGroup) getActivity().findViewById(R.id.popup));
+        popup = new PopupWindow(layout, 360, 400, true);
+        popup.setBackgroundDrawable(new BitmapDrawable());
+        popup.showAtLocation(layout, Gravity.CENTER, 0, -10);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        /*
+         *  Set up popup_list and adapter
+         */
+        ListView popup_list = (ListView) layout.findViewById(R.id.popup_list);
+        String[] popup_array = new String[]{"nessuna", "oggi", "domani", "scegli data"};
+        ArrayAdapter<String> popup_Adapter = new ArrayAdapter<String>(getActivity(), R.layout.popup_element, popup_array);
+        popup_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                switch (position){
+                    case 0:
+                        Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo(null);
+                        break;
+                    case 1:
+                        GregorianCalendar today_date = new GregorianCalendar();
+                        Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo(today_date);
+                        break;
+                    case 2:
+                        GregorianCalendar tomorrow_date = new GregorianCalendar();
+                        tomorrow_date.add(Calendar.DATE, 1);
+                        Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo(tomorrow_date);
+                        break;
+                    default:
+                        break;
+                }
+                popup.dismiss();
+                animator.resetView(listView.getChildAt(list_visible_position));
+            }
+        });
+        popup_list.setAdapter(popup_Adapter);
     }
 }

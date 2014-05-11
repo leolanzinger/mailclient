@@ -13,4 +13,13 @@
         <item>sent</item>
         <item>trash</item>
     </array>
+
+    <string-array name="popup">
+        <item>nessuna</item>
+        <item>oggi</item>
+        <item>domani</item>
+        <item>scegli data</item>
+    </string-array>
+
+
 </resources>

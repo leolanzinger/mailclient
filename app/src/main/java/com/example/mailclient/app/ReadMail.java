@@ -19,15 +19,20 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.mail.internet.InternetAddress;
 
@@ -367,26 +372,48 @@ public class ReadMail extends Activity {
      * perform animation after pinning element
      */
     public void initiatePopupWindow() {
-        try {
-            LayoutInflater inflater = (LayoutInflater) ReadMail.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View layout = inflater.inflate(R.layout.popup, (ViewGroup) findViewById(R.id.popup_element));
-            popup = new PopupWindow(layout, 360, 400, true);
-            popup.setBackgroundDrawable(new BitmapDrawable());
-            popup.showAtLocation(layout, Gravity.CENTER, 0, -10);
-            TextView popup_nessuna = (TextView) layout.findViewById(R.id.popup_nessuna);
-            popup_nessuna.setOnClickListener(new View.OnClickListener() {
+        /*
+         *  Define popup layout
+         */
+        LayoutInflater inflater = (LayoutInflater) ReadMail.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.popup, (ViewGroup) ReadMail.this.findViewById(R.id.popup));
+        popup = new PopupWindow(layout, 360, 400, true);
+        popup.setBackgroundDrawable(new BitmapDrawable());
+        popup.showAtLocation(layout, Gravity.CENTER, 0, -10);
+
+        /*
+         *  Set up popup_list and adapter
+         */
+        ListView popup_list = (ListView) layout.findViewById(R.id.popup_list);
+        String[] popup_array = new String[]{"nessuna", "oggi", "domani", "scegli data"};
+        ArrayAdapter<String> popup_Adapter = new ArrayAdapter<String>(ReadMail.this, R.layout.popup_element, popup_array);
+            popup_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onClick(View view) {
-                    // pin
-                    email.addTodo();
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+                    switch (position){
+                        case 0:
+                            email.addTodo(null);
+                            break;
+                        case 1:
+                            GregorianCalendar today_date = new GregorianCalendar();
+                            email.addTodo(today_date);
+                            break;
+                        case 2:
+                            GregorianCalendar tomorrow_date = new GregorianCalendar();
+                            tomorrow_date.add(Calendar.DATE, 1);
+                            email.addTodo(tomorrow_date);
+                            break;
+                        default:
+                            break;
+                    }
                     todoButton.setBackgroundColor(R.color.yellow);
                     todoButton.setBackgroundResource(R.drawable.pinned);
                     popup.dismiss();
                 }
             });
+        popup_list.setAdapter(popup_Adapter);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
+
