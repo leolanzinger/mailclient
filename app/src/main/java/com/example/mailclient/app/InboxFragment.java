@@ -117,6 +117,7 @@ public class InboxFragment extends Fragment {
                          * Istantiate popup window for pin options
                          */
                         initiatePopupWindow();
+                        animator.resetView(listView.getChildAt(list_visible_position));
                     }
                     else if (this.getAction().equals(SwipeDetector.Action.LR_TRIGGER)) {
                         // delete
@@ -213,7 +214,6 @@ public class InboxFragment extends Fragment {
                         break;
                 }
                 popup.dismiss();
-                animator.resetView(listView.getChildAt(list_visible_position));
             }
         });
         popup_list.setAdapter(popup_Adapter);
