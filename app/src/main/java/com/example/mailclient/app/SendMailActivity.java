@@ -1,5 +1,9 @@
 package com.example.mailclient.app;
 
+/**
+ * Created by teo on 01/04/14.
+ */
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;

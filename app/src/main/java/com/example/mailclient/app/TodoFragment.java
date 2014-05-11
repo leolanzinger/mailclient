@@ -2,24 +2,15 @@ package com.example.mailclient.app;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import eu.erikw.PullToRefreshListView;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
@@ -49,6 +40,11 @@ public class TodoFragment extends Fragment {
         for (int i=0; i<Mailbox.emailList.size(); i++) {
             if ((Mailbox.emailList.get(i).todo || !Mailbox.emailList.get(i).seen) && (!Mailbox.emailList.get(i).deleted)) {
                 todo_list.add(Mailbox.emailList.get(i));
+                Collections.sort(todo_list,new Comparator<Email>() {
+                    public int compare(Email a, Email b) {
+                        return a.expire_date.compareTo(b.expire_date);
+                    }
+                });
             }
             else {}
         }
@@ -151,8 +147,6 @@ public class TodoFragment extends Fragment {
             ((MainActivity) getActivity()).mDrawerLayout.closeDrawers();
         }
     }
-
-
 
 //
 //        mDrawerLayout.closeDrawers();

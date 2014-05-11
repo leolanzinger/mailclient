@@ -1,7 +1,6 @@
 package com.example.mailclient.app;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;

@@ -1,9 +1,7 @@
 package com.example.mailclient.app;
 
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Properties;
 
 import javax.mail.Flags;
@@ -13,9 +11,7 @@ import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
-import javax.mail.search.FlagTerm;
 import javax.mail.search.MessageIDTerm;
-import javax.mail.search.SearchTerm;
 
 /**
  * Created by Leo on 02/04/14.

@@ -7,8 +7,6 @@ import android.graphics.Point;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 
 /**
  * Created by Giulio on 15/04/14.

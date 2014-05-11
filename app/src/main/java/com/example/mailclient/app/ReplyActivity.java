@@ -1,6 +1,7 @@
 package com.example.mailclient.app;
 
-/*
+
+/**
  * Created by teo on 01/04/14.
  */
 

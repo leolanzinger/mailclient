@@ -2,10 +2,7 @@ package com.example.mailclient.app;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,7 +13,6 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import javax.mail.internet.InternetAddress;
 
@@ -66,11 +62,24 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
              * to avoid long text cropping.
              */
             String subject_excerpt;
-            if (item.subject.length() > 15) {
-                subject_excerpt = item.subject.substring(0, 15);
+            Log.d("Check", "soggetto: " + item.subject);
+
+            /*
+             *  Check if there is no subject
+             */
+
+            if (item.subject == null) {
+                subject_excerpt = "(nessun oggetto)";
                 subject_excerpt += "...";
-            } else {
-                subject_excerpt = item.subject;
+
+            }
+            else {
+                if (item.subject.length() > 15) {
+                    subject_excerpt = item.subject.substring(0, 15);
+                    subject_excerpt += "...";
+                } else {
+                    subject_excerpt = item.subject;
+                }
             }
             subjectView.setText(subject_excerpt);
 
