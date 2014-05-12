@@ -1,7 +1,9 @@
 package com.example.mailclient.app;
 
 import android.app.ActionBar;
+import android.app.AlarmManager;
 import android.app.DialogFragment;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -394,18 +396,33 @@ public class ReadMail extends FragmentActivity {
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
                     switch (position){
+                        /*
+                         *  No date set for alarm (don't set an alarm)
+                         */
                         case 0:
                             email.addTodo(null);
                             break;
+                        /*
+                         * Alarm set for today at end time
+                         */
                         case 1:
                             GregorianCalendar today_date = new GregorianCalendar();
+                            // Add email to todolist
                             email.addTodo(today_date);
                             break;
+                        /*
+                         * Alarm set for tomorrow at start time (reminder message)
+                         * and tomorrow at end time (if not completed)
+                         */
                         case 2:
                             GregorianCalendar tomorrow_date = new GregorianCalendar();
                             tomorrow_date.add(Calendar.DATE, 1);
                             email.addTodo(tomorrow_date);
                             break;
+                        /*
+                         *  Alarm set for a date's start time (reminder message)
+                         *  and date's end time (if not completed)
+                         */
                         case 3:
                             DialogFragment newFragment = new DatePickerFragment(){
                                 @Override

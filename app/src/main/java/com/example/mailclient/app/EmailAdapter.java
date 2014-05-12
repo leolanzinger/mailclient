@@ -139,6 +139,7 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
                 View frontground = view.findViewById(R.id.list_content);
                 frontground.setBackgroundResource(R.drawable.seen);
             }
+
         }
 
         view.setOnTouchListener(this);

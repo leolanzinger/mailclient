@@ -1,9 +1,13 @@
 package com.example.mailclient.app;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by Leo on 13/04/14.
@@ -25,12 +29,19 @@ public class Mailbox {
     // internal storage keys
     static String KEY = "mailClient";
     static String SENT_KEY = "mailClient_sent";
+    // reminder calendars
+    public static GregorianCalendar scheduler_start, scheduler_end;
+    // alarmList
+    public static ArrayList<PendingIntent> intentArray;
+    // alarm manager
+    public static AlarmManager alManager;
 
     public Mailbox(Context context) {
         baseContext = context;
         storer = new InternalStorage();
         emailList  = new ArrayList<Email>();
         sentList = new ArrayList<Email>();
+        intentArray =  new ArrayList<PendingIntent>();
 
         try {
             // attempt to read the email list from internal storage
@@ -42,6 +53,22 @@ public class Mailbox {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        /*
+         *  Let's hardcode alarm times
+         */
+        scheduler_start = new GregorianCalendar();
+        scheduler_end = new GregorianCalendar();
+        scheduler_start.set(Calendar.HOUR_OF_DAY, 8);
+        scheduler_start.set(Calendar.MINUTE, 0);
+        scheduler_end.set(Calendar.HOUR_OF_DAY, 18);
+        scheduler_end.set(Calendar.MINUTE, 0);
+
+        /*
+         *  Istantiate alarm manager
+         */
+        alManager = (AlarmManager) baseContext.getSystemService(baseContext.ALARM_SERVICE);
+
     }
 
     /*

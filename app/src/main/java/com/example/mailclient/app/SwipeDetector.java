@@ -71,15 +71,12 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
         switch (activity) {
             case 0:
                 is_todo = true;
-                Log.i("scrolling", "todo");
                 break;
             case 1:
                 is_inbox = true;
-                Log.i("scrolling", "inbox");
                 break;
             case 2:
                 is_trash = true;
-                Log.i("scrolling", "trash");
                 break;
             default:
                 break;
@@ -190,7 +187,6 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                             }
                         }
                         else if (is_inbox) {
-                            Log.i("scrolling", "inbox moving");
                             //going leftwards
                             if (distanceX < 0) {
                                 //set yellow background (pin item background)
@@ -205,7 +201,6 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                             }
                         }
                         else if (is_trash) {
-                            Log.i("scrolling", "trash moving");
                             //going leftwards
                             if (distanceX < 0) {
                             }
@@ -231,11 +226,9 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                         if (is_todo) {
                             //going leftwards
                             if (distanceX < 0) {
-                                Log.i("scrolling", "todo moving < 0");
                             }
                             //going rightwards
                             else {
-                                Log.i("scrolling", "todo moving > 0");
                                 cur_item.setX(baseX + distanceX);
                             }
                         }

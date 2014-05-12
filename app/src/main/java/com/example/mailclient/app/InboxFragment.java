@@ -1,12 +1,15 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -186,19 +189,35 @@ public class InboxFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+                Email email = Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1)));
                 switch (position){
+                    /*
+                     *  No date set for alarm (don't set an alarm)
+                     */
                     case 0:
-                        Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo(null);
+                        email.addTodo(null);
                         break;
+                    /*
+                     * Alarm set for today at end time
+                     */
                     case 1:
                         GregorianCalendar today_date = new GregorianCalendar();
-                        Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo(today_date);
+                        // Add email to todolist
+                        email.addTodo(today_date);
                         break;
+                    /*
+                     * Alarm set for tomorrow at start time (reminder message)
+                     * and tomorrow at end time (if not completed)
+                     */
                     case 2:
                         GregorianCalendar tomorrow_date = new GregorianCalendar();
                         tomorrow_date.add(Calendar.DATE, 1);
-                        Mailbox.emailList.get(Mailbox.emailList.indexOf(inbox_email_list.get(list_position - 1))).addTodo(tomorrow_date);
+                        email.addTodo(tomorrow_date);
                         break;
+                    /*
+                     *  Alarm set for a date's start time (reminder message)
+                     *  and date's end time (if not completed)
+                     */
                     case 3:
                         DialogFragment newFragment = new DatePickerFragment(){
                                 @Override

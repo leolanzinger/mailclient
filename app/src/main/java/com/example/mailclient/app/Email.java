@@ -1,5 +1,9 @@
 package com.example.mailclient.app;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -12,6 +16,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -32,15 +37,11 @@ public class Email implements Serializable {
     /*
      * Email variables
      */
-    boolean todo;
-    boolean seen;
-    boolean deleted;
-    String subject;
+    boolean todo, seen, deleted;
+    String subject, excerpt, ID, ID_START, ID_END;
     Date date;
     ArrayList<String> body, body_temp, attachmentPath;
     Address[] from,to,cc;
-    String excerpt;
-    String ID;
     GregorianCalendar expire_date;
 
 
@@ -172,6 +173,8 @@ public class Email implements Serializable {
      */
     public void setID(String s) {
         ID = s;
+        ID_START = s.concat(String.valueOf(Mailbox.scheduler_start.getTimeInMillis()));
+        ID_END = s.concat(String.valueOf(Mailbox.scheduler_end.getTimeInMillis()));
     }
 
     /*
@@ -204,11 +207,75 @@ public class Email implements Serializable {
     }
 
     public void removeTodo() {
+        if (expire_date != null) {
+            /*
+             *  Cancel alarms
+             */
+            Intent intent_start = new Intent(Mailbox.baseContext, AlarmReceiver.class);
+            PendingIntent int_start = PendingIntent.getBroadcast(Mailbox.baseContext, ID_START.hashCode(), intent_start, 0);
+            Intent intent_end = new Intent(Mailbox.baseContext, AlarmReceiver.class);
+            PendingIntent int_end = PendingIntent.getBroadcast(Mailbox.baseContext, ID_END.hashCode(), intent_end, 0);
+            Mailbox.alManager.cancel(int_start);
+            Mailbox.alManager.cancel(int_end);
+        }
         expire_date = null;
         todo = false;
     }
 
     public void setReminder(GregorianCalendar date) {
         expire_date = date;
+        if (date != null) {
+            /*
+             *  set start alarm
+             */
+            Calendar cal = Calendar.getInstance();
+            if (date.after(cal) ) {
+                /*
+                 * set start alarm
+                 */
+                Intent intent = new Intent(Mailbox.baseContext, AlarmReceiver.class);
+                String notification_msg;
+                if (subject == null) {
+                    notification_msg = "<nessun oggetto>";
+                }
+                else {
+                    notification_msg = subject;
+                }
+                intent.putExtra("EMAIL", "Oggi devi rispondere a: \"" + notification_msg + "\"");
+                intent.putExtra("ID", ID.hashCode());
+                GregorianCalendar alarm_start_cal = date;
+                alarm_start_cal.set(GregorianCalendar.HOUR_OF_DAY, Mailbox.scheduler_start.get(GregorianCalendar.HOUR_OF_DAY));
+                alarm_start_cal.set(GregorianCalendar.MINUTE, Mailbox.scheduler_end.get(GregorianCalendar.MINUTE));
+                alarm_start_cal.set(GregorianCalendar.SECOND, 0);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(Mailbox.baseContext, ID_END.hashCode() , intent, 0);
+                Mailbox.alManager.set(AlarmManager.RTC, alarm_start_cal.getTimeInMillis(), pendingIntent);
+                Mailbox.intentArray.add(pendingIntent);
+                Log.i("alarm", "alarm set for " + "Oggi devi fare: \"" + notification_msg + "\"");
+                Log.i("alarm", "alarm set at " + alarm_start_cal.getTime());
+            }
+
+            /*
+             * set end alarm
+             */
+            Intent intent = new Intent(Mailbox.baseContext, AlarmReceiver.class);
+            String notification_msg;
+            if (subject == null) {
+                notification_msg = "<nessun oggetto>";
+            }
+            else {
+                notification_msg = subject;
+            }
+            intent.putExtra("EMAIL", "Oggi dovevi rispondere a: \"" + notification_msg + "\"");
+            intent.putExtra("ID", ID.hashCode());
+            GregorianCalendar alarm_end_cal = date;
+            alarm_end_cal.set(GregorianCalendar.HOUR_OF_DAY, Mailbox.scheduler_end.get(GregorianCalendar.HOUR_OF_DAY));
+            alarm_end_cal.set(GregorianCalendar.MINUTE, Mailbox.scheduler_end.get(GregorianCalendar.MINUTE));
+            alarm_end_cal.set(GregorianCalendar.SECOND, 0);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(Mailbox.baseContext, ID_END.hashCode() , intent, 0);
+            Mailbox.alManager.set(AlarmManager.RTC, alarm_end_cal.getTimeInMillis(), pendingIntent);
+            Mailbox.intentArray.add(pendingIntent);
+            Log.i("alarm", "alarm set for " + "Oggi non hai fatto: \"" + notification_msg + "\"");
+            Log.i("alarm", "alarm set at " + alarm_end_cal.getTime());
+        }
     }
 }
