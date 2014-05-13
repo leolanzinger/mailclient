@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 import javax.mail.internet.InternetAddress;
 
@@ -113,7 +114,7 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
                     date_format = "";
                 }
             }
-            else{
+            else {
                 date_format = new SimpleDateFormat("dd MMM").format(item.date.getTime());
             }
             dateView.setText(date_format);
@@ -137,8 +138,14 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
                 fromView.setTypeface(null, Typeface.NORMAL);
                 dateView.setTypeface(null, Typeface.NORMAL);
                 View frontground = view.findViewById(R.id.list_content);
-                frontground.setBackgroundResource(R.drawable.seen);
+                GregorianCalendar gregorio = new GregorianCalendar();
+                if(item.expire_date != null && item.expire_date.get(GregorianCalendar.DAY_OF_YEAR) == gregorio.get(GregorianCalendar.DAY_OF_YEAR)) {
+                    applyDifferentBackgroundResource(R.drawable.seen_expire,frontground);
+                } else {
+                    applyDifferentBackgroundResource(R.drawable.seen,frontground);
+                }
             }
+
 
         }
 
@@ -158,5 +165,14 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
      */
     public void processPosition(View view) {
 
+    }
+
+    private void applyDifferentBackgroundResource(int resId, View v){
+        final int paddingBottom = v.getPaddingBottom();
+        final int paddingLeft   = v.getPaddingLeft();
+        final int paddingRight  = v.getPaddingRight();
+        final int paddingTop    = v.getPaddingTop();
+        v.setBackgroundResource(resId);
+        v.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
     }
 }

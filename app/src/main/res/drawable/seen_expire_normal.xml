@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/stroke_yellow"/>
+    <!--mettere uno stroke gialla a lato-->
+    <item android:drawable="@drawable/seen_normal"  android:right="10dp"/>
+</layer-list>
+
+
