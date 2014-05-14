@@ -1,15 +1,12 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -196,6 +193,7 @@ public class InboxFragment extends Fragment {
                      */
                     case 0:
                         email.addTodo(null);
+                        adapter.notifyDataSetChanged();
                         break;
                     /*
                      * Alarm set for today at end time
@@ -204,6 +202,7 @@ public class InboxFragment extends Fragment {
                         GregorianCalendar today_date = new GregorianCalendar();
                         // Add email to todolist
                         email.addTodo(today_date);
+                        adapter.notifyDataSetChanged();
                         break;
                     /*
                      * Alarm set for tomorrow at start time (reminder message)
@@ -213,6 +212,7 @@ public class InboxFragment extends Fragment {
                         GregorianCalendar tomorrow_date = new GregorianCalendar();
                         tomorrow_date.add(Calendar.DATE, 1);
                         email.addTodo(tomorrow_date);
+                        adapter.notifyDataSetChanged();
                         break;
                     /*
                      *  Alarm set for a date's start time (reminder message)
@@ -227,6 +227,7 @@ public class InboxFragment extends Fragment {
                                 }
                         };
                         newFragment.show(getActivity().getFragmentManager(), "datePicker");
+                        adapter.notifyDataSetChanged();
                     default:
                         break;
                 }
