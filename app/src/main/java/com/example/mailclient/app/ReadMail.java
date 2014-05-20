@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.Log;
@@ -29,12 +30,14 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -61,6 +64,9 @@ public class ReadMail extends FragmentActivity {
     boolean call_from_sent, call_from_inbox, call_from_todo;
 
     PopupWindow popup;
+
+    // request code for speech recognition
+    private static final int REQUEST_CODE = 1234;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -293,6 +299,18 @@ public class ReadMail extends FragmentActivity {
     }
 
     /*
+     *  Show options menu for
+     *  reply mail button
+     */
+    public void showOptionsMenu(MenuItem menu) {
+        View menuItemView = findViewById(R.id.reply_mail);
+        PopupMenu popup = new PopupMenu(this, menuItemView);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.reply_mail_menu, popup.getMenu());
+        popup.show();
+    }
+
+    /*
      *  Launch new ReplyActivity
      *  that sends an email back to
      *  "from" addresses
@@ -309,6 +327,21 @@ public class ReadMail extends FragmentActivity {
         startActivity(intent);
     }
     /*
+     *  Launch new Reply Activity from speech recognizer
+     */
+    public void replyMail(String content) {
+        Intent intent = new Intent(this, ReplyActivity.class);
+        intent.putExtra("fromEmail", Mailbox.account_email);
+        intent.putExtra("password", Mailbox.account_password);
+        intent.putExtra("subject","Re: "+ email.subject);
+        intent.putExtra("body", content + " "+Html.fromHtml(body_content).toString()); //DA INDENTARE
+        intent.putExtra("to",from_addresses);
+        intent.putExtra("replyType", "Reply");
+
+        startActivity(intent);
+    }
+
+    /*
     *  Launch new ReplyActivity
     *  that sends an email back to
     *  "from" addresses and to all "cc" ones
@@ -319,6 +352,22 @@ public class ReadMail extends FragmentActivity {
         intent.putExtra("password", Mailbox.account_password);
         intent.putExtra("subject","Re: "+ email.subject);
         intent.putExtra("body",""+Html.fromHtml(body_content).toString()); //DA INDENTARE
+        intent.putExtra("to",from_addresses);
+        intent.putExtra("cc",cc_addresses);
+        intent.putExtra("replyType", "ReplyAll");
+        startActivity(intent);
+    }
+
+    /*
+     *  Launch new Reply all activity
+     *  from speech analyzer
+     */
+    public void replyAll(String content) {
+        Intent intent = new Intent(this, ReplyActivity.class);
+        intent.putExtra("fromEmail", Mailbox.account_email);
+        intent.putExtra("password", Mailbox.account_password);
+        intent.putExtra("subject","Re: "+ email.subject);
+        intent.putExtra("body",content + " "+Html.fromHtml(body_content).toString()); //DA INDENTARE
         intent.putExtra("to",from_addresses);
         intent.putExtra("cc",cc_addresses);
         intent.putExtra("replyType", "ReplyAll");
@@ -369,6 +418,14 @@ public class ReadMail extends FragmentActivity {
             update_deleted_task.execute(email.ID);
             this.finish();
         }
+    }
+
+    /*
+     *  Trigger speech recognition
+     */
+    public void speakButtonClicked(MenuItem menu) {
+
+        startVoiceRecognitionActivity();
     }
 
     /*
@@ -442,7 +499,34 @@ public class ReadMail extends FragmentActivity {
                 }
             });
         popup_list.setAdapter(popup_Adapter);
+    }
 
+    /*
+     *  Start speech recognition activity
+     */
+    private void startVoiceRecognitionActivity()
+    {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice recognition...");
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    /*
+     * Handle the results from the voice recognition activity.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK)
+        {
+            // Populate the wordsList with the String values the recognition engine thought it heard
+            ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            SpeechAnalyzer speechAnalysis = new SpeechAnalyzer();
+            speechAnalysis.analyze(matches, ReadMail.this, email);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
 

@@ -3,13 +3,13 @@
         android:title="reply"
         android:icon="@drawable/reply"
         android:showAsAction="ifRoom"
-        android:onClick="replyMail"
+        android:onClick="showOptionsMenu"
         />
-    <item android:id="@+id/reply_all_mail"
-        android:title="reply all"
+    <item android:id="@+id/speak_mail"
+        android:title="speak"
         android:icon="@drawable/replyall"
         android:showAsAction="ifRoom"
-        android:onClick="replyAll"
+        android:onClick="speakButtonClicked"
         />
     <item android:id="@+id/forward"
         android:title="forward"
