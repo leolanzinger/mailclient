@@ -71,11 +71,23 @@ public class ReplyActivity extends Activity {
         bccEmailText.setText(intent.getStringExtra("bcc"));
 
         this.setTitle(intent.getStringExtra("replyType"));
+
+
+
         /*
          *  Set quoted original message
          */
         String body_cont = intent.getStringExtra("body");
-        bodyEmailText.setText("\nOriginal message: \n\n" + body_cont);
+        /*
+         *  Insert message if voice-called
+         */
+        String speech_content = intent.getStringExtra("content");
+        if (speech_content != null) {
+            bodyEmailText.setText(speech_content+"\nOriginal message: \n\n" + body_cont);
+        }
+        else {
+            bodyEmailText.setText("\nOriginal message: \n\n" + body_cont);
+        }
         bodyEmailText.requestFocus();
         bodyEmailText.setSelection(0);
 

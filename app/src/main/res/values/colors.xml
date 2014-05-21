@@ -1,14 +1,14 @@
 <resources>
-    <color name="blue">#2D5FB7</color>
+    <color name="blue">#34495E</color>
     <color name="grey">#cacaca</color>
     <color name="black">#4A4A4A</color>
     <color name="white">#FFFFFF</color>
     <color name="unread">#EAF0F5</color>
     <color name="pressing">#B7D7F2</color>
     <color name="navbar_border">#EEE</color>
-    <color name="red">#FF5A24</color>
-    <color name="green">#569d4f</color>
-    <color name="yellow">#FCBC54</color>
+    <color name="red">#E74C3C</color>
+    <color name="green">#27AE60</color>
+    <color name="yellow">#F1C40F</color>
 
     <integer-array name="pocket_background_colors">
         <item>@color/pocket_color_1</item>
@@ -38,7 +38,7 @@
 
     <color name="pocket_color_1">#85edb9</color>
     <color name="pocket_color_2">#34bdb7</color>
-    <color name="pocket_color_3">#ee4458</color>
-    <color name="pocket_color_4">#fcb74d</color>
+    <color name="pocket_color_3">#E74C3C</color>
+    <color name="pocket_color_4">#F1C40F</color>
 
 </resources>

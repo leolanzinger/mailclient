@@ -334,7 +334,8 @@ public class ReadMail extends FragmentActivity {
         intent.putExtra("fromEmail", Mailbox.account_email);
         intent.putExtra("password", Mailbox.account_password);
         intent.putExtra("subject","Re: "+ email.subject);
-        intent.putExtra("body", content + " "+Html.fromHtml(body_content).toString()); //DA INDENTARE
+        intent.putExtra("content", content);
+        intent.putExtra("body", ""+Html.fromHtml(body_content).toString()); //DA INDENTARE
         intent.putExtra("to",from_addresses);
         intent.putExtra("replyType", "Reply");
 
@@ -367,7 +368,8 @@ public class ReadMail extends FragmentActivity {
         intent.putExtra("fromEmail", Mailbox.account_email);
         intent.putExtra("password", Mailbox.account_password);
         intent.putExtra("subject","Re: "+ email.subject);
-        intent.putExtra("body",content + " "+Html.fromHtml(body_content).toString()); //DA INDENTARE
+        intent.putExtra("content", content);
+        intent.putExtra("body",""+Html.fromHtml(body_content).toString()); //DA INDENTARE
         intent.putExtra("to",from_addresses);
         intent.putExtra("cc",cc_addresses);
         intent.putExtra("replyType", "ReplyAll");
