@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -63,7 +66,7 @@ public class ReadMail extends FragmentActivity {
     int mail_index;
     boolean call_from_sent, call_from_inbox, call_from_todo;
 
-    PopupWindow popup;
+    PopupWindow popup, fadePopup;
 
     // request code for speech recognition
     private static final int REQUEST_CODE = 1234;
@@ -436,14 +439,34 @@ public class ReadMail extends FragmentActivity {
      */
     public void initiatePopupWindow() {
         /*
-         *  Define popup layout
+         *  Get window size
          */
-        LayoutInflater inflater = (LayoutInflater) ReadMail.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.popup, (ViewGroup) ReadMail.this.findViewById(R.id.popup));
-        popup = new PopupWindow(layout, 360, 400, true);
-        popup.setBackgroundDrawable(new BitmapDrawable());
-        popup.showAtLocation(layout, Gravity.CENTER, 0, -10);
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y;
 
+        /*
+         *  First display fade popup to dim the background
+         */
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout_fade = inflater.inflate(R.layout.fadepopup,
+                (ViewGroup) findViewById(R.id.fadePopup));
+        fadePopup = new PopupWindow(layout_fade, width, height, true);
+        fadePopup.setBackgroundDrawable(new BitmapDrawable());
+        fadePopup.showAtLocation(layout_fade, Gravity.NO_GRAVITY, 0, 0);
+        fadePopup.setOutsideTouchable(true);
+        fadePopup.setFocusable(true);
+
+        /*
+         *  Define popup layout and display it
+         */
+        View layout = inflater.inflate(R.layout.popup, (ViewGroup) findViewById(R.id.popup));
+        popup = new PopupWindow(layout, (width/4)*3, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popup.setBackgroundDrawable(new BitmapDrawable());
+        popup.showAtLocation(layout, Gravity.CENTER, 0, 0);
         /*
          *  Set up popup_list and adapter
          */
@@ -501,6 +524,13 @@ public class ReadMail extends FragmentActivity {
                 }
             });
         popup_list.setAdapter(popup_Adapter);
+
+        popup.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                fadePopup.dismiss();
+            }
+        });
     }
 
     /*
