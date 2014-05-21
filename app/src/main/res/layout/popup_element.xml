@@ -7,5 +7,4 @@
     android:textSize="18dip"
     android:id="@+id/popup_element"
     android:gravity="left"
-    android:padding="15sp"
-    android:background="@drawable/popup_element"/>
+    android:padding="15sp"/>
