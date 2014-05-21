@@ -12,9 +12,9 @@
 
     <!-- ActionBar styles -->
     <style name="MyActionBar"
-        parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="@android:background">@color/white</item>
-        <item name="@android:textColor">@color/black</item>
+        parent="@android:style/Widget.Holo.ActionBar.Solid">
+        <item name="@android:background">@color/blue</item>
+        <item name="@android:textColor">@color/white</item>
         <item name="android:titleTextStyle">@style/MyActionBarTextStyle</item>
         <item name="android:paddingBottom">0dp</item>
         <item name="android:layout_marginBottom">0dp</item>
@@ -29,13 +29,13 @@
     <!-- ActionBar title text -->
     <style name="MyActionBarTextStyle"
         parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-            <item name="@android:textColor">@color/black</item>
+            <item name="@android:textColor">@color/white</item>
     </style>
 
     <!-- ActionBar tabs text styles -->
     <style name="MyActionBarTabText"
         parent="@android:style/Widget.Holo.ActionBar.TabText">
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
 </resources>
