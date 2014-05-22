@@ -17,15 +17,19 @@ import java.util.Calendar;
  * Created by Leo on 12/05/14.
  */
 public class AlarmReceiver extends BroadcastReceiver {
+
+    String notification_msg, notification_title;
+
     @Override
     public void onReceive(Context context, Intent intent) {
         // Show the toast  like in above screen shot
-        String notification_msg = intent.getStringExtra("EMAIL");
+        notification_msg = intent.getStringExtra("EMAIL");
+        notification_title = intent.getStringExtra("TITLE");
         int nId = intent.getIntExtra("ID", 0);
                 NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(Mailbox.baseContext)
                         .setSmallIcon(R.drawable.pin_list)
-                        .setContentTitle("Reminder:")
+                        .setContentTitle(notification_title)
                         .setContentText(notification_msg);
 
         Intent resultIntent = new Intent(Mailbox.baseContext, MainActivity.class);
@@ -43,6 +47,5 @@ public class AlarmReceiver extends BroadcastReceiver {
                 (NotificationManager) Mailbox.baseContext.getSystemService(Context.NOTIFICATION_SERVICE);
 
         mNotificationManager.notify(nId, mBuilder.build());
-        Log.i("alarm", notification_msg);
     }
 }

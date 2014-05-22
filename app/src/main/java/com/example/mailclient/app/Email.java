@@ -241,11 +241,12 @@ public class Email implements Serializable {
                 else {
                     notification_msg = subject;
                 }
-                intent.putExtra("EMAIL", "Oggi devi rispondere a: \"" + notification_msg + "\"");
+                intent.putExtra("TITLE", "Today's task:");
+                intent.putExtra("EMAIL", notification_msg);
                 intent.putExtra("ID", ID.hashCode());
                 GregorianCalendar alarm_start_cal = date;
                 alarm_start_cal.set(GregorianCalendar.HOUR_OF_DAY, Mailbox.scheduler_start.get(GregorianCalendar.HOUR_OF_DAY));
-                alarm_start_cal.set(GregorianCalendar.MINUTE, Mailbox.scheduler_end.get(GregorianCalendar.MINUTE));
+                alarm_start_cal.set(GregorianCalendar.MINUTE, Mailbox.scheduler_start.get(GregorianCalendar.MINUTE));
                 alarm_start_cal.set(GregorianCalendar.SECOND, 0);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(Mailbox.baseContext, ID_END.hashCode() , intent, 0);
                 Mailbox.alManager.set(AlarmManager.RTC, alarm_start_cal.getTimeInMillis(), pendingIntent);
@@ -265,7 +266,8 @@ public class Email implements Serializable {
             else {
                 notification_msg = subject;
             }
-            intent.putExtra("EMAIL", "Oggi dovevi rispondere a: \"" + notification_msg + "\"");
+            intent.putExtra("TITLE", "Uncompleted task:");
+            intent.putExtra("EMAIL", notification_msg);
             intent.putExtra("ID", ID.hashCode());
             GregorianCalendar alarm_end_cal = date;
             alarm_end_cal.set(GregorianCalendar.HOUR_OF_DAY, Mailbox.scheduler_end.get(GregorianCalendar.HOUR_OF_DAY));
