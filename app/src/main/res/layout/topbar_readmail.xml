@@ -13,9 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_alignParentRight="true"
-        android:src="@drawable/delete"
-        android:background="@drawable/seen"
+        android:src="@drawable/ic_action_delete"
         android:onClick="deleteMail"
+        android:background="@null"
+        android:scaleType="fitEnd"
         />
 
     <ImageButton
@@ -28,6 +29,7 @@
         android:layout_toLeftOf="@id/readMail_delete"
         android:onClick="setToDo"
         android:layout_marginRight="@dimen/icon_dist"
+        android:scaleType="fitEnd"
         />
 
 </RelativeLayout>
