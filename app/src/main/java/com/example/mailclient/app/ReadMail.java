@@ -76,7 +76,9 @@ public class ReadMail extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_mail);
         Bundle extras = getIntent().getExtras();
-        mail_index = extras.getInt("index", 0);
+
+        Mailbox.last_mail_read_index = extras.getInt("index", 0);
+        mail_index = Mailbox.last_mail_read_index;
 
         /*
          * We need this to avoid pinning and deleting

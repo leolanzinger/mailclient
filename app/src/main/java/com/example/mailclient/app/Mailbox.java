@@ -35,6 +35,8 @@ public class Mailbox {
     public static ArrayList<PendingIntent> intentArray;
     // alarm manager
     public static AlarmManager alManager;
+    // avoid null pointer on read mail when onResume()
+    public static int last_mail_read_index;
 
     public Mailbox(Context context) {
         baseContext = context;
