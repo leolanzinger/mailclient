@@ -51,6 +51,7 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
     private int screen_width, BLOCK_THRESHOLD;
     private boolean scrolling = false;
     private ListView list;
+    private boolean is_pin, is_delete;
 
     /*
      * Dumb boolean values to distinguish
@@ -109,6 +110,8 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                 distanceX = 0;
                 distanceY = 0;
                 curX = 0;
+                is_pin = false;
+                is_delete = false;
 
                 // get current pressed item
                 Rect rect = new Rect();
@@ -192,12 +195,15 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                                 //set yellow background (pin item background)
                                 cur_item_background.setBackgroundResource(R.drawable.pin_background);
                                 cur_item_background.findViewById(R.id.pin_icon).setVisibility(View.VISIBLE);
+                                is_pin = true;
+
                             }
                             //going rightwards
                             else {
                                 //set red background (delete item background)
                                 cur_item_background.setBackgroundResource(R.drawable.delete_background);
                                 cur_item_background.findViewById(R.id.delete_icon).setVisibility(View.VISIBLE);
+                                is_delete = true;
                             }
                         }
                         else if (is_trash) {
@@ -242,7 +248,22 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                             }
                         }
                         else if (is_inbox) {
-                            cur_item.setX(baseX + distanceX);
+                            if (is_pin) {
+                                if (distanceX > 0) {
+
+                                }
+                                else {
+                                    cur_item.setX(baseX + distanceX);
+                                }
+                            }
+                            else if (is_delete) {
+                                if (distanceX < 0) {
+
+                                }
+                                else {
+                                    cur_item.setX(baseX + distanceX);
+                                }
+                            }
                         }
                     }
                     // handle touch event -> do not pass to scroll (return true)

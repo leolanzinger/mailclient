@@ -7,7 +7,7 @@
         />
     <item android:id="@+id/speak_mail"
         android:title="speak"
-        android:icon="@drawable/replyall"
+        android:icon="@drawable/ic_action_mic"
         android:showAsAction="ifRoom"
         android:onClick="speakButtonClicked"
         />

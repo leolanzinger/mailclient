@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
-    android:paddingBottom="0dp"
+    android:paddingBottom="6dp"
+    android:paddingTop="6dp"
     android:weightSum="100">
 
         <ImageView
@@ -19,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:textSize="@dimen/drawer_text"
+            android:textColor="@color/dark_grey"
             android:gravity="center_vertical"
             android:layout_weight="90" />
 </LinearLayout>

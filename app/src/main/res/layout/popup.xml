@@ -5,15 +5,13 @@
     android:orientation="vertical">
 
 
-    <TextView
+    <ImageView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="25dip"
-        android:text="Set reminder:"
         android:id="@+id/popup_title"
         android:gravity="center_horizontal"
-        android:padding="15sp"
-        android:textColor="@color/white"
+        android:padding="10sp"
+        android:src="@drawable/reminder"
         android:background="@color/yellow" />
 
     <ListView

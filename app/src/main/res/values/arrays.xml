@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="sidebar_icons">
-        <item>ic_action_pin</item>
-        <item>inbox</item>
-        <item>ic_action_send_mail</item>
-        <item>ic_action_delete</item>
+        <item>drawer_pin</item>
+        <item>drawer_inbox</item>
+        <item>drawer_sent</item>
+        <item>drawer_trash</item>
     </array>
 
     <array name="sidebar_titles">
-        <item>to do</item>
-        <item>inbox</item>
-        <item>sent</item>
-        <item>trash</item>
+        <item>To do</item>
+        <item>Inbox</item>
+        <item>Sent</item>
+        <item>Trash</item>
     </array>
 
     <string-array name="popup">
