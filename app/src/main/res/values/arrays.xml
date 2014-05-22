@@ -15,10 +15,10 @@
     </array>
 
     <string-array name="popup">
-        <item>nessuna</item>
-        <item>oggi</item>
-        <item>domani</item>
-        <item>scegli data</item>
+        <item>no reminder</item>
+        <item>today</item>
+        <item>tomorrow</item>
+        <item>pick date</item>
     </string-array>
 
 

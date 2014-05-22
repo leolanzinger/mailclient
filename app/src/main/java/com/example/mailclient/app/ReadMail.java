@@ -471,7 +471,7 @@ public class ReadMail extends FragmentActivity {
          *  Set up popup_list and adapter
          */
         ListView popup_list = (ListView) layout.findViewById(R.id.popup_list);
-        String[] popup_array = new String[]{"nessuna", "oggi", "domani", "scegli data"};
+        String[] popup_array = new String[]{"no reminder", "today", "tomorrow", "pick date"};
         ArrayAdapter<String> popup_Adapter = new ArrayAdapter<String>(ReadMail.this, R.layout.popup_element, popup_array);
             popup_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
