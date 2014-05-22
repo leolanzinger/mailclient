@@ -130,6 +130,10 @@ public class TodoFragment extends Fragment {
                         // reset view
                         animator.resetView(listView.getChildAt(list_visible_position));
                     }
+                    else if (this.getAction().equals(Action.RL_BACK)) {
+                        // reset view
+                        animator.resetView(listView.getChildAt(list_visible_position));
+                    }
                     else {
 
                     }
