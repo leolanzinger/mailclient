@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="sidebar_icons">
-        <item>pin</item>
+        <item>ic_action_pin</item>
         <item>inbox</item>
         <item>ic_action_send_mail</item>
         <item>ic_action_delete</item>

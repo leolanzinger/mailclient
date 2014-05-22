@@ -22,13 +22,15 @@
 
     <ImageButton
         android:id="@+id/readMail_pin"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_width="wrap_content"
         android:background="@drawable/action_bar_not_pinned"
         android:src="@drawable/ic_action_pin"
         android:contentDescription="pin"
         android:layout_toLeftOf="@id/readMail_delete"
         android:onClick="setToDo"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:layout_marginRight="@dimen/icon_dist"
         android:scaleType="fitCenter"
         />
