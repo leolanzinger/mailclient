@@ -6,30 +6,31 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_width="wrap_content"
-    android:layout_gravity="end">
+    android:layout_gravity="end"
+    android:paddingRight="@dimen/icon_dist">
 
     <ImageButton
         android:id="@+id/readMail_delete"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_width="wrap_content"
         android:layout_alignParentRight="true"
         android:src="@drawable/ic_action_delete"
         android:onClick="deleteMail"
         android:background="@null"
-        android:scaleType="fitEnd"
+        android:scaleType="fitCenter"
         />
 
     <ImageButton
         android:id="@+id/readMail_pin"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:background="@drawable/not_pinned"
-        android:src="@drawable/pin"
+        android:background="@drawable/action_bar_not_pinned"
+        android:src="@drawable/ic_action_pin"
         android:contentDescription="pin"
         android:layout_toLeftOf="@id/readMail_delete"
         android:onClick="setToDo"
         android:layout_marginRight="@dimen/icon_dist"
-        android:scaleType="fitEnd"
+        android:scaleType="fitCenter"
         />
 
 </RelativeLayout>

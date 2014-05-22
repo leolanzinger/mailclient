@@ -3,8 +3,8 @@
     <array name="sidebar_icons">
         <item>pin</item>
         <item>inbox</item>
-        <item>send_mail</item>
-        <item>delete</item>
+        <item>ic_action_send_mail</item>
+        <item>ic_action_delete</item>
     </array>
 
     <array name="sidebar_titles">

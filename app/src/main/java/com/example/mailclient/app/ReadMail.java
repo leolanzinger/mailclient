@@ -1,9 +1,7 @@
 package com.example.mailclient.app;
 
 import android.app.ActionBar;
-import android.app.AlarmManager;
 import android.app.DialogFragment;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -219,7 +217,7 @@ public class ReadMail extends FragmentActivity {
         if (email.todo) {
             todoButton.setBackgroundResource(R.drawable.pinned);
         } else {
-            todoButton.setBackgroundResource(R.drawable.not_pinned);
+            todoButton.setBackgroundResource(R.drawable.action_bar_not_pinned);
         }
 
         actionBar.setCustomView(v);
@@ -402,7 +400,7 @@ public class ReadMail extends FragmentActivity {
         if (!call_from_sent) {
             if (email.todo) {
                 email.removeTodo();
-                todoButton.setBackgroundResource(R.drawable.not_pinned);
+                todoButton.setBackgroundResource(R.drawable.action_bar_not_pinned);
             } else {
                 initiatePopupWindow();
             }
