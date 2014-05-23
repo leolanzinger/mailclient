@@ -127,4 +127,14 @@ public class TrashBinFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.onDestroy();
+    }
 }

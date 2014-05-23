@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -92,6 +93,35 @@ public class MainActivity extends Activity {
     public void onPause() {
         super.onPause();
         Mailbox.save(Mailbox.emailList);
+        Log.i("lifecycle", "onPause main activity");
+    }
+
+    @Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        Log.i("lifecycle", "onDestroy main activity");
+    }
+
+    @Override
+    protected void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+        Log.i("lifecycle", "onResume main activity");
+    }
+
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        Log.i("lifecycle", "onStart main activity");
+    }
+
+    @Override
+    protected void onStop() {
+        // TODO Auto-generated method stub
+        super.onStop();
+        Log.i("lifecycle", "onStop main activity");
     }
 
     @Override

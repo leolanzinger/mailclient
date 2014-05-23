@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,7 +141,7 @@ public class TodoFragment extends Fragment {
                 }
             }
         });
-
+        Log.i("fragment lifecycle", "onCreateView todo fragment");
         return view;
     }
 
@@ -151,6 +152,42 @@ public class TodoFragment extends Fragment {
             ((MainActivity) getActivity()).setActionBarTitle("to do");
             ((MainActivity) getActivity()).mDrawerLayout.closeDrawers();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.onDestroy();
     }
 
 //
