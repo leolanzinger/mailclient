@@ -17,19 +17,19 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.mailclient.app.SendMailActivity"
-            android:label="send"
+            android:label="Send email"
             android:configChanges="orientation"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.mailclient.app.ReplyActivity"
-            android:label="reply"
+            android:label="Reply"
             android:configChanges="orientation"
             android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.example.mailclient.app.ReadMail"
-            android:label="read"
+            android:label="Read email"
             android:uiOptions="splitActionBarWhenNarrow"
             android:configChanges="orientation"
             android:screenOrientation="portrait">

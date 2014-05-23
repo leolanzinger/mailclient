@@ -207,51 +207,52 @@ public class ReadMail extends FragmentActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         LayoutInflater inflator = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflator.inflate(R.layout.topbar_readmail, null);
+        if (!call_from_sent) {
+            View v = inflator.inflate(R.layout.topbar_readmail, null);
 
+            /*
+             *  To Do icon
+             */
+            todoButton = (ImageButton) v.findViewById(R.id.readMail_pin);
+            if (email.todo) {
+                todoButton.setBackgroundResource(R.drawable.pinned);
+            } else {
+                todoButton.setBackgroundResource(R.drawable.action_bar_not_pinned);
+            }
 
-        /*
-         *  To Do icon
-         */
-        todoButton = (ImageButton) v.findViewById(R.id.readMail_pin);
-        if (email.todo) {
-            todoButton.setBackgroundResource(R.drawable.pinned);
-        } else {
-            todoButton.setBackgroundResource(R.drawable.action_bar_not_pinned);
-        }
+            actionBar.setCustomView(v);
 
-        actionBar.setCustomView(v);
+            if (email.attachmentPath.size() != 0) {
 
-        if (email.attachmentPath.size() != 0) {
+                final TableLayout lm = (TableLayout) findViewById(R.id.array_button);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                for (int i = 0; i < email.attachmentPath.size(); i++) {
 
-            final TableLayout lm = (TableLayout) findViewById(R.id.array_button);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            for (int i = 0; i < email.attachmentPath.size(); i++) {
+                    // Create LinearLayout
+                    LinearLayout ll = new LinearLayout(this);
+                    ll.setOrientation(LinearLayout.VERTICAL);
 
-                // Create LinearLayout
-                LinearLayout ll = new LinearLayout(this);
-                ll.setOrientation(LinearLayout.VERTICAL);
+                    Button btn = new Button(this);
+                    btn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.view_attachment, 0, 0, 0);
+                    btn.setText(new File(email.attachmentPath.get(i)).getName());
+                    btn.setLayoutParams(params);
+                    btn.setId(i);
+                    final int indice = i;
+                    btn.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_VIEW);
+                            intent.setDataAndType(Uri.fromFile(new File(email.attachmentPath.get(indice))), "image/*");
+                            startActivity(intent);
 
-                Button btn = new Button(this);
-                btn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.view_attachment, 0, 0, 0);
-                btn.setText(new File(email.attachmentPath.get(i)).getName());
-                btn.setLayoutParams(params);
-                btn.setId(i);
-                final int indice = i;
-                btn.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.setDataAndType(Uri.fromFile(new File(email.attachmentPath.get(indice))), "image/*");
-                        startActivity(intent);
+                        }
+                    });
+                    //Add button to LinearLayout
+                    ll.addView(btn);
+                    //Add button to LinearLayout defined in XML
+                    lm.addView(ll);
 
-                    }
-                });
-                //Add button to LinearLayout
-                ll.addView(btn);
-                //Add button to LinearLayout defined in XML
-                lm.addView(ll);
-
+                }
             }
         }
 }
@@ -284,8 +285,12 @@ public class ReadMail extends FragmentActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.read_mail, menu);
-
+        if (!call_from_sent) {
+            inflater.inflate(R.menu.read_mail, menu);
+        }
+        else {
+            inflater.inflate(R.menu.read_sent_mail, menu);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 

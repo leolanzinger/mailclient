@@ -160,7 +160,7 @@ public class InboxFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setActionBarTitle("inbox");
+            ((MainActivity) getActivity()).setActionBarTitle("Inbox");
             ((MainActivity) getActivity()).mDrawerLayout.closeDrawers();
         }
     }
@@ -282,7 +282,7 @@ public class InboxFragment extends Fragment {
         super.onStop();
         this.onDestroy();
     }
-    
+
     @Override
     public void onResume() {
         Log.i("adapter", "on resume");
