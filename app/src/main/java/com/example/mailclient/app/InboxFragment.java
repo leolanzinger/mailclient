@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -281,6 +282,14 @@ public class InboxFragment extends Fragment {
         super.onStop();
         this.onDestroy();
     }
+    
+    @Override
+    public void onResume() {
+        Log.i("adapter", "on resume");
+        adapter.notifyDataSetChanged();
+        super.onResume();
+    }
+
 
 
 }

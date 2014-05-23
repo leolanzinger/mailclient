@@ -176,6 +176,8 @@ public class TodoFragment extends Fragment {
 
     @Override
     public void onResume() {
+        Log.i("adapter", "on resume");
+        adapter.notifyDataSetChanged();
         super.onResume();
     }
 
