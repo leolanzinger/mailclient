@@ -25,6 +25,10 @@
     <style name="MyBottomBar"
 >
         <item name="android:backgroundSplit">@drawable/bottom_navbar_background</item>
+        <item name="android:paddingLeft">@dimen/icon_dist</item>
+        <item name="android:paddingRight">@dimen/icon_dist</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingTop">1dp</item>
     </style>
 
     <!-- ActionBar title text -->
