@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">mailClient</string>
+    <string name="app_name">Zapp</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_main">MailClient</string>
+    <string name="title_activity_main">Zapp</string>
     <string name="send_activity">sendEmail</string>
     <string name="title_activity_read_mail">ReadMail</string>
     <string name="appwidget_text">EXAMPLE</string>
