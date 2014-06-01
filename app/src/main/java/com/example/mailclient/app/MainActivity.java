@@ -1,5 +1,9 @@
 package com.example.mailclient.app;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -38,6 +42,7 @@ public class MainActivity extends Activity {
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
     ActionBarDrawerToggle mDrawerToggle;
+    String AUTH_TOKEN_TYPE = "Manage your emails";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +86,42 @@ public class MainActivity extends Activity {
         fragmentTransaction.add(R.id.main_content, fragment, TAG);
         fragmentTransaction.commit();
 
+
+        /*
+         * Trying to get google account from Android account manager
+         */
+
+
+        AccountManager accountManager = AccountManager.get(this);
+        Account[] accounts = accountManager.getAccountsByType("com.google");
+
+        Account mailAccount = accounts[0]; //first google account in the phone
+
+        accountManager.getAuthToken(mailAccount,"mail",false,new GetAuthTokenCallback(),null);
+
+        Mailbox.account_email=mailAccount.name; //username of the first google account in the phone
+        Mailbox.account_password="android2014";
+
+
     }
+
+    private class GetAuthTokenCallback implements AccountManagerCallback<Bundle> {
+        public void run(AccountManagerFuture<Bundle> result) {
+            Bundle bundle;
+            try {
+                bundle = result.getResult();
+                Intent intent = (Intent)bundle.get(AccountManager.KEY_INTENT);
+                if(intent != null) {
+                    // User input required
+                    startActivity(intent);
+                } else {
+                    Log.d("Check", "Token: " + bundle.getString(AccountManager.KEY_AUTHTOKEN)); //abbiamo il token, dobbiamo usarlo per l'autenticazione
+                }
+            } catch (Exception e) {
+                Log.d("Check", e.toString());
+            }
+        }
+    };
 
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
