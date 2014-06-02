@@ -2,6 +2,9 @@ package com.example.mailclient.app;
 
 import android.util.Log;
 
+import com.sun.mail.smtp.SMTPTransport;
+import com.sun.mail.util.BASE64EncoderStream;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +18,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.URLName;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -46,7 +49,7 @@ public class GMailSender {
     Session mailSession;
     MimeMessage emailMessage;
 
-    public GMailSender(String fromEmail, String fromPassword, List<String> toEmailList, String emailSubject, String emailBody, List<String> ccEmailList, List<String> bccEmailList) {
+    public GMailSender(String fromEmail, List<String> toEmailList, String emailSubject, String emailBody, List<String> ccEmailList, List<String> bccEmailList) {
         this.fromEmail = fromEmail;
         this.fromPassword = fromPassword;
         this.toEmailList = toEmailList;
@@ -62,7 +65,7 @@ public class GMailSender {
         Log.i("GMailSender", "Mail server properties set.");
     }
 
-    public GMailSender(String fromEmail, String fromPassword, List<String> toEmailList, String emailSubject, String emailBody, List<String> ccEmailList, List<String> bccEmailList, ArrayList<String> fileName) {
+    public GMailSender(String fromEmail, List<String> toEmailList, String emailSubject, String emailBody, List<String> ccEmailList, List<String> bccEmailList, ArrayList<String> fileName) {
 
         this.fromEmail = fromEmail;
         this.fromPassword = fromPassword;
@@ -134,14 +137,52 @@ public class GMailSender {
         return emailMessage;
     }
 
-    public void sendEmail() throws AddressException, MessagingException {
+    public void sendEmail() throws Exception {
 
-        Transport transport = mailSession.getTransport("smtp");
-        transport.connect(emailHost, fromEmail, fromPassword);
+        /*
+         * Trying new version
+         */
+
+        SMTPTransport smtpTransport = connectToSmtp("smtp.gmail.com",587,fromEmail,MainActivity.tokenString,true);
+
+
         Log.i("GMailSender","allrecipients: "+emailMessage.getAllRecipients());
-        transport.sendMessage(emailMessage, emailMessage.getAllRecipients());
-        transport.close();
+        smtpTransport.sendMessage(emailMessage, emailMessage.getAllRecipients());
+        smtpTransport.close();
         Log.i("GMailSender", "Email sent successfully.");
+
+//        Old Version
+
+//        Transport transport = mailSession.getTransport("smtp");
+//        transport.connect(emailHost, fromEmail, fromPassword);
+//        Log.i("GMailSender","allrecipients: "+emailMessage.getAllRecipients());
+//        transport.sendMessage(emailMessage, emailMessage.getAllRecipients());
+//        transport.close();
+//        Log.i("GMailSender", "Email sent successfully.");
+    }
+
+    public SMTPTransport connectToSmtp(String host, int port, String userEmail,String oauthToken, boolean debug) throws Exception {
+
+        Properties props = new Properties();
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.starttls.required", "true");
+        props.put("mail.smtp.sasl.enable", "false");
+        mailSession = Session.getInstance(props);
+        mailSession.setDebug(debug);
+
+
+        final URLName unusedUrlName = null;
+        SMTPTransport transport = new SMTPTransport(mailSession, unusedUrlName);
+        // If the password is non-null, SMTP tries to do AUTH LOGIN.
+        final String emptyPassword = null;
+        transport.connect(host, port, userEmail, emptyPassword);
+
+        byte[] response = String.format("user=%s\1auth=Bearer %s\1\1", userEmail,oauthToken).getBytes();
+        response = BASE64EncoderStream.encode(response);
+
+        transport.issueCommand("AUTH XOAUTH2 " + new String(response), 235);
+
+        return transport;
     }
 
 }

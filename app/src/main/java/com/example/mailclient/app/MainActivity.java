@@ -34,6 +34,7 @@ public class MainActivity extends Activity {
     public static Context baseContext;
     public static int current_fragment;
     public static String TAG;
+    public static String tokenString;
 
     /*
      *  Drawer menu variables
@@ -97,31 +98,26 @@ public class MainActivity extends Activity {
 
         Account mailAccount = accounts[0]; //first google account in the phone
 
-        accountManager.getAuthToken(mailAccount,"mail",false,new GetAuthTokenCallback(),null);
+        accountManager.getAuthToken(mailAccount, "oauth2:https://mail.google.com/", null, this, new OnTokenAcquired(), null);
 
         Mailbox.account_email=mailAccount.name; //username of the first google account in the phone
-        Mailbox.account_password="android2014";
 
 
     }
+    private class OnTokenAcquired implements AccountManagerCallback<Bundle>{
+        @Override
+        public void run(AccountManagerFuture<Bundle> result){
+            try{
+                Bundle bundle = result.getResult();
+                tokenString = bundle.getString(AccountManager.KEY_AUTHTOKEN); //here it is the token
+                Log.d("Check", tokenString);
 
-    private class GetAuthTokenCallback implements AccountManagerCallback<Bundle> {
-        public void run(AccountManagerFuture<Bundle> result) {
-            Bundle bundle;
-            try {
-                bundle = result.getResult();
-                Intent intent = (Intent)bundle.get(AccountManager.KEY_INTENT);
-                if(intent != null) {
-                    // User input required
-                    startActivity(intent);
-                } else {
-                    Log.d("Check", "Token: " + bundle.getString(AccountManager.KEY_AUTHTOKEN)); //abbiamo il token, dobbiamo usarlo per l'autenticazione
-                }
-            } catch (Exception e) {
-                Log.d("Check", e.toString());
+            } catch (Exception e){
+                Log.d("Check", e.getMessage());
             }
         }
-    };
+    }
+
 
     @Override
     public void onPostCreate(Bundle savedInstanceState) {

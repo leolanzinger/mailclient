@@ -195,9 +195,9 @@ public class SendMailActivity extends Activity {
 
         Log.i("Check", "stampiamo la size della lista: "+ selectedImagePath.size());
         if (selectedImagePath.size() == 0) {
-            new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, ccEmailList, bccEmailList);
+            new SendMailTask(SendMailActivity.this).execute(fromEmail, toEmailList, emailSubject, emailBody, ccEmailList, bccEmailList);
         } else {
-            new SendMailTask(SendMailActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, ccEmailList, bccEmailList, selectedImagePath);
+            new SendMailTask(SendMailActivity.this).execute(fromEmail, toEmailList, emailSubject, emailBody, ccEmailList, bccEmailList, selectedImagePath);
         }
 
         attachmentList.clear();
