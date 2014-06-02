@@ -1,1 +1,1 @@
-include ':app', ':pulltorefresh', ':javax.mail.android', ':asmack-2010.05.07'
+include ':app', ':pulltorefresh'
