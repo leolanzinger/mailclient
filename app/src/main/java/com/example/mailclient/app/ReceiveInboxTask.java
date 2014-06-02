@@ -38,8 +38,8 @@ public class ReceiveInboxTask extends AsyncTask<Object, Object, ArrayList<Email>
         Message[] msg = null;
         Message[] sent_msg = null;
         try {
-            GMailReceiver reader = new GMailReceiver(args[0].toString(),
-                    args[1].toString());
+
+            GMailReceiver reader = new GMailReceiver(args[0].toString());
             try {
                 msg = reader.readLastMails();
             } catch (Exception e) {

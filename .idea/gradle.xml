@@ -9,6 +9,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/asmack-2010.05.07" />
+            <option value="$PROJECT_DIR$/javax.mail.android" />
             <option value="$PROJECT_DIR$/pulltorefresh" />
           </set>
         </option>

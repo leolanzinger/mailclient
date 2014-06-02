@@ -35,8 +35,7 @@ public class ReceiveSentMailTask extends AsyncTask<Object, Object, ArrayList<Ema
     protected ArrayList<Email> doInBackground(Object... args) {
         Message[] sent_msg = null;
         try {
-            GMailReceiver reader = new GMailReceiver(args[0].toString(),
-                    args[1].toString());
+            GMailReceiver reader = new GMailReceiver(args[0].toString());
             try {
                 sent_msg = reader.readSentMails();
             } catch (Exception e) {

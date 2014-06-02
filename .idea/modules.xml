@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/asmack-2010.05.07/asmack-2010.05.07.iml" filepath="$PROJECT_DIR$/asmack-2010.05.07/asmack-2010.05.07.iml" />
+      <module fileurl="file://$PROJECT_DIR$/javax.mail.android/javax.mail.android.iml" filepath="$PROJECT_DIR$/javax.mail.android/javax.mail.android.iml" />
       <module fileurl="file://$PROJECT_DIR$/mailclient.iml" filepath="$PROJECT_DIR$/mailclient.iml" />
       <module fileurl="file://$PROJECT_DIR$/pulltorefresh/pulltorefresh.iml" filepath="$PROJECT_DIR$/pulltorefresh/pulltorefresh.iml" />
     </modules>

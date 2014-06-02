@@ -1,13 +1,20 @@
 package com.example.mailclient.app;
 
+import com.sun.mail.imap.IMAPSSLStore;
+import com.sun.mail.imap.IMAPStore;
+
+import java.security.Provider;
+import java.security.Security;
 import java.util.Properties;
+import java.util.logging.Logger;
+
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
-import javax.mail.Store;
+import javax.mail.URLName;
 import javax.mail.search.FlagTerm;
 
 /*
@@ -18,28 +25,33 @@ import javax.mail.search.FlagTerm;
 public class GMailReceiver extends javax.mail.Authenticator {
     private static final String TAG = "GMailReceiver";
 
-    private String mailhost = "imap.gmail.com";
-    private Session session;
-    private Store store;
+    private IMAPStore store;
 
-    public GMailReceiver(String user, String password) {
 
-        Properties props = System.getProperties();
-        if (props == null){
-        }else{
-            props.setProperty("mail.store.protocol", "imaps");
-//            Log.d(TAG, "Transport: "+props.getProperty("mail.transport.protocol"));
-//            Log.d(TAG, "Store: "+props.getProperty("mail.store.protocol"));
-//            Log.d(TAG, "Host: "+props.getProperty("mail.imap.host"));
-//            Log.d(TAG, "Authentication: "+props.getProperty("mail.imap.auth"));
-//            Log.d(TAG, "Port: "+props.getProperty("mail.imap.port"));
+    private static final Logger logger = Logger.getLogger(GMailReceiver.class.getName());
+    private static Session mSession;
+
+    public static final class OAuth2Provider extends Provider {
+        private static final long serialVersionUID = 1L;
+
+        public OAuth2Provider() {
+            super("Google OAuth2 Provider", 1.0,
+                    "Provides the XOAUTH2 SASL Mechanism");
+            put("SaslClientFactory.XOAUTH2",
+                    "com.example.testjavamail.OAuth2SaslClientFactory");
         }
+    }
+
+
+    public GMailReceiver(String user) {
+
+        this.initialize();
+
         try {
-            session = Session.getDefaultInstance(props, null);
-            store = session.getStore("imaps");
-            store.connect(mailhost, user, password);
+            store = connectToImap("imap.gmail.com", 993, user, MainActivity.tokenString, true);
+
             /*
-             * Call this method to list all the avaiable folders:
+             * Call this method to list all the available folders:
              *
              *   Folder[] folderList = store.getFolder("[Gmail]").list();
              *   for (int i = 0; i < folderList.length; i++) {
@@ -49,6 +61,8 @@ public class GMailReceiver extends javax.mail.Authenticator {
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
         } catch (MessagingException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -159,4 +173,48 @@ public class GMailReceiver extends javax.mail.Authenticator {
             return null;
         }
     }
+
+    /**
+     * Installs the OAuth2 SASL provider. This must be called exactly once before
+     * calling other methods on this class.
+     */
+    public static void initialize() {
+        Security.addProvider(new OAuth2Provider());
+    }
+
+    /**
+     * Connects and authenticates to an IMAP server with OAuth2. You must have
+     * called {@code initialize}.
+     *
+     * @param host Hostname of the imap server, for example {@code
+     *     imap.googlemail.com}.
+     * @param port Port of the imap server, for example 993.
+     * @param userEmail Email address of the user to authenticate, for example
+     *     {@code oauth@gmail.com}.
+     * @param oauthToken The user's OAuth token.
+     * @param debug Whether to enable debug logging on the IMAP connection.
+     *
+     * @return An authenticated IMAPStore that can be used for IMAP operations.
+     */
+    public static IMAPStore connectToImap(String host,
+                                          int port,
+                                          String userEmail,
+                                          String oauthToken,
+                                          boolean debug) throws Exception {
+        Properties props = new Properties();
+        props.put("mail.imaps.sasl.enable", "true");
+        props.put("mail.imaps.sasl.mechanisms", "XOAUTH2");
+        props.put(OAuth2SaslClientFactory.OAUTH_TOKEN_PROP, oauthToken);
+        Session session = Session.getInstance(props);
+        session.setDebug(debug);
+
+        final URLName unusedUrlName = null;
+        IMAPSSLStore store = new IMAPSSLStore(session, unusedUrlName);
+        final String emptyPassword = "";
+        store.connect(host, port, userEmail, emptyPassword);
+        return store;
+    }
+
+//TODO: GMailUpdater, ReplyActivity and everything related, to update
+
 }
