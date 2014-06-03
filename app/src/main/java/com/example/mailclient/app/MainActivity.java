@@ -35,6 +35,7 @@ public class MainActivity extends Activity {
     public static int current_fragment;
     public static String TAG;
     public static String tokenString;
+    public static Account mailAccount;
 
     /*
      *  Drawer menu variables
@@ -96,11 +97,20 @@ public class MainActivity extends Activity {
         AccountManager accountManager = AccountManager.get(this);
         Account[] accounts = accountManager.getAccountsByType("com.google");
 
-        Account mailAccount = accounts[0]; //first google account in the phone
 
+        if (accounts.length==0){
+            //No account, add one to accountManager with name mailAccount!
+
+        } else{
+            //Choose your account, it will be named mailAccount
+            Intent intentAccounts = new Intent(this,AccountList.class);
+            startActivity(intentAccounts);
+        }
+
+        //Managing authentication token and username
         accountManager.getAuthToken(mailAccount, "oauth2:https://mail.google.com/", null, this, new OnTokenAcquired(), null);
 
-        Mailbox.account_email=mailAccount.name; //username of the first google account in the phone
+        Mailbox.account_email=mailAccount.name;
 
 
     }

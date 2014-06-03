@@ -204,7 +204,7 @@ public class GMailReceiver extends javax.mail.Authenticator {
         Properties props = new Properties();
         props.put("mail.imaps.sasl.enable", "true");
         props.put("mail.imaps.sasl.mechanisms", "XOAUTH2");
-        props.put(OAuth2SaslClientFactory.OAUTH_TOKEN_PROP, oauthToken);
+//        props.put(OAuth2SaslClientFactory.OAUTH_TOKEN_PROP, oauthToken);
         Session session = Session.getInstance(props);
         session.setDebug(debug);
 

@@ -39,7 +39,6 @@ public class GMailSender {
     final String emailHost = "smtp.gmail.com";
 
     String fromEmail;
-    String fromPassword;
     List<String> toEmailList, ccEmailList, bccEmailList;
     String emailSubject;
     String emailBody;
@@ -51,7 +50,6 @@ public class GMailSender {
 
     public GMailSender(String fromEmail, List<String> toEmailList, String emailSubject, String emailBody, List<String> ccEmailList, List<String> bccEmailList) {
         this.fromEmail = fromEmail;
-        this.fromPassword = fromPassword;
         this.toEmailList = toEmailList;
         this.ccEmailList = ccEmailList;
         this.bccEmailList = bccEmailList;
@@ -68,7 +66,6 @@ public class GMailSender {
     public GMailSender(String fromEmail, List<String> toEmailList, String emailSubject, String emailBody, List<String> ccEmailList, List<String> bccEmailList, ArrayList<String> fileName) {
 
         this.fromEmail = fromEmail;
-        this.fromPassword = fromPassword;
         this.toEmailList = toEmailList;
         this.ccEmailList = ccEmailList;
         this.bccEmailList = bccEmailList;
@@ -145,20 +142,10 @@ public class GMailSender {
 
         SMTPTransport smtpTransport = connectToSmtp("smtp.gmail.com",587,fromEmail,MainActivity.tokenString,true);
 
-
         Log.i("GMailSender","allrecipients: "+emailMessage.getAllRecipients());
         smtpTransport.sendMessage(emailMessage, emailMessage.getAllRecipients());
         smtpTransport.close();
         Log.i("GMailSender", "Email sent successfully.");
-
-//        Old Version
-
-//        Transport transport = mailSession.getTransport("smtp");
-//        transport.connect(emailHost, fromEmail, fromPassword);
-//        Log.i("GMailSender","allrecipients: "+emailMessage.getAllRecipients());
-//        transport.sendMessage(emailMessage, emailMessage.getAllRecipients());
-//        transport.close();
-//        Log.i("GMailSender", "Email sent successfully.");
     }
 
     public SMTPTransport connectToSmtp(String host, int port, String userEmail,String oauthToken, boolean debug) throws Exception {
@@ -169,7 +156,6 @@ public class GMailSender {
         props.put("mail.smtp.sasl.enable", "false");
         mailSession = Session.getInstance(props);
         mailSession.setDebug(debug);
-
 
         final URLName unusedUrlName = null;
         SMTPTransport transport = new SMTPTransport(mailSession, unusedUrlName);
