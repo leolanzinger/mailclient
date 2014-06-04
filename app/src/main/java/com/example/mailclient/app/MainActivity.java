@@ -98,22 +98,30 @@ public class MainActivity extends Activity {
         Account[] accounts = accountManager.getAccountsByType("com.google");
 
 
-        if (accounts.length==0){
+        if (accounts.length==0) {
             //No account, add one to accountManager with name mailAccount!
 
-        } else{
-            //Choose your account, it will be named mailAccount
-            Intent intentAccounts = new Intent(this,AccountList.class);
-            startActivity(intentAccounts);
+            //Might be a solution for adding account, but it let users to add any kind of account
+//            startActivity(new Intent(android.provider.Settings.ACTION_ADD_ACCOUNT));
+
+            //Or this
+//            Intent intent = new Intent(Settings.ACTION_ADD_ACCOUNT);
+//            intent.putExtra(Settings.EXTRA_ACCOUNT_TYPES, new String[] {"com.google"});
+//            startActivity(intent);
+
         }
+
+        //Choose your account, it will be named mailAccount
+        Intent intentAccounts = new Intent(this,AccountList.class);
+        startActivity(intentAccounts);
 
         //Managing authentication token and username
         accountManager.getAuthToken(mailAccount, "oauth2:https://mail.google.com/", null, this, new OnTokenAcquired(), null);
 
         Mailbox.account_email=mailAccount.name;
 
-
     }
+
     private class OnTokenAcquired implements AccountManagerCallback<Bundle>{
         @Override
         public void run(AccountManagerFuture<Bundle> result){
