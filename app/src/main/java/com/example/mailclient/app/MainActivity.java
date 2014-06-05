@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -27,15 +28,18 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class MainActivity extends Activity {
 
+    private static final int NEW_ACCOUNT = 0;
+    private static final int CHOOSE_ACCOUNT = 1;
+
     /*
-    *   Set main variables
-    */
+        *   Set main variables
+        */
     public static Mailbox mailbox;
     public static Context baseContext;
     public static int current_fragment;
     public static String TAG;
     public static String tokenString;
-    public static Account mailAccount;
+    public Account[] accounts;
 
     /*
      *  Drawer menu variables
@@ -44,7 +48,6 @@ public class MainActivity extends Activity {
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
     ActionBarDrawerToggle mDrawerToggle;
-    String AUTH_TOKEN_TYPE = "Manage your emails";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,36 +96,71 @@ public class MainActivity extends Activity {
          * Trying to get google account from Android account manager
          */
 
-
         AccountManager accountManager = AccountManager.get(this);
-        Account[] accounts = accountManager.getAccountsByType("com.google");
-
+        accounts = accountManager.getAccountsByType("com.google");
 
         if (accounts.length==0) {
-            //No account, add one to accountManager with name mailAccount!
-
-            //Might be a solution for adding account, but it let users to add any kind of account
-//            startActivity(new Intent(android.provider.Settings.ACTION_ADD_ACCOUNT));
-
-            //Or this
-//            Intent intent = new Intent(Settings.ACTION_ADD_ACCOUNT);
-//            intent.putExtra(Settings.EXTRA_ACCOUNT_TYPES, new String[] {"com.google"});
-//            startActivity(intent);
-
+            //No Google account found, add one to accountManager with name mailAccount!
+            Intent intent = new Intent(Settings.ACTION_ADD_ACCOUNT);
+            intent.putExtra(Settings.EXTRA_ACCOUNT_TYPES, new String[] {"com.google"});
+            startActivityForResult(intent, NEW_ACCOUNT);
         }
-
-        //Choose your account, it will be named mailAccount
-        Intent intentAccounts = new Intent(this,AccountList.class);
-        startActivity(intentAccounts);
-
-        //Managing authentication token and username
-        accountManager.getAuthToken(mailAccount, "oauth2:https://mail.google.com/", null, this, new OnTokenAcquired(), null);
-
-        Mailbox.account_email=mailAccount.name;
+        //Choose one existing account
+        Intent intent = AccountManager.newChooseAccountIntent(null, null, new String[] { "com.google" }, true, null, null, null, null);
+        startActivityForResult(intent, CHOOSE_ACCOUNT);
 
     }
 
-    private class OnTokenAcquired implements AccountManagerCallback<Bundle>{
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("Check", "Request and result code " +  requestCode + " and "+  resultCode);
+        
+
+        if (resultCode!=0){
+            //resultCode==0 NO LOGIN
+            //resultCode==-1 LOGIN
+            //requestCode==0 NEW_ACCOUNT
+            //requestCode==1 CHOOSE_ACCOUNT
+            Log.d("Check", "Request and result code " +  requestCode + " and "+  resultCode);
+
+            Bundle bundle = data.getExtras();
+
+            String usernameAccount = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
+
+            Log.d("Check", "Username here instead: "+ usernameAccount);
+
+            AccountManager accountManager = AccountManager.get(this);
+            Account[] tempAccounts = accountManager.getAccountsByType("com.google");
+
+            Account mailAccount = null;
+
+            Log.d("Check", "tempAccounts length: "+  tempAccounts.length);
+
+            for (int i = 0; i < tempAccounts.length; i++) {
+//                if (usernameAccount==tempAccounts[i].name) {
+//                TODO: abbiamo un problema in questa condizione,capire come fare a farla rispettare sennò prende sempre l'ultimo account della lista
+                    mailAccount=(tempAccounts[i]);
+                    Log.d("Check", "usernameAccount " + usernameAccount);
+                    Log.d("Check", "mailaccount.name " + mailAccount.name);
+                    Log.d("Check", "tempAccounts[i].name " + tempAccounts[i].name);
+
+                    //Managing authentication token and username for SMTP/IMAP
+                    accountManager.getAuthToken(mailAccount, "oauth2:https://mail.google.com/", null, this, new OnTokenAcquired(), null);
+                    Log.d("Check", ""+tokenString);
+                    Mailbox.account_email=mailAccount.name;
+            }
+        } else {
+            System.exit(0);
+        }
+
+
+    }
+
+
+
+        private class OnTokenAcquired implements AccountManagerCallback<Bundle>{
         @Override
         public void run(AccountManagerFuture<Bundle> result){
             try{
