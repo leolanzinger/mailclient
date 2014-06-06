@@ -3,7 +3,6 @@ package com.example.mailclient.app;
 import com.sun.mail.imap.IMAPSSLStore;
 import com.sun.mail.imap.IMAPStore;
 
-import java.security.Provider;
 import java.security.Security;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -31,21 +30,10 @@ public class GMailReceiver extends javax.mail.Authenticator {
     private static final Logger logger = Logger.getLogger(GMailReceiver.class.getName());
     private static Session mSession;
 
-    public static final class OAuth2Provider extends Provider {
-        private static final long serialVersionUID = 1L;
-
-        public OAuth2Provider() {
-            super("Google OAuth2 Provider", 1.0,
-                    "Provides the XOAUTH2 SASL Mechanism");
-            put("SaslClientFactory.XOAUTH2",
-                    "com.example.testjavamail.OAuth2SaslClientFactory");
-        }
-    }
-
 
     public GMailReceiver(String user) {
 
-        this.initialize();
+        initialize();
 
         try {
             store = connectToImap("imap.gmail.com", 993, user, MainActivity.tokenString, true);

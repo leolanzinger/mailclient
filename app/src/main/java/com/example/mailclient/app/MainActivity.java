@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -28,8 +27,11 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class MainActivity extends Activity {
 
-    private static final int NEW_ACCOUNT = 0;
     private static final int CHOOSE_ACCOUNT = 1;
+    private static final int AUTHORIZATION_CODE = 1993;
+    private static final int ACCOUNT_CODE = 1601;
+
+
 
     /*
         *   Set main variables
@@ -39,7 +41,9 @@ public class MainActivity extends Activity {
     public static int current_fragment;
     public static String TAG;
     public static String tokenString;
-    public Account[] accounts;
+    public static AuthPreferences authPreferences;
+    public static AccountManager accountManager;
+
 
     /*
      *  Drawer menu variables
@@ -96,84 +100,97 @@ public class MainActivity extends Activity {
          * Trying to get google account from Android account manager
          */
 
-        AccountManager accountManager = AccountManager.get(this);
-        accounts = accountManager.getAccountsByType("com.google");
+        accountManager = AccountManager.get(this);
+        authPreferences = new AuthPreferences(this);
 
-        if (accounts.length==0) {
-            //No Google account found, add one to accountManager with name mailAccount!
-            Intent intent = new Intent(Settings.ACTION_ADD_ACCOUNT);
-            intent.putExtra(Settings.EXTRA_ACCOUNT_TYPES, new String[] {"com.google"});
-            startActivityForResult(intent, NEW_ACCOUNT);
+        Log.d("Check", authPreferences.getUser() + " " + authPreferences.getToken());
+
+        if (authPreferences.getUser() != null && authPreferences.getToken() != null) {
+            getCredentials();
+        } else {
+            chooseAccount();
         }
-        //Choose one existing account
-        Intent intent = AccountManager.newChooseAccountIntent(null, null, new String[] { "com.google" }, true, null, null, null, null);
-        startActivityForResult(intent, CHOOSE_ACCOUNT);
+    }
 
+    private void chooseAccount() {
+        Intent intent = AccountManager.newChooseAccountIntent(null, null, new String[] { "com.google" }, false, null, null, null, null);
+        startActivityForResult(intent, ACCOUNT_CODE);
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("Check", "Request and result code " +  requestCode + " and "+  resultCode);
-        
 
-        if (resultCode!=0){
-            //resultCode==0 NO LOGIN
-            //resultCode==-1 LOGIN
-            //requestCode==0 NEW_ACCOUNT
-            //requestCode==1 CHOOSE_ACCOUNT
-            Log.d("Check", "Request and result code " +  requestCode + " and "+  resultCode);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == AUTHORIZATION_CODE) {
+                requestToken();
+            } else if (requestCode == ACCOUNT_CODE) {
+                String accountName = data
+                        .getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                authPreferences.setUser(accountName);
 
-            Bundle bundle = data.getExtras();
-
-            String usernameAccount = bundle.getString(AccountManager.KEY_ACCOUNT_NAME);
-
-            Log.d("Check", "Username here instead: "+ usernameAccount);
-
-            AccountManager accountManager = AccountManager.get(this);
-            Account[] tempAccounts = accountManager.getAccountsByType("com.google");
-
-            Account mailAccount = null;
-
-            Log.d("Check", "tempAccounts length: "+  tempAccounts.length);
-
-            for (int i = 0; i < tempAccounts.length; i++) {
-//                if (usernameAccount==tempAccounts[i].name) {
-//                TODO: abbiamo un problema in questa condizione,capire come fare a farla rispettare sennò prende sempre l'ultimo account della lista
-                    mailAccount=(tempAccounts[i]);
-                    Log.d("Check", "usernameAccount " + usernameAccount);
-                    Log.d("Check", "mailaccount.name " + mailAccount.name);
-                    Log.d("Check", "tempAccounts[i].name " + tempAccounts[i].name);
-
-                    //Managing authentication token and username for SMTP/IMAP
-                    accountManager.getAuthToken(mailAccount, "oauth2:https://mail.google.com/", null, this, new OnTokenAcquired(), null);
-                    Log.d("Check", ""+tokenString);
-                    Mailbox.account_email=mailAccount.name;
+                // invalidate old tokens which might be cached. we want a fresh
+                // one, which is guaranteed to work
+                invalidateToken();
+                requestToken();
             }
-        } else {
-            System.exit(0);
         }
+    }
 
+    private void invalidateToken() {
+        AccountManager accountManager = AccountManager.get(this);
+        accountManager.invalidateAuthToken("com.google", authPreferences.getToken());
+        authPreferences.setToken(null);
+    }
 
+//            TODO: force quit, to implement or not?
+//        } else {
+//            System.exit(0);
+//        }
+
+    private void requestToken(){
+        Account userAccount = null;
+        String user = authPreferences.getUser();
+        for (Account account : accountManager.getAccountsByType("com.google")) {
+            if (account.name.equals(user)) {
+                userAccount = account;
+
+                break;
+            }
+        }
+        accountManager.getAuthToken(userAccount, "oauth2:https://mail.google.com/", null, this, new OnTokenAcquired(), null);
     }
 
 
 
-        private class OnTokenAcquired implements AccountManagerCallback<Bundle>{
+    private class OnTokenAcquired implements AccountManagerCallback<Bundle>{
         @Override
-        public void run(AccountManagerFuture<Bundle> result){
-            try{
+        public void run(AccountManagerFuture<Bundle> result) {
+            try {
                 Bundle bundle = result.getResult();
-                tokenString = bundle.getString(AccountManager.KEY_AUTHTOKEN); //here it is the token
-                Log.d("Check", tokenString);
 
-            } catch (Exception e){
-                Log.d("Check", e.getMessage());
+                Intent launch = (Intent) bundle.get(AccountManager.KEY_INTENT);
+                if (launch != null) {
+                    startActivityForResult(launch, AUTHORIZATION_CODE);
+                } else {
+                    String token = bundle
+                            .getString(AccountManager.KEY_AUTHTOKEN);
+
+                    authPreferences.setToken(token);
+
+                    getCredentials();
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
     }
 
+    private void getCredentials() {
+        Mailbox.account_email=authPreferences.getUser();
+        MainActivity.tokenString=authPreferences.getToken();
+    }
 
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
