@@ -1,8 +1,6 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.text.Html;
 import android.util.Log;
 import android.widget.Toast;
 

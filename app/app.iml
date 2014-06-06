@@ -72,10 +72,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="mail" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-19.1.0" level="project" />
-    <orderEntry type="library" exported="" name="additionnal" level="project" />
     <orderEntry type="library" exported="" name="library-0.4.0" level="project" />
     <orderEntry type="library" exported="" name="android-support-v13" level="project" />
-    <orderEntry type="library" exported="" name="activation" level="project" />
+    <orderEntry type="module" module-name="javaMail" exported="" />
     <orderEntry type="module" module-name="pulltorefresh" exported="" />
   </component>
 </module>

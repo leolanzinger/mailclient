@@ -36,7 +36,6 @@ public class GMailSender {
     final String emailPort = "587";// gmail's smtp port
     final String smtpAuth = "true";
     final String starttls = "true";
-    final String emailHost = "smtp.gmail.com";
 
     String fromEmail;
     List<String> toEmailList, ccEmailList, bccEmailList;
@@ -154,6 +153,7 @@ public class GMailSender {
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.starttls.required", "true");
         props.put("mail.smtp.sasl.enable", "false");
+        props.put(OAuth2SaslClientFactory.OAUTH_TOKEN_PROP, oauthToken);
         mailSession = Session.getInstance(props);
         mailSession.setDebug(debug);
 

@@ -2,7 +2,6 @@ package com.example.mailclient.app;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -30,7 +29,7 @@ public class UpdateDeletedMailTask extends AsyncTask {
             /*
              *  Updates INBOX status of updated deleted Emails
              */
-            GMailUpdater updater = new GMailUpdater(Mailbox.account_email, Mailbox.account_password);
+            GMailUpdater updater = new GMailUpdater(Mailbox.account_email);
             try {
                 ArrayList<String> deleted = new ArrayList<String>();
                 deleted.add((String) args[0]);

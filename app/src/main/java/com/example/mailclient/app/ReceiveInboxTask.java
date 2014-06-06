@@ -108,7 +108,7 @@ public class ReceiveInboxTask extends AsyncTask<Object, Object, ArrayList<Email>
                 list.add(email);
             }
 
-            GMailUpdater updater = new GMailUpdater(Mailbox.account_email, Mailbox.account_password);
+            GMailUpdater updater = new GMailUpdater(Mailbox.account_email);
             try {
                 updater.updateSeenGmail(unread_mess_ID, false);
             } catch (Exception e) {

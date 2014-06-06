@@ -42,8 +42,7 @@ import java.util.List;
 
 public class ReplyActivity extends Activity {
 
-    private static final int OLDERVERSION = 0;
-    private static final int NEWVERSION = 1;
+    private static final int OLDERVERSION = 1;
     ArrayList<String> selectedImagePath,attachmentList;
     EditText toEmailText, ccEmailText, bccEmailText, subjectEmailText, bodyEmailText;
     TextView attachmentView;
@@ -54,7 +53,6 @@ public class ReplyActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sendmailactivity);
-
 
         toEmailText = (EditText) this.findViewById(R.id.send_to_edit);
         ccEmailText = (EditText) this.findViewById(R.id.send_cc_edit);
@@ -71,7 +69,6 @@ public class ReplyActivity extends Activity {
         bccEmailText.setText(intent.getStringExtra("bcc"));
 
         this.setTitle(intent.getStringExtra("replyType"));
-
 
 
         /*
@@ -218,33 +215,31 @@ public class ReplyActivity extends Activity {
         bodyEmailText = (EditText) this.findViewById(R.id.send_body);
 
         String fromEmail = Mailbox.account_email;
-        String fromPassword = Mailbox.account_password;
         String toEmails = toEmailText.getText().toString();
         String ccEmails = ccEmailText.getText().toString();
         String bccEmails = bccEmailText.getText().toString();
-        List<String> toEmailList = Arrays.asList(toEmails
-                .split("\\s*,\\s*"));
-        List<String> ccEmailList = Arrays.asList(ccEmails
-                .split("\\s*,\\s*"));
-        List<String> bccEmailList = Arrays.asList(bccEmails
-                .split("\\s*,\\s*"));
+        List<String> toEmailList = Arrays.asList(toEmails.split("\\s*,\\s*"));
+        List<String> ccEmailList = Arrays.asList(ccEmails.split("\\s*,\\s*"));
+        List<String> bccEmailList = Arrays.asList(bccEmails.split("\\s*,\\s*"));
         Log.i("SendMailActivity", "To List: " + toEmailList);
         String emailSubject = subjectEmailText.getText().toString();
         String emailBody = bodyEmailText.getText().toString();
 
-
-        Log.i("Check", "stampiamo la size della lista: " + selectedImagePath.size());
         if (selectedImagePath.size() == 0) {
-            new SendMailTask(ReplyActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, ccEmailList, bccEmailList);
+            new SendMailTask(ReplyActivity.this).execute(fromEmail, toEmailList, emailSubject, emailBody, ccEmailList, bccEmailList);
         } else {
-            new SendMailTask(ReplyActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, ccEmailList, bccEmailList, selectedImagePath);
+            new SendMailTask(ReplyActivity.this).execute(fromEmail, toEmailList, emailSubject, emailBody, ccEmailList, bccEmailList, selectedImagePath);
         }
+
+        attachmentList.clear();
+
+
     }
 
     public void addAttachment(MenuItem menu) {
         if (Build.VERSION.SDK_INT < 19) {
             Intent intent = new Intent();
-            intent.setType("image/jpeg");
+            intent.setType("*/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(intent, OLDERVERSION);
         } else {

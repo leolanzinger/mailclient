@@ -174,7 +174,6 @@ public class SendMailActivity extends Activity {
         bodyEmailText = (EditText) this.findViewById(R.id.send_body);
 
         String fromEmail = Mailbox.account_email;
-        String fromPassword = Mailbox.account_password;
         String toEmails = toEmailText.getText().toString();
         String ccEmails = ccEmailText.getText().toString();
         String bccEmails = bccEmailText.getText().toString();
@@ -191,7 +190,6 @@ public class SendMailActivity extends Activity {
         Log.i("SendMailActivity", "To List: " + toEmailList);
         String emailSubject = subjectEmailText.getText().toString();
         String emailBody = bodyEmailText.getText().toString();
-
 
         Log.i("Check", "stampiamo la size della lista: "+ selectedImagePath.size());
         if (selectedImagePath.size() == 0) {

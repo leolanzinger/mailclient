@@ -27,7 +27,6 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class MainActivity extends Activity {
 
-    private static final int CHOOSE_ACCOUNT = 1;
     private static final int AUTHORIZATION_CODE = 1993;
     private static final int ACCOUNT_CODE = 1601;
 
@@ -162,8 +161,6 @@ public class MainActivity extends Activity {
         accountManager.getAuthToken(userAccount, "oauth2:https://mail.google.com/", null, this, new OnTokenAcquired(), null);
     }
 
-
-
     private class OnTokenAcquired implements AccountManagerCallback<Bundle>{
         @Override
         public void run(AccountManagerFuture<Bundle> result) {
@@ -267,7 +264,6 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
-
     /*
      *  Execute receive mail async task
      *  and triggers progress bar.
@@ -279,8 +275,8 @@ public class MainActivity extends Activity {
         mPocketBar.progressiveStart();
         ReceiveSentMailTask receive_sent_task = new ReceiveSentMailTask(MainActivity.this);
         ReceiveInboxTask receive_task = new ReceiveInboxTask(MainActivity.this);
-        receive_sent_task.execute(Mailbox.account_email, Mailbox.account_password);
-        receive_task.execute(Mailbox.account_email, Mailbox.account_password);
+        receive_sent_task.execute(Mailbox.account_email);
+        receive_task.execute(Mailbox.account_email);
     }
 
     public void receiveMail(View view) {
@@ -289,8 +285,8 @@ public class MainActivity extends Activity {
         mPocketBar.progressiveStart();
         ReceiveSentMailTask receive_sent_task = new ReceiveSentMailTask(MainActivity.this);
         ReceiveInboxTask receive_task = new ReceiveInboxTask(MainActivity.this);
-        receive_sent_task.execute(Mailbox.account_email, Mailbox.account_password);
-        receive_task.execute(Mailbox.account_email, Mailbox.account_password);
+        receive_sent_task.execute(Mailbox.account_email);
+        receive_task.execute(Mailbox.account_email);
     }
 
     /*

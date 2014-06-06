@@ -3,7 +3,6 @@ package com.example.mailclient.app;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;

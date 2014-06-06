@@ -1,16 +1,15 @@
 package com.example.mailclient.app;
 
 
+import com.sun.mail.imap.IMAPStore;
+
 import java.util.ArrayList;
-import java.util.Properties;
 
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
-import javax.mail.Session;
-import javax.mail.Store;
 import javax.mail.search.MessageIDTerm;
 
 /**
@@ -23,34 +22,22 @@ import javax.mail.search.MessageIDTerm;
 */
 
 public class GMailUpdater extends javax.mail.Authenticator {
-    private static final String TAG = "GMailUpdater";
+    private IMAPStore store;
 
-    private String mailhost = "imap.gmail.com";
-    private Session session;
-    private Store store;
-
-    public GMailUpdater(String user, String password) {
+    public GMailUpdater(String user) {
 
         /*
          * Set SMTP variables
          */
-        Properties props = System.getProperties();
-        if (props == null){
-        }else{
-            props.setProperty("mail.store.protocol", "imaps");
-//            Log.d(TAG, "Transport: "+props.getProperty("mail.transport.protocol"));
-//            Log.d(TAG, "Store: "+props.getProperty("mail.store.protocol"));
-//            Log.d(TAG, "Host: "+props.getProperty("mail.imap.host"));
-//            Log.d(TAG, "Authentication: "+props.getProperty("mail.imap.auth"));
-//            Log.d(TAG, "Port: "+props.getProperty("mail.imap.port"));
-        }
+
+        GMailReceiver.initialize();
         try {
-            session = Session.getDefaultInstance(props, null);
-            store = session.getStore("imaps");
-            store.connect(mailhost, user, password);
+            store = GMailReceiver.connectToImap("imap.gmail.com", 993, user, MainActivity.tokenString, true);
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
         } catch (MessagingException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

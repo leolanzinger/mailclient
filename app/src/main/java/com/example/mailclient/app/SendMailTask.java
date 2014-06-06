@@ -41,7 +41,6 @@ public class SendMailTask extends AsyncTask {
             Log.i("SendMailTask", "About to instantiate GMailSender...");
             publishProgress("Processing input....");
 
-
             if (args.length==6){
                 GMailSender androidEmail = new GMailSender(args[0].toString(), (List) args[1], args[2].toString(),
                         args[3].toString(), (List) args[4], (List) args[5]);
