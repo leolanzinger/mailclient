@@ -79,7 +79,7 @@ public class TodoFragment extends Fragment {
             }
         };
         listView.setAdapter(adapter);
-        listView.setEmptyView(view.findViewById(R.id.empty_todo));
+        //listView.setEmptyView(view.findViewById(R.id.empty_todo));
 
         /*
          *  Istantiate progress bar and hide it
@@ -96,7 +96,7 @@ public class TodoFragment extends Fragment {
         /*
          *  Notify main activity of fragment
          */
-        MainActivity.current_fragment = 0;
+        MainActivity.current_fragment = 1;
 
         animator = new Animator();
 

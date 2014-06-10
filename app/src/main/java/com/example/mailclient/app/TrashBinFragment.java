@@ -85,7 +85,7 @@ public class TrashBinFragment extends Fragment {
         /*
          *  Notify main activity of fragment
          */
-        MainActivity.current_fragment = 3;
+        MainActivity.current_fragment = 4;
 
         animator = new Animator();
 

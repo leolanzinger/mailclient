@@ -244,19 +244,19 @@ public class MainActivity extends Activity {
             Fragment fragment = null;
             FragmentManager fragmentManager = getFragmentManager();
             switch (position) {
-                case 0:
+                case 1:
                     fragment = new TodoFragment();
                     TAG = "TODO";
                     break;
-                case 1:
+                case 2:
                     fragment = new InboxFragment();
                     TAG = "INBOX";
                     break;
-                case 2:
+                case 3:
                     fragment = new SentFragment();
                     TAG = "SENT";
                     break;
-                case 3:
+                case 4:
                     fragment = new TrashBinFragment();
                     TAG = "TRASH";
                     break;

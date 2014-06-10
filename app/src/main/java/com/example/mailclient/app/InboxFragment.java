@@ -102,7 +102,7 @@ public class InboxFragment extends Fragment {
         /*
          *  Notify main activity of fragment
          */
-        MainActivity.current_fragment = 1;
+        MainActivity.current_fragment = 2;
 
         animator = new Animator();
 
