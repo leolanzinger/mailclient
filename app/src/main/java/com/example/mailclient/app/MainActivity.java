@@ -27,7 +27,6 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class MainActivity extends Activity {
 
-    private static final int CHOOSE_ACCOUNT = 1;
     private static final int AUTHORIZATION_CODE = 1993;
     private static final int ACCOUNT_CODE = 1601;
 
@@ -106,6 +105,8 @@ public class MainActivity extends Activity {
         Log.d("Check", authPreferences.getUser() + " " + authPreferences.getToken());
 
         if (authPreferences.getUser() != null && authPreferences.getToken() != null) {
+            invalidateToken();
+            requestToken();
             getCredentials();
         } else {
             chooseAccount();
@@ -123,22 +124,19 @@ public class MainActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            if (requestCode == AUTHORIZATION_CODE) {
-                requestToken();
-            } else if (requestCode == ACCOUNT_CODE) {
-                String accountName = data
-                        .getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-                authPreferences.setUser(accountName);
+            if (requestCode == ACCOUNT_CODE) {
+                    String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+                    authPreferences.setUser(accountName);
 
-                // invalidate old tokens which might be cached. we want a fresh
-                // one, which is guaranteed to work
-                invalidateToken();
-                requestToken();
+                    // invalidate old tokens which might be cached. we want a fresh
+                    // one, which is guaranteed to work
+                    invalidateToken();
+                    requestToken();
+                }
             }
-        }
     }
 
-    private void invalidateToken() {
+    public void invalidateToken() {
         AccountManager accountManager = AccountManager.get(this);
         accountManager.invalidateAuthToken("com.google", authPreferences.getToken());
         authPreferences.setToken(null);
@@ -149,7 +147,7 @@ public class MainActivity extends Activity {
 //            System.exit(0);
 //        }
 
-    private void requestToken(){
+    public void requestToken(){
         Account userAccount = null;
         String user = authPreferences.getUser();
         for (Account account : accountManager.getAccountsByType("com.google")) {
@@ -164,7 +162,7 @@ public class MainActivity extends Activity {
 
 
 
-    private class OnTokenAcquired implements AccountManagerCallback<Bundle>{
+    public class OnTokenAcquired implements AccountManagerCallback<Bundle>{
         @Override
         public void run(AccountManagerFuture<Bundle> result) {
             try {
@@ -174,9 +172,7 @@ public class MainActivity extends Activity {
                 if (launch != null) {
                     startActivityForResult(launch, AUTHORIZATION_CODE);
                 } else {
-                    String token = bundle
-                            .getString(AccountManager.KEY_AUTHTOKEN);
-
+                    String token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
                     authPreferences.setToken(token);
 
                     getCredentials();
