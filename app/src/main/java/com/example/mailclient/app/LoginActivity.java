@@ -2,6 +2,8 @@ package com.example.mailclient.app;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,7 +37,16 @@ public class LoginActivity extends Activity{
     public void checkAccount(View v) {
         if (usernameText.getText().toString().matches("") || passwordText.getText().toString().matches("")) {
             // far partire un alert con errore di account o password sono nulli
-            Log.d("Check", "Username or Password not valid!");
+            new AlertDialog.Builder(this)
+                    .setTitle("Username or Password are empty")
+                    .setMessage("Please insert correct credentials")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // continue with delete
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         }
         else {
             CheckAccountTask checkaccount_task = new CheckAccountTask(LoginActivity.this);
@@ -47,10 +58,27 @@ public class LoginActivity extends Activity{
         Log.d("Check", "Account Succeded!");
         Log.d("Check", usernameText.getText().toString());
         Log.d("Check", passwordText.getText().toString());
+
+        AuthPreferences authPreferences = new AuthPreferences(this);
+        authPreferences.setUser(usernameText.getText().toString());
+        authPreferences.setPassword(passwordText.getText().toString());
+        Mailbox.account_email = authPreferences.getUser();
+        Mailbox.account_password = authPreferences.getPassword();
+        finish();
+
     }
     public void accountFailed(){
-        Log.d("Check", "Account Failed!");
-        Log.d("Check", usernameText.getText().toString());
-        Log.d("Check", passwordText.getText().toString());
+        new AlertDialog.Builder(this)
+                .setTitle("Username or Password is wrong")
+                .setMessage("Please insert correct credentials")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
     }
+
 }

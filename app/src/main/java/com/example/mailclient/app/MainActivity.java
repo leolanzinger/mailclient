@@ -23,9 +23,10 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 public class MainActivity extends Activity {
 
+    private static final int LOGIN_SUCCEDED = 1;
     /*
-    *   Set main variables
-    */
+        *   Set main variables
+        */
     public static Mailbox mailbox;
     public static Context baseContext;
     public static int current_fragment;
@@ -88,17 +89,24 @@ public class MainActivity extends Activity {
         AuthPreferences authPreferences = new AuthPreferences(this);
 
         if (authPreferences.getUser() != null && authPreferences.getPassword() != null) {
-            Mailbox.account_email =authPreferences.getUser();
+            Mailbox.account_email = authPreferences.getUser();
             Mailbox.account_password = authPreferences.getPassword();
         } else {
             //Facciamo partire un intent che te lo fa aggiungere
             Intent intentAccount = new Intent(this, LoginActivity.class);
-            startActivity(intentAccount);
+            startActivityForResult(intentAccount, LOGIN_SUCCEDED);
         }
 
     }
 
-    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode==1){
+            Log.d("Check","Receive mail? Yes!");
+            receiveMail();
+        }
+    }
+
+        @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
@@ -190,6 +198,16 @@ public class MainActivity extends Activity {
     }
 
     public void receiveMail(View view) {
+        SmoothProgressBar mPocketBar = (SmoothProgressBar) getFragmentManager().findFragmentById(R.id.main_content).getView().findViewById(R.id.pocket);
+        mPocketBar.setVisibility(View.VISIBLE);
+        mPocketBar.progressiveStart();
+        ReceiveSentMailTask receive_sent_task = new ReceiveSentMailTask(MainActivity.this);
+        ReceiveInboxTask receive_task = new ReceiveInboxTask(MainActivity.this);
+        receive_sent_task.execute(Mailbox.account_email, Mailbox.account_password);
+        receive_task.execute(Mailbox.account_email, Mailbox.account_password);
+    }
+
+    public void receiveMail() {
         SmoothProgressBar mPocketBar = (SmoothProgressBar) getFragmentManager().findFragmentById(R.id.main_content).getView().findViewById(R.id.pocket);
         mPocketBar.setVisibility(View.VISIBLE);
         mPocketBar.progressiveStart();
