@@ -243,4 +243,10 @@ public class MainActivity extends Activity {
     public void setActionBarTitle(String title){
         setTitle(title);
     }
+
+    //open settings from drawer
+    public void openSettings (View v) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
 }
