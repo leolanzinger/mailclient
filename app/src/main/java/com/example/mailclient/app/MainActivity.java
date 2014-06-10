@@ -57,6 +57,11 @@ public class MainActivity extends Activity {
         mDrawerLinks = getResources().getStringArray(R.array.sidebar_icons);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Set the header
+        View header = (View)getLayoutInflater().inflate(R.layout.header_container,null);
+        mDrawerList.addHeaderView(header);
+
         mDrawerList.setAdapter(new DrawerAdapter(this, R.layout.drawer_list, mDrawerLinks));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -270,5 +275,11 @@ public class MainActivity extends Activity {
      */
     public void setActionBarTitle(String title){
         setTitle(title);
+    }
+
+    //open settings from drawer
+    public void openSettings (View v) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 }
