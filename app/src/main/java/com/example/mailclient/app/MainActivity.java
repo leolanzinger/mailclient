@@ -56,6 +56,11 @@ public class MainActivity extends Activity {
         mDrawerLinks = getResources().getStringArray(R.array.sidebar_icons);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Set the header
+        View header = (View)getLayoutInflater().inflate(R.layout.header_container,null);
+        mDrawerList.addHeaderView(header);
+
         mDrawerList.setAdapter(new DrawerAdapter(this, R.layout.drawer_list, mDrawerLinks));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
