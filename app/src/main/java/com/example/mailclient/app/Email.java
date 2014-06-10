@@ -124,21 +124,24 @@ public class Email implements Serializable {
      * Return the primary content of the message.
      */
     private void getContent(Part p) throws MessagingException, IOException {
-
-        Multipart mp = (Multipart)p.getContent();
-        for (int i=0; i < mp.getCount(); i++) {
-            if ( mp.getBodyPart(i).isMimeType("multipart/*")) {
-                getContent(mp.getBodyPart(i));
-            }
-            else {
-                if (mp.getBodyPart(i).isMimeType("text/*")) {
-                    String s = (String) mp.getBodyPart(i).getContent();
-                    body_temp.add(s);
-                }
-                else {
-                    String filePath= "storage/sdcard0/Download/"+mp.getBodyPart(i).getFileName();
-                    saveFile(mp.getBodyPart(i).getInputStream(), filePath);
-                    attachmentPath.add(filePath);
+        if(p.isMimeType("text/*")){
+            String s = (String) p.getContent();
+            body_temp.add(s);
+        }
+        else {
+            Multipart mp = (Multipart) p.getContent();
+            for (int i = 0; i < mp.getCount(); i++) {
+                if (mp.getBodyPart(i).isMimeType("multipart/*")) {
+                    getContent(mp.getBodyPart(i));
+                } else {
+                    if (mp.getBodyPart(i).isMimeType("text/*")) {
+                        String s = (String) mp.getBodyPart(i).getContent();
+                        body_temp.add(s);
+                    } else {
+                        String filePath = "storage/sdcard0/Download/" + mp.getBodyPart(i).getFileName();
+                        saveFile(mp.getBodyPart(i).getInputStream(), filePath);
+                        attachmentPath.add(filePath);
+                    }
                 }
             }
         }
