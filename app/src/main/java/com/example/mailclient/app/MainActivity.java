@@ -81,6 +81,21 @@ public class MainActivity extends Activity {
         fragmentTransaction.add(R.id.main_content, fragment, TAG);
         fragmentTransaction.commit();
 
+        /*
+         * Check login data
+         */
+
+        AuthPreferences authPreferences = new AuthPreferences(this);
+
+        if (authPreferences.getUser() != null && authPreferences.getPassword() != null) {
+            Mailbox.account_email =authPreferences.getUser();
+            Mailbox.account_password = authPreferences.getPassword();
+        } else {
+            //Facciamo partire un intent che te lo fa aggiungere
+            Intent intentAccount = new Intent(this, LoginActivity.class);
+            startActivity(intentAccount);
+        }
+
     }
 
     @Override

@@ -24,8 +24,8 @@ public class Mailbox {
     // SMTP values
     static InternalStorage storer;
     public static Context baseContext;
-    public static String account_email = "mailclientandroid@gmail.com";
-    public static String account_password = "android2014";
+    public static String account_email;
+    public static String account_password;
     // internal storage keys
     static String KEY = "mailClient";
     static String SENT_KEY = "mailClient_sent";

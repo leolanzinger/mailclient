@@ -52,6 +52,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.mailclient.app.LoginActivity"
+            android:label="Login"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" >
+        </activity>
 
         <receiver android:name=".AlarmReceiver"/>
     </application>

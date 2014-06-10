@@ -2,7 +2,6 @@ package com.example.mailclient.app;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.util.ArrayList;
 
