@@ -2,14 +2,32 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <TextView
+        android:text="Welcome!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="26dp"
+        android:width="200dp"
+        android:layout_marginTop="10dp"/>
+    <TextView
+        android:text="Setup your account please."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16dp"
+        android:paddingBottom="20dp"
+        android:width="200dp"/>
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Username"
+        android:gravity="left"
         android:id="@+id/usernameView"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal|left" />
 
     <EditText
         android:layout_width="match_parent"
@@ -22,7 +40,7 @@
         android:layout_height="wrap_content"
         android:text="Password"
         android:id="@+id/passwordView"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal|left" />
 
     <EditText
         android:layout_width="match_parent"
@@ -36,6 +54,10 @@
         android:text="Connect"
         android:id="@+id/confirm_button"
         android:layout_gravity="center_horizontal"
-        android:onClick="checkAccount"/>
+        android:onClick="checkAccount"
+        android:background="@color/blue"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:layout_margin="15dp"/>
 
 </LinearLayout>

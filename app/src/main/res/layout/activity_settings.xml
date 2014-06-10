@@ -1,16 +1,59 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="com.example.mailclient.app.SettingsActivity">
 
     <TextView
-        android:text="@string/hello_world"
+        android:text="Account"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="26dp"
+        android:paddingBottom="10dp"
+        android:width="200dp"/>
 
-</RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:gravity="left"
+        android:id="@+id/usernameView"
+        android:layout_gravity="center_horizontal|left" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/usernameText"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Password"
+        android:id="@+id/passwordView"
+        android:layout_gravity="center_horizontal|left" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/passwordText"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connect"
+        android:id="@+id/confirm_button"
+        android:layout_gravity="center_horizontal"
+        android:onClick="checkAccount"
+        android:background="@color/blue"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:layout_margin="15dp"/>
+
+</LinearLayout>
