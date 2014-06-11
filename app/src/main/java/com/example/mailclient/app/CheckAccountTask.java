@@ -48,6 +48,13 @@ public class CheckAccountTask extends AsyncTask {
                 ((LoginActivity)parentActivity).accountFailed();
             }
             progressDialog.dismiss();
+        } else if (parentActivity instanceof SettingsActivity) {
+            if (succeeded) {
+                ((SettingsActivity)parentActivity).accountSucceded();
+            } else {
+                ((SettingsActivity)parentActivity).accountFailed();
+            }
+            progressDialog.dismiss();
         }
     }
 

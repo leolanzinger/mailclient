@@ -64,6 +64,14 @@ public class LoginActivity extends Activity{
         authPreferences.setPassword(passwordText.getText().toString());
         Mailbox.account_email = authPreferences.getUser();
         Mailbox.account_password = authPreferences.getPassword();
+
+        OwnerInfo ownerInfo = new OwnerInfo(this);
+
+        Log.d("Check", ownerInfo.name); //Dobbiamo buttarlo nella barra laterale
+        Log.d("Check", ownerInfo.email);
+        Log.d("Check", ownerInfo.id);
+
+
         finish();
 
     }
