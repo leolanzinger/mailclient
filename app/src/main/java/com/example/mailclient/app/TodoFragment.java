@@ -198,7 +198,7 @@ public class TodoFragment extends Fragment {
         }
     }
 
-    public void setUpTodoList() {
+    public static void setUpTodoList() {
         todo_list.clear();
         for (int i=0; i<Mailbox.emailList.size(); i++) {
             Mailbox.emailList.get(i).separator = false;
@@ -236,22 +236,32 @@ public class TodoFragment extends Fragment {
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(date);
                     int today = cal.get(Calendar.DAY_OF_MONTH);
-                    int email_expire = todo_list.get(i).expire_date.get(Calendar.DAY_OF_MONTH);
-
+                    int email_expire;
                     Email separator = new Email();
                     separator.separator = true;
-
-                    if (today == email_expire) {
-                        separator.subject = "TODAY";
-                        todo_list.add(i, separator);
-                        Log.d("separator", "today first");
-                        i++;
-                    } else if (today == email_expire - 1) {
-                        separator.subject = "TOMORROW";
-                        todo_list.add(i, separator);
-                        Log.d("separator", "tomorrow first");
-                        i++;
-                    } else {
+                    if (todo_list.get(i).expire_date != null) {
+                        email_expire  = todo_list.get(i).expire_date.get(Calendar.DAY_OF_MONTH);
+                        if (today == email_expire) {
+                            separator.subject = "TODAY";
+                            todo_list.add(i, separator);
+                            Log.d("separator", "today first");
+                            i++;
+                        } else if (today == email_expire - 1) {
+                            separator.subject = "TOMORROW";
+                            todo_list.add(i, separator);
+                            Log.d("separator", "tomorrow first");
+                            i++;
+                        } else {
+                            if (continue_reading) {
+                                separator.subject = "UPCOMING";
+                                todo_list.add(i, separator);
+                                Log.d("separator", "upcoming first");
+                                continue_reading = false;
+                                i++;
+                            }
+                        }
+                    }
+                    else {
                         if (continue_reading) {
                             separator.subject = "UPCOMING";
                             todo_list.add(i, separator);
@@ -274,13 +284,25 @@ public class TodoFragment extends Fragment {
             // if different expire dates insert excerpt
             else {
                 if (todo_list.get(i).todo) {
-                    if (!todo_list.get(i-1).seen || todo_list.get(i).expire_date.get(Calendar.DAY_OF_MONTH) != todo_list.get(i - 1).expire_date.get(Calendar.DAY_OF_MONTH)) {
-
+                    int i_date, i_1_date;
+                    if (todo_list.get(i).expire_date != null ) {
+                        i_date = todo_list.get(i).expire_date.get(Calendar.DAY_OF_MONTH);
+                    }
+                    else {
+                        i_date = -1;
+                    }
+                    if (todo_list.get(i - 1).expire_date != null) {
+                        i_1_date = todo_list.get(i - 1).expire_date.get(Calendar.DAY_OF_MONTH);
+                    }
+                    else {
+                        i_1_date = -2;
+                    }
+                    if (i_date != i_1_date) {
                         Date date = new Date();
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(date);
                         int today = cal.get(Calendar.DAY_OF_MONTH);
-                        int email_expire = todo_list.get(i).expire_date.get(Calendar.DAY_OF_MONTH);
+                        int email_expire = i_date;
 
                         Email separator = new Email();
                         separator.separator = true;
