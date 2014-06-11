@@ -40,6 +40,8 @@ public class MainActivity extends Activity {
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
     ActionBarDrawerToggle mDrawerToggle;
+    TextView surnameTextView, nameTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,21 +68,9 @@ public class MainActivity extends Activity {
         mDrawerList.setAdapter(new DrawerAdapter(this, R.layout.drawer_list, mDrawerLinks));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-
-        //get user info
-        OwnerInfo ownerInfo = new OwnerInfo(this);
-
-
-//        TODO wait
         //put user info on the drawer
-//        TextView nome = (TextView)findViewById(R.id.nome);
-//        TextView cognome = (TextView)findViewById(R.id.cognome);
-//        String arr[] = ownerInfo.name.split(" ", 2);
-//        //becca il nome
-//        String firstWord = arr[0];
-//        String theRest = arr[1];
-//        nome.setText(firstWord);
-//        cognome.setText(theRest);
+        nameTextView = (TextView)findViewById(R.id.nome);
+        surnameTextView = (TextView)findViewById(R.id.cognome);
 
          /*
          *  Drawer adapter and list
@@ -113,6 +103,8 @@ public class MainActivity extends Activity {
         if (authPreferences.getUser() != null && authPreferences.getPassword() != null) {
             Mailbox.account_email = authPreferences.getUser();
             Mailbox.account_password = authPreferences.getPassword();
+            Mailbox.account_name = authPreferences.getName();
+            setCredentialsToDrawer();
         } else {
             //Facciamo partire un intent che te lo fa aggiungere
             Intent intentAccount = new Intent(this, LoginActivity.class);
@@ -123,9 +115,16 @@ public class MainActivity extends Activity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode==1){
-            Log.d("Check","Receive mail? Yes!");
-            receiveMail();
+            if (resultCode == Activity.RESULT_CANCELED) {
+                this.finish();
+            }
+            else {
+                Log.d("Check", "Receive mail? Yes!");
+                receiveMail();
+                setCredentialsToDrawer();
+            }
         }
+
     }
 
         @Override
@@ -298,5 +297,16 @@ public class MainActivity extends Activity {
     public void openSettings (View v) {
         Intent intent = new Intent(baseContext, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    public void setCredentialsToDrawer() {
+        String arr[] = Mailbox.account_name.split(" ", 2);
+        //becca il nome
+        String firstWord = arr[0];
+//        if (arr[1] != null) {
+//            String theRest = arr[1];
+//            surnameTextView.setText(theRest);
+//        }
+        nameTextView.setText(firstWord);
     }
 }

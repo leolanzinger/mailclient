@@ -11,6 +11,7 @@ public class AuthPreferences {
 
     private static final String KEY_USER = "user";
     private static final String KEY_PASSWORD = "password";
+    private static final String KEY_NAME = "name";
 
     private SharedPreferences preferences;
 
@@ -30,6 +31,12 @@ public class AuthPreferences {
         editor.commit();
     }
 
+    public void setName(String name) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(KEY_NAME, name);
+        editor.commit();
+    }
+
     public String getUser() {
         return preferences.getString(KEY_USER, null);
     }
@@ -37,4 +44,6 @@ public class AuthPreferences {
     public String getPassword() {
         return preferences.getString(KEY_PASSWORD, null);
     }
+
+    public String getName() { return preferences.getString(KEY_NAME, null);}
 }

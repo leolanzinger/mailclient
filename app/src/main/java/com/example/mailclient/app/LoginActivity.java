@@ -3,6 +3,7 @@ package com.example.mailclient.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,7 @@ public class LoginActivity extends Activity{
     Spinner usernameSpinner;
     Button login_button;
     String username;
+    String[] account_names;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class LoginActivity extends Activity{
         // ownerInfo per sapere tutti gli account disponibili sul telefono
         OwnerInfo ownerInfo = new OwnerInfo(this);
         String[] accounts_email = ownerInfo.retrieveEmailList();
+        account_names = ownerInfo.retrieveNameList();
 
         ArrayAdapter<CharSequence> adapter;
 
@@ -91,8 +94,10 @@ public class LoginActivity extends Activity{
         AuthPreferences authPreferences = new AuthPreferences(this);
         authPreferences.setUser(username);
         authPreferences.setPassword(passwordText.getText().toString());
+        authPreferences.setName(account_names[usernameSpinner.getSelectedItemPosition()]);
         Mailbox.account_email = authPreferences.getUser();
         Mailbox.account_password = authPreferences.getPassword();
+        Mailbox.account_name = authPreferences.getName();
 
 
 //
@@ -113,6 +118,13 @@ public class LoginActivity extends Activity{
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, resultIntent);
+        finish();
     }
 
 

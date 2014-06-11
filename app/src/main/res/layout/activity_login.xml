@@ -40,7 +40,9 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:id="@+id/passwordText"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:text="leothebassist"
+        />
 
     <Button
         android:layout_width="wrap_content"

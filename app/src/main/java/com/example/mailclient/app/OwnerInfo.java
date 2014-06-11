@@ -34,7 +34,7 @@ public class OwnerInfo {
 
     final AccountManager manager;
     final Account[] accounts;
-    ArrayList<String> emails, id;
+    ArrayList<String> emails, id, names;
 
     public OwnerInfo(Activity MainActivity) {
         manager = AccountManager.get(MainActivity);
@@ -42,9 +42,11 @@ public class OwnerInfo {
 
         emails = new ArrayList<String>();
         id = new ArrayList<String>();
+        names = new ArrayList<String>();
 
         // retrieve accounts info
         if (accounts[0].name != null) {
+
             accountName = accounts[0].name;
             String where= ContactsContract.CommonDataKinds.Email.DATA + " = ?";
             ArrayList<String> what = new ArrayList<String>();
@@ -56,26 +58,25 @@ public class OwnerInfo {
                 what.add(accounts[i].name);
                 Log.v("Got account", "Account " + accounts[i].name);
             }
-            String[] whatarr=(String[]) what.toArray(new String[what.size()]);
+
+            String[] whatarr = (String[]) what.toArray(new String[what.size()]);
             ContentResolver cr = MainActivity.getContentResolver();
             Cursor emailCur = cr.query(
                     ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
                     where,
                     whatarr, null);
-            int j=0;
+
             while (emailCur.moveToNext()) {
                 if (!emails.contains(emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)))) {
 //                id[j] = (emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.CONTACT_ID)));
                     emails.add(emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
+                    // add to arraylist relative primary name
+                    if (!names.contains(emailCur.getString(emailCur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)))) {
+                        names.add(emailCur.getString(emailCur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
+                    }
                 }
-                String newName = emailCur
-                        .getString(emailCur
-                                .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                if (name == null || newName.length() > name.length())
-                    name = newName;
             }
 
-            Log.i("accounts", "number of accounts: " + j);
             emailCur.close();
         }
     }
@@ -83,4 +84,6 @@ public class OwnerInfo {
     public String[] retrieveEmailList() {
         return emails.toArray(new String[emails.size()]);
     }
+
+    public String[] retrieveNameList() { return names.toArray(new String[names.size()]); }
 }
