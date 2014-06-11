@@ -99,11 +99,8 @@ public class LoginActivity extends Activity{
         Mailbox.account_password = authPreferences.getPassword();
         Mailbox.account_name = authPreferences.getName();
 
-
-//
-//        TextView nome = (TextView)findViewById(R.id.nome);
-//        nome.setText(ownerInfo.name);
-
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_OK, resultIntent);
         finish();
 
     }

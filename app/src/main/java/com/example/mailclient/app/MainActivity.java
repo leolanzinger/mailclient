@@ -113,12 +113,14 @@ public class MainActivity extends Activity {
 
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==1){
             if (resultCode == Activity.RESULT_CANCELED) {
                 this.finish();
             }
-            else {
+            else if (resultCode == Activity.RESULT_OK) {
                 Log.d("Check", "Receive mail? Yes!");
                 receiveMail();
                 setCredentialsToDrawer();
@@ -127,7 +129,7 @@ public class MainActivity extends Activity {
 
     }
 
-        @Override
+    @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();

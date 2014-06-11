@@ -41,7 +41,6 @@
         android:inputType="textPassword"
         android:id="@+id/passwordText"
         android:layout_gravity="center_horizontal"
-        android:text="leothebassist"
         />
 
     <Button
