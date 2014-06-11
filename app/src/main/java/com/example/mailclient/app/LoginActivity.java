@@ -1,6 +1,5 @@
 package com.example.mailclient.app;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -19,7 +18,6 @@ public class LoginActivity extends Activity{
     EditText usernameText, passwordText;
     TextView usernameView, passwordView;
     Button login_button;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -34,9 +32,6 @@ public class LoginActivity extends Activity{
 
         login_button = (Button) this.findViewById(R.id.confirm_button);
         login_button.setBackgroundResource(R.drawable.login_button);
-
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     public void checkAccount(View v) {
@@ -69,6 +64,13 @@ public class LoginActivity extends Activity{
         authPreferences.setPassword(passwordText.getText().toString());
         Mailbox.account_email = authPreferences.getUser();
         Mailbox.account_password = authPreferences.getPassword();
+
+        OwnerInfo ownerInfo = new OwnerInfo(this);
+
+//
+//        TextView nome = (TextView)findViewById(R.id.nome);
+//        nome.setText(ownerInfo.name);
+
         finish();
 
     }
@@ -83,7 +85,7 @@ public class LoginActivity extends Activity{
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-
     }
+
 
 }

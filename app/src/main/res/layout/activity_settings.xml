@@ -14,13 +14,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="26dp"
-        android:paddingBottom="10dp"
-        android:width="200dp"/>
+        android:paddingBottom="10dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Username"
+        android:textSize="15dp"
         android:gravity="left"
         android:id="@+id/usernameView"
         android:layout_gravity="center_horizontal|left" />
@@ -35,6 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Password"
+        android:textSize="15dp"
         android:id="@+id/passwordView"
         android:layout_gravity="center_horizontal|left" />
 

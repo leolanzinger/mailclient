@@ -1,6 +1,7 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 /*
@@ -10,11 +11,13 @@ import android.os.AsyncTask;
 public class CheckAccountTask extends AsyncTask {
 
     Activity parentActivity;
-    boolean succeded;
+    boolean succeeded;
+    ProgressDialog progressDialog;
 
     public CheckAccountTask(Activity activity) {
         parentActivity = activity;
-        succeded = true;
+        succeeded = true;
+        progressDialog = ProgressDialog.show(parentActivity,"","Connecting");
     }
 
 
@@ -25,7 +28,7 @@ public class CheckAccountTask extends AsyncTask {
     protected Object doInBackground(Object... args) {
         try {
             GMailChecker checker = new GMailChecker(args[0].toString(),args[1].toString());
-            succeded = checker.connected();
+            succeeded = checker.connected();
         } catch (Exception e) {
         }
 
@@ -39,11 +42,19 @@ public class CheckAccountTask extends AsyncTask {
     @Override
     public void onPostExecute(Object result) {
         if (parentActivity instanceof LoginActivity) {
-            if (succeded) {
+            if (succeeded) {
                 ((LoginActivity)parentActivity).accountSucceded();
             } else {
                 ((LoginActivity)parentActivity).accountFailed();
             }
+            progressDialog.dismiss();
+        } else if (parentActivity instanceof SettingsActivity) {
+            if (succeeded) {
+                ((SettingsActivity)parentActivity).accountSucceded();
+            } else {
+                ((SettingsActivity)parentActivity).accountFailed();
+            }
+            progressDialog.dismiss();
         }
     }
 
