@@ -73,7 +73,7 @@ public class LoginActivity extends Activity{
                 .setMessage("Please insert correct credentials")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // continue with delete
+                        //Do nothing
                     }
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
