@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
@@ -64,6 +65,20 @@ public class MainActivity extends Activity {
 
         mDrawerList.setAdapter(new DrawerAdapter(this, R.layout.drawer_list, mDrawerLinks));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+
+        //get user info
+        OwnerInfo ownerInfo = new OwnerInfo(this);
+
+        //put user info on the drawer
+        TextView nome = (TextView)findViewById(R.id.nome);
+        TextView cognome = (TextView)findViewById(R.id.cognome);
+        String arr[] = ownerInfo.name.split(" ", 2);
+        //becca il nome
+        String firstWord = arr[0];
+        String theRest = arr[1];
+        nome.setText(firstWord);
+        cognome.setText(theRest);
 
          /*
          *  Drawer adapter and list

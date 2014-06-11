@@ -67,10 +67,9 @@ public class LoginActivity extends Activity{
 
         OwnerInfo ownerInfo = new OwnerInfo(this);
 
-        Log.d("Check", ownerInfo.name); //Dobbiamo buttarlo nella barra laterale
-        Log.d("Check", ownerInfo.email);
-        Log.d("Check", ownerInfo.id);
-
+//
+//        TextView nome = (TextView)findViewById(R.id.nome);
+//        nome.setText(ownerInfo.name);
 
         finish();
 
