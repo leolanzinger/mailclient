@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ public class LoginActivity extends Activity{
 
     EditText usernameText, passwordText;
     TextView usernameView, passwordView;
+    Button login_button;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,9 @@ public class LoginActivity extends Activity{
 
         usernameText = (EditText) this.findViewById(R.id.usernameText);
         passwordText = (EditText) this.findViewById(R.id.passwordText);
+
+        login_button = (Button) this.findViewById(R.id.confirm_button);
+        login_button.setBackgroundResource(R.drawable.login_button);
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

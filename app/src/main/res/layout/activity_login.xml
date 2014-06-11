@@ -40,6 +40,7 @@
         android:layout_height="wrap_content"
         android:text="Password"
         android:id="@+id/passwordView"
+        android:inputType="textPassword"
         android:layout_gravity="center_horizontal|left" />
 
     <EditText

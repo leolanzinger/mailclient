@@ -5,14 +5,21 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 
 public class SettingsActivity extends Activity {
+
+    Button login_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        login_button = (Button) this.findViewById(R.id.confirm_button);
+        login_button.setBackgroundResource(R.drawable.login_button);
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowHomeEnabled(true);
@@ -40,5 +47,9 @@ public class SettingsActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-    
+
+    public void checkAccount(View v) {
+
+    }
+
 }
