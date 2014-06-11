@@ -3,6 +3,7 @@ package com.example.mailclient.app;
 import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -72,9 +73,9 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
 
             }
             else {
-                if (item.subject.length() > 15) {
-                    subject_excerpt = item.subject.substring(0, 15);
-                    subject_excerpt += "...";
+                if (item.subject.length() > 21) {
+                    subject_excerpt = item.subject.substring(0, 20);
+                    subject_excerpt += "..";
                 } else {
                     subject_excerpt = item.subject;
                 }
@@ -122,7 +123,7 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
             /*
              *  Set excerpt from Email
              */
-            excerptView.setText(item.excerpt);
+            excerptView.setText(Html.fromHtml(item.excerpt));
 
             /*
              *  Set bold if email not read

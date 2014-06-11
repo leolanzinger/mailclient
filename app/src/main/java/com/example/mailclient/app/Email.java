@@ -183,8 +183,6 @@ public class Email implements Serializable {
      */
     public void setExcerpt() throws MessagingException, IOException {
 
-        //TODO: pulirlo
-
         String body_content = "";
         for (int i=0; i<body.size(); i++) {
             String disposition = body.get(i);
