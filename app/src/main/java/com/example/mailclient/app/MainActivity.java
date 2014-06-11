@@ -70,15 +70,17 @@ public class MainActivity extends Activity {
         //get user info
         OwnerInfo ownerInfo = new OwnerInfo(this);
 
+
+//        TODO wait
         //put user info on the drawer
-        TextView nome = (TextView)findViewById(R.id.nome);
-        TextView cognome = (TextView)findViewById(R.id.cognome);
-        String arr[] = ownerInfo.name.split(" ", 2);
-        //becca il nome
-        String firstWord = arr[0];
-        String theRest = arr[1];
-        nome.setText(firstWord);
-        cognome.setText(theRest);
+//        TextView nome = (TextView)findViewById(R.id.nome);
+//        TextView cognome = (TextView)findViewById(R.id.cognome);
+//        String arr[] = ownerInfo.name.split(" ", 2);
+//        //becca il nome
+//        String firstWord = arr[0];
+//        String theRest = arr[1];
+//        nome.setText(firstWord);
+//        cognome.setText(theRest);
 
          /*
          *  Drawer adapter and list

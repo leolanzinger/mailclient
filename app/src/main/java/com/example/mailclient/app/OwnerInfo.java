@@ -28,15 +28,22 @@ public class OwnerInfo {
     //
     // in your AndroidManifest.xml for this code.
 
-    public String id = null;
-    public String email = null;
     public String phone = null;
     public String accountName = null;
     public String name = null;
 
+    final AccountManager manager;
+    final Account[] accounts;
+    ArrayList<String> emails, id;
+
     public OwnerInfo(Activity MainActivity) {
-        final AccountManager manager = AccountManager.get(MainActivity);
-        final Account[] accounts = manager.getAccountsByType("com.google");
+        manager = AccountManager.get(MainActivity);
+        accounts = manager.getAccountsByType("com.google");
+
+        emails = new ArrayList<String>();
+        id = new ArrayList<String>();
+
+        // retrieve accounts info
         if (accounts[0].name != null) {
             accountName = accounts[0].name;
             String where= ContactsContract.CommonDataKinds.Email.DATA + " = ?";
@@ -55,39 +62,25 @@ public class OwnerInfo {
                     ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
                     where,
                     whatarr, null);
+            int j=0;
             while (emailCur.moveToNext()) {
-                id = emailCur
-                        .getString(emailCur
-                                .getColumnIndex(ContactsContract.CommonDataKinds.Email.CONTACT_ID));
-                email = emailCur
-                        .getString(emailCur
-                                .getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+                if (!emails.contains(emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)))) {
+//                id[j] = (emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.CONTACT_ID)));
+                    emails.add(emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
+                }
                 String newName = emailCur
                         .getString(emailCur
                                 .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
                 if (name == null || newName.length() > name.length())
                     name = newName;
-
-                Log.v("Got contacts", "ID " + id + " Email : " + email
-                        + " Name : " + name);
             }
 
+            Log.i("accounts", "number of accounts: " + j);
             emailCur.close();
-            if (id != null) {
-
-                // get the phone number
-                Cursor pCur = cr.query(
-                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                        null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID
-                                + " = ?", new String[] { id }, null);
-                while (pCur.moveToNext()) {
-                    phone = pCur
-                            .getString(pCur
-                                    .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    Log.v("Got contacts", "phone" + phone);
-                }
-                pCur.close();
-            }
         }
+    }
+
+    public String[] retrieveEmailList() {
+        return emails.toArray(new String[emails.size()]);
     }
 }

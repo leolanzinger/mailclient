@@ -21,10 +21,10 @@
         android:id="@+id/usernameView"
         android:layout_gravity="center_horizontal|left" />
 
-    <EditText
+    <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/usernameText"
+        android:id="@+id/usernameSpinner"
         android:layout_gravity="center_horizontal" />
 
     <TextView

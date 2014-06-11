@@ -105,9 +105,6 @@ public class SettingsActivity extends Activity {
 
         OwnerInfo ownerInfo = new OwnerInfo(this);
 
-        Log.d("Check", ownerInfo.accountName);
-        Log.d("Check", ownerInfo.email);
-        Log.d("Check", ownerInfo.id);
 
         finish();
 
