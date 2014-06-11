@@ -25,6 +25,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
+import javax.mail.internet.InternetAddress;
 
 /**
  * Created by Leo on 30/03/14.
@@ -83,22 +84,36 @@ public class Email implements Serializable {
     }
 
     public void setFrom(Address[] addr) {
-        from = new Address[addr.length];
-        for (int i = 0; i < addr.length; i++) {
-            from[i] = addr[i];
+        if (addr != null) {
+            from = new Address[addr.length];
+            for (int i = 0; i < addr.length; i++) {
+                from[i] = addr[i];
+            }
         }
     }
 
     public void setTo(Address[] addr) {
-        to = new Address[addr.length];
-        for (int i = 0; i < addr.length; i++) {
-            to[i] = addr[i];
+        if (addr != null) {
+            to = new Address[addr.length];
+            for (int i = 0; i < addr.length; i++) {
+                to[i] = addr[i];
+            }
         }
     }
+
     public void setCC(Address[] addr) {
-        cc = new Address[addr.length];
-        for (int i = 0; i < addr.length; i++) {
-            cc[i] = addr[i];
+        if (addr != null) {
+            cc = new Address[addr.length];
+            for (int i = 0; i < addr.length; i++) {
+                cc[i] = addr[i];
+            }
+            // if to is null set to as cc so the app won't crash
+            if (to == null) {
+                to = new Address[cc.length];
+                for (int i = 0; i < cc.length; i++) {
+                    to[i] = cc[i];
+                }
+            }
         }
     }
 
@@ -107,6 +122,21 @@ public class Email implements Serializable {
      */
     public void setNoCC() {
         cc = new Address[0];
+    }
+
+    /*
+     * Hack to avoid empty to emails
+     */
+    public void setEmptyRecipient(Address[] addr_bcc) {
+        if (to == null || to.length == 0){
+            if (cc == null || cc.length == 0) {
+                Log.d("to null", "set to as bcc");
+                to = new Address[addr_bcc.length];
+                for (int i = 0; i < addr_bcc.length; i++) {
+                    to[i] = addr_bcc[i];
+                }
+            }
+        }
     }
 
     /*
@@ -152,8 +182,6 @@ public class Email implements Serializable {
      *  - saves only first line without multiple spaces
      */
     public void setExcerpt() throws MessagingException, IOException {
-
-        //TODO: pulirlo
 
         String body_content = "";
         for (int i=0; i<body.size(); i++) {

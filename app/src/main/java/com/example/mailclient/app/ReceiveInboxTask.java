@@ -82,6 +82,8 @@ public class ReceiveInboxTask extends AsyncTask<Object, Object, ArrayList<Email>
                         email.setNoCC();
                     }
 
+                    email.setEmptyRecipient(msg[i].getRecipients(Message.RecipientType.BCC));
+
                     String ID = msg[i].getHeader("Message-Id")[0];
 
                     Flags seen = new Flags(Flags.Flag.SEEN);
