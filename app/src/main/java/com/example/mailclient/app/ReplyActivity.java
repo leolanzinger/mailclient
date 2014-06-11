@@ -187,7 +187,25 @@ public class ReplyActivity extends Activity {
             case R.id.action_settings:
                 return true;
             case android.R.id.home:
-                this.finish();
+                //Check before exit
+
+                new AlertDialog.Builder(this)
+                        .setTitle("You are closing the email sender ")
+                        .setMessage("Do you want to close your email?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Close the activity
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Do nothing
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
