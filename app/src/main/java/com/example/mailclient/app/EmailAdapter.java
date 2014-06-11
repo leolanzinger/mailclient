@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.TreeSet;
 
 import javax.mail.internet.InternetAddress;
 
@@ -28,6 +30,8 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
 
     Fragment sent_fragment, todo_fragment;
     private Context context;
+    private static final int TYPE_ITEM = 0;
+    private static final int TYPE_SEPARATOR = 1;
 
     public EmailAdapter(Context context, int resource, ArrayList<Email> items) {
         super(context, resource,  items);
@@ -41,18 +45,37 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
         todo_fragment = ((MainActivity) context).getFragmentManager().findFragmentByTag("TODO");
     }
 
+
+    @Override
+    public int getItemViewType(int position) {
+        if(!getItem(position).separator){
+            return TYPE_ITEM;
+        }
+        else {
+            return TYPE_SEPARATOR;
+        }
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         View view = convertView;
         Email item = getItem(position);
+        int rowType = getItemViewType(position);
 
-        if (view == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.email_list, null);
+//        if (view == null) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        switch (rowType) {
+            case TYPE_ITEM:
+                view = inflater.inflate(R.layout.email_list_item, null);
+                break;
+            case TYPE_SEPARATOR:
+                view = inflater.inflate(R.layout.todo_separator, null);
+                break;
         }
+//        }
 
-        if (item != null) {
+        if (item != null && rowType == TYPE_ITEM) {
             TextView subjectView = (TextView) view.findViewById(R.id.list_subject);
             TextView fromView = (TextView) view.findViewById(R.id.list_from);
             TextView dateView = (TextView) view.findViewById(R.id.list_date);
@@ -109,10 +132,10 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
             String date_format;
             if (todo_fragment != null && todo_fragment.isVisible()) {
                 if (item.expire_date != null) {
-                    date_format = new SimpleDateFormat("dd MMM").format(item.expire_date.getTime());
+                    date_format = "";
                 }
                 else {
-                    date_format = "";
+                    date_format = new SimpleDateFormat("dd MMM").format(item.date.getTime());
                 }
             }
             else {
@@ -146,8 +169,10 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
                     applyDifferentBackgroundResource(R.drawable.seen,frontground);
                 }
             }
-
-
+        }
+        else if (item != null && rowType == TYPE_SEPARATOR) {
+            TextView subjectView = (TextView) view.findViewById(R.id.separator_title);
+            subjectView.setText(item.subject);
         }
 
         view.setOnTouchListener(this);

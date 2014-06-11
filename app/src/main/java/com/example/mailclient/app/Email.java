@@ -38,7 +38,7 @@ public class Email implements Serializable {
     /*
      * Email variables
      */
-    boolean todo, seen, deleted;
+    boolean todo, seen, deleted, separator;
     String subject, excerpt, ID, ID_START, ID_END;
     Date date;
     ArrayList<String> body, body_temp, attachmentPath;
@@ -51,6 +51,9 @@ public class Email implements Serializable {
      *  new Email object
      */
     public Email() {
+        // fake variable to use it as a separator in todo adapter
+        separator = false;
+
         subject = new String();
         date = new Date();
         body = new ArrayList<String> ();

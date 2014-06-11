@@ -406,6 +406,10 @@ public class ReadMail extends FragmentActivity {
             if (email.todo) {
                 email.removeTodo();
                 todoButton.setBackgroundResource(R.drawable.action_bar_not_pinned);
+                if (call_from_todo) {
+                    TodoFragment.todo_list.remove(email);
+                    Log.d("todo", "rimosso dai todo");
+                }
             } else {
                 initiatePopupWindow();
             }
@@ -418,6 +422,7 @@ public class ReadMail extends FragmentActivity {
             //find out which fragment is being displayed and remove from its list
             if (call_from_todo) {
                 TodoFragment.todo_list.remove(email);
+                Log.d("todo", "deleted da todo");
             }
             else if (call_from_inbox) {
                 InboxFragment.inbox_email_list.remove(email);

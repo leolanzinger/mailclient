@@ -141,13 +141,16 @@ public class ReceiveInboxTask extends AsyncTask<Object, Object, ArrayList<Email>
         Fragment trash_fragment = receiveMailActivity.getFragmentManager().findFragmentByTag("TRASH");
 
         if (todo_fragment != null && todo_fragment.isVisible()) {
+            int new_mails = 0;
             for (Email em : result) {
                 if (!em.seen) {
                     TodoFragment.adapter.insert(em, 0);
+                    new_mails++;
                 }
                 Mailbox.emailList.add(0, em);
             }
             TodoFragment.adapter.notifyDataSetChanged();
+            TodoFragment.setUnseenHeader(new_mails);
             Mailbox.save(Mailbox.emailList);
 
             TodoFragment.mPocketBar.progressiveStop();

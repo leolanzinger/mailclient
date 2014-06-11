@@ -33,6 +33,7 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
         RL_BACK,
         CLICK,
         RESET,
+        SEPARATOR,
         REFRESH,
         None// when no action was detected
     }
@@ -52,6 +53,7 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
     private boolean scrolling = false;
     private ListView list;
     private boolean is_pin, is_delete;
+    boolean separator;
 
     /*
      * Dumb boolean values to distinguish
@@ -145,6 +147,12 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                             cur_item_background.findViewById(R.id.unpin_icon).setVisibility(View.GONE);
                             cur_item_background.findViewById(R.id.pin_icon).setVisibility(View.GONE);
                             cur_item_background.findViewById(R.id.delete_icon).setVisibility(View.GONE);
+
+                            separator = false;
+                        }
+                        else {
+                            Log.d("separator", "attempt to click on separator");
+                            separator = true;
                         }
                         break;
                     }
@@ -280,33 +288,36 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                 upY = event.getY();
                 float deltaX = upX - downX;
                 float deltaY = downY - upY;
-
-                if (!scrolling) {
-                    if (Math.abs(deltaX) > 0) {
-                        /*
-                         * if it is the case set the action
-                         * variables to the corrispondent
-                         * performed movement.
-                         */
-                        if (Math.abs(deltaX) > BLOCK_THRESHOLD) {
-                            if (deltaX < 0) {
-                                mSwipeDetected = Action.RL_TRIGGER;
+                if(!separator) {
+                    if (!scrolling) {
+                        if (Math.abs(deltaX) > 0) {
+                                        /*
+                                         * if it is the case set the action
+                                         * variables to the corrispondent
+                                         * performed movement.
+                                         */
+                            if (Math.abs(deltaX) > BLOCK_THRESHOLD) {
+                                if (deltaX < 0) {
+                                    mSwipeDetected = Action.RL_TRIGGER;
+                                } else {
+                                    mSwipeDetected = Action.LR_TRIGGER;
+                                }
                             } else {
-                                mSwipeDetected = Action.LR_TRIGGER;
+                                if (deltaX < 0) {
+                                    mSwipeDetected = Action.RL_BACK;
+                                } else {
+                                    mSwipeDetected = Action.LR_BACK;
+                                }
                             }
                         } else {
-                            if (deltaX < 0) {
-                                mSwipeDetected = Action.RL_BACK;
-                            } else {
-                                mSwipeDetected = Action.LR_BACK;
-                            }
+                            mSwipeDetected = Action.CLICK;
                         }
                     } else {
-                        mSwipeDetected = Action.CLICK;
+                        mSwipeDetected = Action.None;
                     }
                 }
                 else {
-                    mSwipeDetected = Action.None;
+                    mSwipeDetected = Action.SEPARATOR;
                 }
             getResults();
             return false;
