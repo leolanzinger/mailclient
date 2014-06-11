@@ -6,20 +6,11 @@
     android:padding="5dp">
 
     <TextView
-        android:text="Welcome!"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="26dp"
-        android:width="200dp"
-        android:layout_marginTop="10dp"/>
-    <TextView
         android:text="Setup your account please."
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16dp"
-        android:paddingBottom="20dp"
-        android:width="200dp"/>
-
+        android:textSize="20dp"
+        android:paddingBottom="5dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -40,12 +31,12 @@
         android:layout_height="wrap_content"
         android:text="Password"
         android:id="@+id/passwordView"
-        android:inputType="textPassword"
         android:layout_gravity="center_horizontal|left" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textPassword"
         android:id="@+id/passwordText"
         android:layout_gravity="center_horizontal" />
 
