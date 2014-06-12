@@ -3,14 +3,11 @@ package com.example.mailclient.app;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,7 +24,7 @@ public class SettingsActivity extends Activity {
     TextView passwordView, usernameView;
     Spinner usernameSpinner;
     Button login_button;
-    String username, name;
+    String username, name, id;
     Context context;
 
     @Override
@@ -50,12 +47,13 @@ public class SettingsActivity extends Activity {
         OwnerInfo ownerInfo = new OwnerInfo(this);
         String[] accounts_email = ownerInfo.retrieveEmailList();
         final String[] accounts_name = ownerInfo.retrieveNameList();
+        final String[] account_ids = ownerInfo.retrieveIdList();
 
         ArrayAdapter<CharSequence> adapter;
 
         if (accounts_email == null || accounts_email.length == 0) {
             String[] empty_array = new String[1];
-            empty_array[0] = "Aggiungi un account";
+            empty_array[0] = "Add new account";
             adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, empty_array);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             usernameSpinner.setAdapter(adapter);
@@ -77,11 +75,16 @@ public class SettingsActivity extends Activity {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     name = accounts_name[i];
+                    id = account_ids[i];
                     if (Mailbox.account_email.equals(usernameSpinner.getItemAtPosition(i).toString())) {
                         login_button.setClickable(false);
                         login_button.setBackgroundResource(R.drawable.login_button_not_active);
                         passwordView.setTextColor(R.color.grey);
                     }
+//                    else if ("Add new account".equals(usernameSpinner.getItemAtPosition(i).toString())) {
+//                        Intent addAccountIntent = new Intent(android.provider.Settings.ACTION_ADD_ACCOUNT);
+//                        startActivity(addAccountIntent);
+//                    }
                     else {
                         login_button.setClickable(true);
                         login_button.setBackgroundResource(R.drawable.login_button);
@@ -135,9 +138,11 @@ public class SettingsActivity extends Activity {
                         authPreferences.setUser(username);
                         authPreferences.setPassword(passwordText.getText().toString());
                         authPreferences.setName(name);
+                        authPreferences.setId(id);
                         Mailbox.account_email = authPreferences.getUser();
                         Mailbox.account_password = authPreferences.getPassword();
                         Mailbox.account_name = authPreferences.getName();
+                        Mailbox.account_id =  authPreferences.getId();
                         Mailbox.emailList.clear();
                         Intent finish_intent = new Intent();
                         setResult(Activity.RESULT_FIRST_USER, finish_intent);
