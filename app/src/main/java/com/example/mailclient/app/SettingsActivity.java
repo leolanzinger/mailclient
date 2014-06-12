@@ -3,13 +3,17 @@ package com.example.mailclient.app;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +27,8 @@ public class SettingsActivity extends Activity {
     TextView passwordView, usernameView;
     Spinner usernameSpinner;
     Button login_button;
-    String username;
+    String username, name;
+    Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,10 +44,12 @@ public class SettingsActivity extends Activity {
 
         login_button = (Button) this.findViewById(R.id.confirm_button);
         login_button.setBackgroundResource(R.drawable.login_button);
+        login_button.setText("Change account");
 
         // ownerInfo per sapere tutti gli account disponibili sul telefono
         OwnerInfo ownerInfo = new OwnerInfo(this);
         String[] accounts_email = ownerInfo.retrieveEmailList();
+        final String[] accounts_name = ownerInfo.retrieveNameList();
 
         ArrayAdapter<CharSequence> adapter;
 
@@ -57,9 +64,40 @@ public class SettingsActivity extends Activity {
             adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, accounts_email);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             usernameSpinner.setAdapter(adapter);
-        }
-//        Log.d("spinner", usernameSpinner.getSelectedItem().toString());
 
+            // display current email in the spinner
+            for (int i = 0; i < accounts_email.length; i++) {
+                if (accounts_email[i].equals(Mailbox.account_email)) {
+                    usernameSpinner.setSelection(i);
+                }
+            }
+
+            // set spinner action listener and use it to change the layout of the account editor's textboxes
+            usernameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    name = accounts_name[i];
+                    if (Mailbox.account_email.equals(usernameSpinner.getItemAtPosition(i).toString())) {
+                        login_button.setClickable(false);
+                        login_button.setBackgroundResource(R.drawable.login_button_not_active);
+                        passwordView.setTextColor(R.color.grey);
+                    }
+                    else {
+                        login_button.setClickable(true);
+                        login_button.setBackgroundResource(R.drawable.login_button);
+                        passwordView.setTextColor(R.color.black);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+        }
+
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     public void checkAccount(View v) {
@@ -88,18 +126,32 @@ public class SettingsActivity extends Activity {
         Log.d("Check", username);
         Log.d("Check", passwordText.getText().toString());
 
-        AuthPreferences authPreferences = new AuthPreferences(this);
-        authPreferences.setUser(username);
-        authPreferences.setPassword(passwordText.getText().toString());
-        Mailbox.account_email = authPreferences.getUser();
-        Mailbox.account_password = authPreferences.getPassword();
-
-
-//
-//        TextView nome = (TextView)findViewById(R.id.nome);
-//        nome.setText(ownerInfo.name);
-
-        finish();
+        new AlertDialog.Builder(this)
+                .setTitle("Change account?")
+                .setMessage("Previous account data will be lost")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        AuthPreferences authPreferences = new AuthPreferences(MainActivity.baseContext);
+                        authPreferences.setUser(username);
+                        authPreferences.setPassword(passwordText.getText().toString());
+                        authPreferences.setName(name);
+                        Mailbox.account_email = authPreferences.getUser();
+                        Mailbox.account_password = authPreferences.getPassword();
+                        Mailbox.account_name = authPreferences.getName();
+                        Mailbox.emailList.clear();
+                        Intent finish_intent = new Intent();
+                        setResult(Activity.RESULT_FIRST_USER, finish_intent);
+                        finish();
+                     }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
 
     }
     public void accountFailed(){
@@ -113,6 +165,20 @@ public class SettingsActivity extends Activity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+            case android.R.id.home:
+                finish();
+                return true;
+
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

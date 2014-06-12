@@ -25,9 +25,10 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 public class MainActivity extends Activity {
 
     private static final int LOGIN_SUCCEDED = 1;
+    private static final int SETTINGS_RESULT = 2;
     /*
-        *   Set main variables
-        */
+    *   Set main variables
+    */
     public static Mailbox mailbox;
     public static Context baseContext;
     public static int current_fragment;
@@ -62,7 +63,7 @@ public class MainActivity extends Activity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the header
-        View header = (View)getLayoutInflater().inflate(R.layout.header_container,null);
+        View header = (View)getLayoutInflater().inflate(R.layout.drawer_header_container,null);
         mDrawerList.addHeaderView(header);
 
         mDrawerList.setAdapter(new DrawerAdapter(this, R.layout.drawer_list, mDrawerLinks));
@@ -116,7 +117,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==1){
+        if (requestCode == 1) {
             if (resultCode == Activity.RESULT_CANCELED) {
                 this.finish();
             }
@@ -124,6 +125,14 @@ public class MainActivity extends Activity {
                 Log.d("Check", "Receive mail? Yes!");
                 receiveMail();
                 setCredentialsToDrawer();
+            }
+        }
+        else if (requestCode == 2) {
+            if (resultCode == Activity.RESULT_FIRST_USER) {
+                Log.d("result code", "reset user");
+                receiveMail();
+                setCredentialsToDrawer();
+                mDrawerLayout.closeDrawers();
             }
         }
 
@@ -190,6 +199,8 @@ public class MainActivity extends Activity {
         }
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(baseContext, SettingsActivity.class);
+            startActivityForResult(intent, SETTINGS_RESULT);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -298,17 +309,17 @@ public class MainActivity extends Activity {
     //open settings from drawer
     public void openSettings (View v) {
         Intent intent = new Intent(baseContext, SettingsActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, SETTINGS_RESULT);
     }
 
     public void setCredentialsToDrawer() {
         String arr[] = Mailbox.account_name.split(" ", 2);
         //becca il nome
         String firstWord = arr[0];
-//        if (arr[1] != null) {
-//            String theRest = arr[1];
-//            surnameTextView.setText(theRest);
-//        }
+        if (arr.length == 2) {
+            String theRest = arr[1];
+            surnameTextView.setText(theRest);
+        }
         nameTextView.setText(firstWord);
     }
 }

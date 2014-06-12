@@ -1,6 +1,7 @@
 <resources>
     <color name="blue">#34495E</color>
     <color name="lightblue">#2980B9</color>
+    <color name="lightdark_grey">#7f8C8D</color>
     <color name="grey">#cacaca</color>
     <color name="dark_grey">#6A6A6A</color>
     <color name="black">#4A4A4A</color>
