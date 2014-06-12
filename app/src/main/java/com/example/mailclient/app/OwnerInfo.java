@@ -82,6 +82,8 @@ public class OwnerInfo {
             }
 
             emailCur.close();
+
+            emails.add("Add new account");
         }
     }
 

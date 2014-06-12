@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -71,7 +72,7 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
 
         // ownerInfo per sapere tutti gli account disponibili sul telefono
         OwnerInfo ownerInfo = new OwnerInfo(this);
-        String[] accounts_email = ownerInfo.retrieveEmailList();
+        final String[] accounts_email = ownerInfo.retrieveEmailList();
         accounts_name = ownerInfo.retrieveNameList();
         account_ids = ownerInfo.retrieveIdList();
 
@@ -101,33 +102,38 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
                     usernameSpinner.setSelection(i);
                 }
             }
+        }
 
-            // set spinner action listener and use it to change the layout of the account editor's textboxes
-            usernameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        // set spinner action listener and use it to change the layout of the account editor's textboxes
+        usernameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == (accounts_email.length - 1)) {
+                    startAddGoogleAccountIntent(getBaseContext());
+                }
+                else {
+                    name = accounts_name[i];
                     if (Mailbox.account_email.equals(usernameSpinner.getItemAtPosition(i).toString())) {
                         login_button.setClickable(false);
                         login_button.setBackgroundResource(R.drawable.login_button_not_active);
                         passwordView.setTextColor(R.color.grey);
-                    }
 //                    else if ("Add new account".equals(usernameSpinner.getItemAtPosition(i).toString())) {
 //                        Intent addAccountIntent = new Intent(android.provider.Settings.ACTION_ADD_ACCOUNT);
 //                        startActivity(addAccountIntent);
 //                    }
-                    else {
+                    } else {
                         login_button.setClickable(true);
                         login_button.setBackgroundResource(R.drawable.login_button);
                         passwordView.setTextColor(R.color.black);
                     }
                 }
+            }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
-                }
-            });
-        }
+            }
+        });
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -260,4 +266,13 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
         authPreferences.setEnd(i, i2);
         Mailbox.scheduler_end = authPreferences.getEnd();
     }
+
+    public static void startAddGoogleAccountIntent(Context context)
+    {
+        Intent addAccountIntent = new Intent(android.provider.Settings.ACTION_ADD_ACCOUNT)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        addAccountIntent.putExtra(Settings.EXTRA_ACCOUNT_TYPES, new String[] {"com.google"});
+        context.startActivity(addAccountIntent);
+    }
+
 }
