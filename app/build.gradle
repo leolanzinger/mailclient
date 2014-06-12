@@ -29,4 +29,7 @@ dependencies {
     compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:appcompat-v7:19.+'
+    compile ("com.doomonafireball.betterpickers:library:1.5.2") {
+        exclude group: 'com.android.support', module: 'support-v4'
+    }
 }

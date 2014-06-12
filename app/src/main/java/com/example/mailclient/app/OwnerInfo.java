@@ -74,6 +74,10 @@ public class OwnerInfo {
                     if (!names.contains(emailCur.getString(emailCur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)))) {
                         names.add(emailCur.getString(emailCur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)));
                     }
+                    // add to arraylist relative id
+                    if (!id.contains(emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.CONTACT_ID)))) {
+                        id.add(emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.CONTACT_ID)));
+                    }
                 }
             }
 
@@ -86,4 +90,6 @@ public class OwnerInfo {
     }
 
     public String[] retrieveNameList() { return names.toArray(new String[names.size()]); }
+
+    public String[] retrieveIdList() { return id.toArray(new String[id.size()]); }
 }

@@ -9,53 +9,142 @@
     android:layout_height="match_parent"
     tools:context="com.example.mailclient.app.SettingsActivity">
 
-    <TextView
-        android:text="Account"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="26dp"
-        android:paddingBottom="10dp"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Username"
-        android:textSize="15dp"
-        android:gravity="left"
-        android:id="@+id/usernameView"
-        android:layout_gravity="center_horizontal|left" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Change your Gmail account:"
+            android:id="@+id/textView"
+            android:paddingBottom="5dp"/>
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/usernameText"
-        android:layout_gravity="center_horizontal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:gravity="left"
+            android:textSize="15dp"
+            android:id="@+id/usernameView"
+            android:layout_gravity="center_horizontal|left" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Password"
-        android:textSize="15dp"
-        android:id="@+id/passwordView"
-        android:layout_gravity="center_horizontal|left" />
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/usernameSpinner"
+            android:layout_gravity="center_horizontal" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/passwordText"
-        android:inputType="textPassword"
-        android:layout_gravity="center_horizontal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Password"
+            android:textSize="15dp"
+            android:id="@+id/passwordView"
+            android:layout_gravity="center_horizontal|left" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Change account"
-        android:id="@+id/confirm_button"
-        android:layout_gravity="center_horizontal"
-        android:onClick="checkAccount"
-        android:background="@color/blue"
-        android:textColor="@color/white"
-        android:padding="10dp"
-        android:layout_margin="15dp"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:id="@+id/passwordText"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Connect"
+            android:id="@+id/confirm_button"
+            android:layout_gravity="center_horizontal"
+            android:onClick="checkAccount"
+            android:background="@color/blue"
+            android:textColor="@color/white"
+            android:padding="10dp"
+            android:layout_margin="15dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Set up your daily schedule:"
+            android:id="@+id/time_picker_title"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dip"
+                    android:textColor="@color/dark_grey"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/start_time_label" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/start_button"
+                    android:text="start time"
+                    android:onClick="setStartTime"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_gravity="right">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="30dip"
+                    android:textColor="@color/dark_grey"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/end_time_label" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/end_button"
+                    android:text="end time"
+                    android:onClick="setEndTime"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center_horizontal" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

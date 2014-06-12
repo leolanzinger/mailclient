@@ -6,15 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 
 /**
  * Created by teo on 10/06/14.
@@ -26,7 +23,7 @@ public class LoginActivity extends Activity{
     Spinner usernameSpinner;
     Button login_button;
     String username;
-    String[] account_names;
+    String[] account_names, account_ids;
 
 
 
@@ -49,6 +46,7 @@ public class LoginActivity extends Activity{
         OwnerInfo ownerInfo = new OwnerInfo(this);
         String[] accounts_email = ownerInfo.retrieveEmailList();
         account_names = ownerInfo.retrieveNameList();
+        account_ids = ownerInfo.retrieveIdList();
 
         ArrayAdapter<CharSequence> adapter;
 
@@ -94,13 +92,25 @@ public class LoginActivity extends Activity{
         Log.d("Check", username);
         Log.d("Check", passwordText.getText().toString());
 
+        // save shared prefernces
         AuthPreferences authPreferences = new AuthPreferences(this);
         authPreferences.setUser(username);
         authPreferences.setPassword(passwordText.getText().toString());
         authPreferences.setName(account_names[usernameSpinner.getSelectedItemPosition()]);
+        authPreferences.setId(account_ids[usernameSpinner.getSelectedItemPosition()]);
+
+        // save default starting time
+        authPreferences.setStart(8, 0);
+        authPreferences.setEnd(18, 0);
+
+        // put everything to Mailbox
+        Mailbox.scheduler_start = authPreferences.getStart();
+        Mailbox.scheduler_end = authPreferences.getEnd();
+
         Mailbox.account_email = authPreferences.getUser();
         Mailbox.account_password = authPreferences.getPassword();
         Mailbox.account_name = authPreferences.getName();
+        Mailbox.account_id = authPreferences.getId();
 
         Intent resultIntent = new Intent();
         setResult(Activity.RESULT_OK, resultIntent);
