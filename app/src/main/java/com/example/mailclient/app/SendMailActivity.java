@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +38,8 @@ import java.util.List;
 */
 
 public class SendMailActivity extends Activity {
+
+    AuthPreferences authPreferences;
 
     private static final int SELECT_PICTURE = 1;
     ArrayList<String> selectedImagePath,attachmentList;
@@ -222,8 +225,8 @@ public class SendMailActivity extends Activity {
 
         attachmentList.clear();
 
-        ReceiveSentMailTask receive_sent_task = new ReceiveSentMailTask(this);
-        receive_sent_task.execute(Mailbox.account_email, Mailbox.account_password);
+//        ReceiveSentMailTask receive_sent_task = new ReceiveSentMailTask(this);
+//        receive_sent_task.execute(Mailbox.account_email, Mailbox.account_password);
 
     }
 
@@ -232,5 +235,37 @@ public class SendMailActivity extends Activity {
         intent.setType("*/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Select Document"), SELECT_PICTURE);
+    }
+
+    public void passwordDialog(){
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(SendMailActivity.this);
+
+        alert.setTitle("You credentials are wrong");
+        alert.setMessage("Insert the correct password for the account " + Mailbox.account_email);
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(SendMailActivity.this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        alert.setView(input);
+
+        authPreferences = new AuthPreferences(SendMailActivity.this);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                authPreferences.setPassword(input.getText().toString());
+                Mailbox.account_password = input.getText().toString();
+                //SendMailActivity.this.finish();
+                // Do something with value!
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //SendMailActivity.this.finish();
+                // Canceled.
+            }
+        });
+
+        alert.show();
     }
 }

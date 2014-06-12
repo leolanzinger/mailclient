@@ -13,10 +13,12 @@ import java.util.ArrayList;
 public class UpdateSeenMailTask extends AsyncTask {
 
     Activity sendMailActivity;
+    boolean password_checked;
+
 
     public UpdateSeenMailTask(Activity activity) {
         sendMailActivity = activity;
-
+        password_checked = true;
     }
 
     protected void onPreExecute() {
@@ -30,6 +32,8 @@ public class UpdateSeenMailTask extends AsyncTask {
              */
             Log.i("UpdateSeenMailTask", "About to instantiate GMailUpdater...");
             GMailUpdater updater = new GMailUpdater(Mailbox.account_email, Mailbox.account_password);
+            password_checked = updater.passwordChecked();
+
             try {
                 ArrayList<String> seen = new ArrayList<String>();
                 seen.add((String) args[0]);
@@ -49,6 +53,11 @@ public class UpdateSeenMailTask extends AsyncTask {
 
     @Override
     public void onPostExecute(Object result) {
+        if(password_checked != true) {
+            if (sendMailActivity instanceof MainActivity) ((MainActivity) sendMailActivity).passwordDialog();
+            else if(sendMailActivity instanceof ReadMail) ((ReadMail) sendMailActivity).passwordDialog();
+            Log.d("Check", "UpdateSeenMailTask");
+        }
     }
 
 }

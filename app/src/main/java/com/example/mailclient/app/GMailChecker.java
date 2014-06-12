@@ -2,6 +2,7 @@ package com.example.mailclient.app;
 
 import java.util.Properties;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
@@ -18,6 +19,7 @@ public class GMailChecker {
     private Session session;
     private Store store;
     private boolean isConnected;
+    private boolean isPasswordCorrect;
 
 
     public GMailChecker(String user, String password) {
@@ -26,6 +28,7 @@ public class GMailChecker {
          * Set SMTP variables
          */
         isConnected = true;
+        isPasswordCorrect = true;
         Properties props = System.getProperties();
         if (props == null){
         }else{
@@ -37,10 +40,17 @@ public class GMailChecker {
             store.connect(mailhost, user, password);
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
+        } catch (AuthenticationFailedException e){
+            //Here it is the exception for password wrong
+            isPasswordCorrect = false;
         } catch (MessagingException e) {
             isConnected = false;
             e.printStackTrace();
         }
+    }
+
+    public boolean passwordChecked() {
+        return isPasswordCorrect;
     }
 
     public boolean connected() {

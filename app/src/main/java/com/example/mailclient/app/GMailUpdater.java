@@ -4,6 +4,7 @@ package com.example.mailclient.app;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -28,12 +29,16 @@ public class GMailUpdater extends javax.mail.Authenticator {
     private String mailhost = "imap.gmail.com";
     private Session session;
     private Store store;
+    private boolean isPasswordCorrect;
+
 
     public GMailUpdater(String user, String password) {
 
         /*
          * Set SMTP variables
          */
+
+        isPasswordCorrect = true;
         Properties props = System.getProperties();
         if (props == null){
         }else{
@@ -50,6 +55,9 @@ public class GMailUpdater extends javax.mail.Authenticator {
             store.connect(mailhost, user, password);
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
+        } catch (AuthenticationFailedException e){
+            //Here it is the exception for password wrong
+            isPasswordCorrect = false;
         } catch (MessagingException e) {
             e.printStackTrace();
         }
@@ -92,5 +100,10 @@ public class GMailUpdater extends javax.mail.Authenticator {
         catch (Exception e) {
         }
     }
+
+    public boolean passwordChecked() {
+        return isPasswordCorrect;
+    }
+
 
 }

@@ -11,6 +11,7 @@ import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.mail.AuthenticationFailedException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -29,6 +30,8 @@ import javax.mail.internet.MimeMultipart;
 */
 
 public class GMailSender {
+
+    private boolean isPasswordCorrect;
 
     final String emailPort = "587";// gmail's smtp port
     final String smtpAuth = "true";
@@ -60,6 +63,9 @@ public class GMailSender {
         emailProperties.put("mail.smtp.auth", smtpAuth);
         emailProperties.put("mail.smtp.starttls.enable", starttls);
         Log.i("GMailSender", "Mail server properties set.");
+
+        isPasswordCorrect = true;
+
     }
 
     public GMailSender(String fromEmail, String fromPassword, List<String> toEmailList, String emailSubject, String emailBody, List<String> ccEmailList, List<String> bccEmailList, ArrayList<String> fileName) {
@@ -78,6 +84,9 @@ public class GMailSender {
         emailProperties.put("mail.smtp.auth", smtpAuth);
         emailProperties.put("mail.smtp.starttls.enable", starttls);
         Log.i("GMailSender", "Mail server properties set.");
+
+        isPasswordCorrect = true;
+
     }
 
     public MimeMessage createEmailMessage() throws AddressException, MessagingException, IOException {
@@ -137,11 +146,24 @@ public class GMailSender {
     public void sendEmail() throws AddressException, MessagingException {
 
         Transport transport = mailSession.getTransport("smtp");
-        transport.connect(emailHost, fromEmail, fromPassword);
-        Log.i("GMailSender","allrecipients: "+emailMessage.getAllRecipients());
-        transport.sendMessage(emailMessage, emailMessage.getAllRecipients());
+
+        try {
+            transport.connect(emailHost, fromEmail, fromPassword);
+            Log.i("GMailSender","allrecipients: "+emailMessage.getAllRecipients());
+            transport.sendMessage(emailMessage, emailMessage.getAllRecipients());
+        } catch (AuthenticationFailedException e){
+            transport.close();
+            isPasswordCorrect = false;
+            e.printStackTrace();
+        }
+
+
         transport.close();
         Log.i("GMailSender", "Email sent successfully.");
+    }
+
+    public boolean passwordChecked() {
+        return isPasswordCorrect;
     }
 
 }

@@ -1,8 +1,10 @@
 package com.example.mailclient.app;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -28,6 +31,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -63,6 +67,7 @@ public class ReadMail extends FragmentActivity {
     ImageButton todoButton;
     int mail_index;
     boolean call_from_sent, call_from_inbox, call_from_todo;
+    AuthPreferences authPreferences;
 
     PopupWindow popup, fadePopup;
 
@@ -436,7 +441,7 @@ public class ReadMail extends FragmentActivity {
             email.removeTodo();
             UpdateDeletedMailTask update_deleted_task = new UpdateDeletedMailTask(ReadMail.this, true);
             update_deleted_task.execute(email.ID);
-            this.finish();
+            //this.finish();
         }
     }
 
@@ -574,6 +579,38 @@ public class ReadMail extends FragmentActivity {
             speechAnalysis.analyze(matches, ReadMail.this, email);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    public void passwordDialog(){
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(ReadMail.this);
+
+        alert.setTitle("You credentials are wrong");
+        alert.setMessage("Insert the correct password for the account " + Mailbox.account_email);
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(ReadMail.this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        alert.setView(input);
+
+        authPreferences = new AuthPreferences(ReadMail.this);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                authPreferences.setPassword(input.getText().toString());
+                Mailbox.account_password = input.getText().toString();
+                // Do something with value!
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //ReadMail.this.finish();
+                // Canceled.
+            }
+        });
+
+        alert.show();
     }
 }
 

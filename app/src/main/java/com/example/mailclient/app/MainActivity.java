@@ -1,11 +1,13 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -16,12 +18,14 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,6 +46,8 @@ public class MainActivity extends Activity {
     public static Context baseContext;
     public static int current_fragment;
     public static String TAG;
+    public static boolean isPasswordCorrect = true;
+    AuthPreferences authPreferences;
 
     /*
      *  Drawer menu variables
@@ -113,6 +119,7 @@ public class MainActivity extends Activity {
         AuthPreferences authPreferences = new AuthPreferences(this);
 
         if (authPreferences.getUser() != null && authPreferences.getPassword() != null) {
+
             Mailbox.account_email = authPreferences.getUser();
             Mailbox.account_password = authPreferences.getPassword();
             Mailbox.account_name = authPreferences.getName();
@@ -370,5 +377,35 @@ public class MainActivity extends Activity {
         } finally {
             cursor.close();
         }
+    }
+
+    public void passwordDialog(){
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+
+        alert.setTitle("You credentials are wrong");
+        alert.setMessage("Insert the correct password for the account " + Mailbox.account_email);
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(MainActivity.this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        alert.setView(input);
+
+        authPreferences = new AuthPreferences(MainActivity.this);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                authPreferences.setPassword(input.getText().toString());
+                Mailbox.account_password = input.getText().toString();
+                // Do something with value!
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
     }
 }

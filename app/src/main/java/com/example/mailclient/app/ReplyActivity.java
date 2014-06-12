@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +43,7 @@ import java.util.List;
 
 public class ReplyActivity extends Activity {
 
+    AuthPreferences authPreferences;
     private static final int OLDERVERSION = 0;
     private static final int NEWVERSION = 1;
     ArrayList<String> selectedImagePath,attachmentList;
@@ -280,5 +282,36 @@ public class ReplyActivity extends Activity {
             // it would be "*/*".
             intent.setType("image/*");
         }
+    }
+    public void passwordDialog(){
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(ReplyActivity.this);
+
+        alert.setTitle("You credentials are wrong");
+        alert.setMessage("Insert the correct password for the account " + Mailbox.account_email);
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(ReplyActivity.this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        alert.setView(input);
+
+        authPreferences = new AuthPreferences(ReplyActivity.this);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                authPreferences.setPassword(input.getText().toString());
+                Mailbox.account_password = input.getText().toString();
+                //ReplyActivity.this.finish();
+                // Do something with value!
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //ReplyActivity.this.finish();
+                // Canceled.
+            }
+        });
+
+        alert.show();
     }
 }

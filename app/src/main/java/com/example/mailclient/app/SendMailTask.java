@@ -18,9 +18,12 @@ public class SendMailTask extends AsyncTask {
 
     private ProgressDialog statusDialog;
     private Activity sendMailActivity;
+    boolean password_checked;
+
 
     public SendMailTask(Activity activity) {
         this.sendMailActivity = activity;
+        password_checked = true;
 
     }
 
@@ -50,6 +53,7 @@ public class SendMailTask extends AsyncTask {
                 androidEmail.createEmailMessage();
                 publishProgress("Sending email....");
                 androidEmail.sendEmail();
+                password_checked = androidEmail.passwordChecked();
                 publishProgress("Email Sent.");
                 Log.i("SendMailTask", "Mail Sent.");
             }
@@ -57,13 +61,14 @@ public class SendMailTask extends AsyncTask {
                 GMailSender androidEmail = new GMailSender(args[0].toString(),
                         args[1].toString(), (List) args[2], args[3].toString(),
                         args[4].toString(), (List) args[5], (List) args[6], (ArrayList) args[7]);
+
                 publishProgress("Preparing mail message....");
                 androidEmail.createEmailMessage();
                 publishProgress("Sending email....");
                 androidEmail.sendEmail();
+                password_checked = androidEmail.passwordChecked();
                 publishProgress("Email Sent.");
                 Log.i("SendMailTask", "Mail Sent.");
-
             }
 
         } catch (Exception e) {
@@ -81,8 +86,14 @@ public class SendMailTask extends AsyncTask {
 
     @Override
     public void onPostExecute(Object result) {
-        this.sendMailActivity.finish();
         statusDialog.dismiss();
+        if(password_checked != true) {
+            if (sendMailActivity instanceof SendMailActivity) ((SendMailActivity)sendMailActivity).passwordDialog();
+            else if (sendMailActivity instanceof ReplyActivity) ((ReplyActivity)sendMailActivity).passwordDialog();
+            Log.d("Check", "SendMailTask");
+        } else sendMailActivity.finish();
+
+
     }
 
 }

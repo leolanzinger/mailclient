@@ -1,9 +1,13 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,10 +25,12 @@ import javax.mail.search.FlagTerm;
 public class ReceiveInboxTask extends AsyncTask<Object, Object, ArrayList<Email>> {
 
     private Activity receiveMailActivity;
+    boolean password_checked;
+
 
     public ReceiveInboxTask(Activity activity) {
         receiveMailActivity = activity;
-
+        password_checked = true;
     }
 
     protected void onPreExecute() {
@@ -40,6 +46,8 @@ public class ReceiveInboxTask extends AsyncTask<Object, Object, ArrayList<Email>
         try {
             GMailReceiver reader = new GMailReceiver(args[0].toString(),
                     args[1].toString());
+            password_checked = reader.passwordChecked();
+
             try {
                 msg = reader.readLastMails();
             } catch (Exception e) {

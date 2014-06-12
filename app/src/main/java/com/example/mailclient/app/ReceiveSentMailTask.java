@@ -1,8 +1,12 @@
 package com.example.mailclient.app;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.EditText;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,9 +22,11 @@ import javax.mail.MessagingException;
 public class ReceiveSentMailTask extends AsyncTask<Object, Object, ArrayList<Email>> {
 
     private Activity receiveMailActivity;
+    boolean password_checked;
 
     public ReceiveSentMailTask(Activity activity) {
         receiveMailActivity = activity;
+        password_checked = true;
 
     }
 
@@ -37,6 +43,7 @@ public class ReceiveSentMailTask extends AsyncTask<Object, Object, ArrayList<Ema
         try {
             GMailReceiver reader = new GMailReceiver(args[0].toString(),
                     args[1].toString());
+            password_checked = reader.passwordChecked();
             try {
                 sent_msg = reader.readSentMails();
             } catch (Exception e) {
@@ -100,6 +107,14 @@ public class ReceiveSentMailTask extends AsyncTask<Object, Object, ArrayList<Ema
 
     @Override
     public void onPostExecute(ArrayList<Email> result) {
+
+        if(password_checked != true) {
+            Log.d("Check", "Here bitch");
+
+            if (receiveMailActivity instanceof MainActivity)     ((MainActivity)receiveMailActivity).passwordDialog();
+            else if (receiveMailActivity instanceof SendMailActivity)     ((SendMailActivity)receiveMailActivity).passwordDialog();
+        }
+
         /*
          *  Notify adapter of the retrieved mails,
          *  store them into cache. Here we don't hide progress bar

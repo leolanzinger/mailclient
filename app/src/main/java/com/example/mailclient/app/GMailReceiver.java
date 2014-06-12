@@ -1,6 +1,13 @@
 package com.example.mailclient.app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.util.Log;
+import android.widget.EditText;
+
 import java.util.Properties;
+
+import javax.mail.AuthenticationFailedException;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -21,6 +28,7 @@ public class GMailReceiver extends javax.mail.Authenticator {
     private String mailhost = "imap.gmail.com";
     private Session session;
     private Store store;
+    private boolean isPasswordCorrect = true;
 
     public GMailReceiver(String user, String password) {
 
@@ -48,10 +56,18 @@ public class GMailReceiver extends javax.mail.Authenticator {
              */
         } catch (NoSuchProviderException e) {
             e.printStackTrace();
+        } catch (AuthenticationFailedException e) {
+            //Here it is the exception for password wrong
+            isPasswordCorrect = false;
         } catch (MessagingException e) {
             e.printStackTrace();
         }
     }
+
+    public boolean passwordChecked() {
+        return isPasswordCorrect;
+    }
+
 
     /*
      *  Reads only unread mails

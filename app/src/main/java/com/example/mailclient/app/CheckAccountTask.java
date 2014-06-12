@@ -3,6 +3,7 @@ package com.example.mailclient.app;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 
 /*
 *   Async task to sync deleted message flag
@@ -11,12 +12,13 @@ import android.os.AsyncTask;
 public class CheckAccountTask extends AsyncTask {
 
     Activity parentActivity;
-    boolean succeeded;
+    boolean succeeded, password_checked;
     ProgressDialog progressDialog;
 
     public CheckAccountTask(Activity activity) {
         parentActivity = activity;
         succeeded = true;
+        password_checked = true;
         progressDialog = ProgressDialog.show(parentActivity,"","Connecting");
     }
 
@@ -29,6 +31,7 @@ public class CheckAccountTask extends AsyncTask {
         try {
             GMailChecker checker = new GMailChecker(args[0].toString(),args[1].toString());
             succeeded = checker.connected();
+            password_checked = checker.passwordChecked();
         } catch (Exception e) {
         }
 
@@ -41,10 +44,20 @@ public class CheckAccountTask extends AsyncTask {
 
     @Override
     public void onPostExecute(Object result) {
-        if (parentActivity instanceof LoginActivity) {
-            if (succeeded) {
+
+
+        if (parentActivity instanceof  MainActivity) {
+            if(password_checked != true)
+                ((MainActivity)parentActivity).passwordDialog();
+        }
+
+        else if (parentActivity instanceof LoginActivity) {
+            Log.d("Check", "here");
+            if (succeeded && password_checked == true) {
+                Log.d("Check", "should not go here now");
                 ((LoginActivity)parentActivity).accountSucceded();
             } else {
+                Log.d("Check", "should go here now");
                 ((LoginActivity)parentActivity).accountFailed();
             }
             progressDialog.dismiss();
