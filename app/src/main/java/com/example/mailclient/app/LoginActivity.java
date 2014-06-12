@@ -26,6 +26,7 @@ public class LoginActivity extends Activity{
     Spinner usernameSpinner;
     Button login_button;
     String username;
+    String[] account_names;
 
 
 
@@ -47,6 +48,7 @@ public class LoginActivity extends Activity{
         // ownerInfo per sapere tutti gli account disponibili sul telefono
         OwnerInfo ownerInfo = new OwnerInfo(this);
         String[] accounts_email = ownerInfo.retrieveEmailList();
+        account_names = ownerInfo.retrieveNameList();
 
         ArrayAdapter<CharSequence> adapter;
 
@@ -95,9 +97,13 @@ public class LoginActivity extends Activity{
         AuthPreferences authPreferences = new AuthPreferences(this);
         authPreferences.setUser(username);
         authPreferences.setPassword(passwordText.getText().toString());
+        authPreferences.setName(account_names[usernameSpinner.getSelectedItemPosition()]);
         Mailbox.account_email = authPreferences.getUser();
         Mailbox.account_password = authPreferences.getPassword();
+        Mailbox.account_name = authPreferences.getName();
 
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_OK, resultIntent);
         finish();
 
     }
@@ -116,8 +122,8 @@ public class LoginActivity extends Activity{
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, resultIntent);
+        finish();
     }
-
 }

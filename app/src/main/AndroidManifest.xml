@@ -64,9 +64,9 @@
 
         <activity
             android:name="com.example.mailclient.app.SettingsActivity"
-            android:label="@string/title_activity_settings"
+            android:label="Settings"
             android:configChanges="orientation"
-            android:screenOrientation="portrait" >>
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

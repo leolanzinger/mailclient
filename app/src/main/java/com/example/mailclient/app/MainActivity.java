@@ -25,9 +25,10 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 public class MainActivity extends Activity {
 
     private static final int LOGIN_SUCCEDED = 1;
+    private static final int SETTINGS_RESULT = 2;
     /*
-        *   Set main variables
-        */
+    *   Set main variables
+    */
     public static Mailbox mailbox;
     public static Context baseContext;
     public static int current_fragment;
@@ -40,6 +41,8 @@ public class MainActivity extends Activity {
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
     ActionBarDrawerToggle mDrawerToggle;
+    TextView surnameTextView, nameTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,27 +63,15 @@ public class MainActivity extends Activity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the header
-        View header = (View)getLayoutInflater().inflate(R.layout.header_container,null);
+        View header = (View)getLayoutInflater().inflate(R.layout.drawer_header_container,null);
         mDrawerList.addHeaderView(header);
 
         mDrawerList.setAdapter(new DrawerAdapter(this, R.layout.drawer_list, mDrawerLinks));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-
-        //get user info
-        OwnerInfo ownerInfo = new OwnerInfo(this);
-
-
-//        TODO wait
         //put user info on the drawer
-//        TextView nome = (TextView)findViewById(R.id.nome);
-//        TextView cognome = (TextView)findViewById(R.id.cognome);
-//        String arr[] = ownerInfo.name.split(" ", 2);
-//        //becca il nome
-//        String firstWord = arr[0];
-//        String theRest = arr[1];
-//        nome.setText(firstWord);
-//        cognome.setText(theRest);
+        nameTextView = (TextView)findViewById(R.id.nome);
+        surnameTextView = (TextView)findViewById(R.id.cognome);
 
          /*
          *  Drawer adapter and list
@@ -113,6 +104,8 @@ public class MainActivity extends Activity {
         if (authPreferences.getUser() != null && authPreferences.getPassword() != null) {
             Mailbox.account_email = authPreferences.getUser();
             Mailbox.account_password = authPreferences.getPassword();
+            Mailbox.account_name = authPreferences.getName();
+            setCredentialsToDrawer();
         } else {
             //Facciamo partire un intent che te lo fa aggiungere
             Intent intentAccount = new Intent(this, LoginActivity.class);
@@ -121,14 +114,31 @@ public class MainActivity extends Activity {
 
     }
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode==1){
-            Log.d("Check","Receive mail? Yes!");
-            receiveMail();
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_CANCELED) {
+                this.finish();
+            }
+            else if (resultCode == Activity.RESULT_OK) {
+                Log.d("Check", "Receive mail? Yes!");
+                receiveMail();
+                setCredentialsToDrawer();
+            }
         }
+        else if (requestCode == 2) {
+            if (resultCode == Activity.RESULT_FIRST_USER) {
+                Log.d("result code", "reset user");
+                receiveMail();
+                setCredentialsToDrawer();
+                mDrawerLayout.closeDrawers();
+            }
+        }
+
     }
 
-        @Override
+    @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         mDrawerToggle.syncState();
@@ -189,6 +199,8 @@ public class MainActivity extends Activity {
         }
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(baseContext, SettingsActivity.class);
+            startActivityForResult(intent, SETTINGS_RESULT);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -297,6 +309,17 @@ public class MainActivity extends Activity {
     //open settings from drawer
     public void openSettings (View v) {
         Intent intent = new Intent(baseContext, SettingsActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, SETTINGS_RESULT);
+    }
+
+    public void setCredentialsToDrawer() {
+        String arr[] = Mailbox.account_name.split(" ", 2);
+        //becca il nome
+        String firstWord = arr[0];
+        if (arr.length == 2) {
+            String theRest = arr[1];
+            surnameTextView.setText(theRest);
+        }
+        nameTextView.setText(firstWord);
     }
 }

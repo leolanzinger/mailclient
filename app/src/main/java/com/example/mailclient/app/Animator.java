@@ -55,6 +55,7 @@ public class Animator {
                 TodoFragment.todo_list.remove(pos);
                 TodoFragment.adapter.notifyDataSetChanged();
                 content.setX(0);
+                TodoFragment.setUpTodoList();
             }
             @Override
             public void onAnimationCancel(android.animation.Animator animator) {
