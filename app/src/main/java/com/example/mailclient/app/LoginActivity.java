@@ -3,8 +3,10 @@ package com.example.mailclient.app;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,6 +26,8 @@ public class LoginActivity extends Activity{
     Spinner usernameSpinner;
     Button login_button;
     String username;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,11 +98,6 @@ public class LoginActivity extends Activity{
         Mailbox.account_email = authPreferences.getUser();
         Mailbox.account_password = authPreferences.getPassword();
 
-
-//
-//        TextView nome = (TextView)findViewById(R.id.nome);
-//        nome.setText(ownerInfo.name);
-
         finish();
 
     }
@@ -115,5 +114,10 @@ public class LoginActivity extends Activity{
                 .show();
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    }
 
 }
