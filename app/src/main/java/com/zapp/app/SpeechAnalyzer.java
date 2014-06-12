@@ -18,7 +18,6 @@ public class SpeechAnalyzer {
 
     public void analyze(ArrayList<String> result, Activity activity, Email email) {
         ArrayList<String> myList = new ArrayList<String>(Arrays.asList(result.get(0).split("\\s+")));
-        Log.i("voice", myList.toString());
         if (myList.get(0).equals("rispondi")) {
             myList.remove(0);
             if (myList.get(0).equals("a") && myList.get(1).equals("tutti") && !myList.get(2).equals("che")){
@@ -31,7 +30,6 @@ public class SpeechAnalyzer {
                 }
                 reply += "\n";
                 ((ReadMail) activity).replyAll(reply);
-                Log.i("voice", "rispondi a tutti");
             }
             else if (myList.get(0).equals("a") && myList.get(1).equals("tutti") && myList.get(2).equals("che")){
                 myList.remove(0);
@@ -44,7 +42,6 @@ public class SpeechAnalyzer {
                 }
                 reply += "\n";
                 ((ReadMail) activity).replyAll(reply);
-                Log.i("voice", "rispondi a tutti che");
             }
             else {
                 if (myList.get(0).equals("che")) {
@@ -57,7 +54,6 @@ public class SpeechAnalyzer {
                 }
                 reply += "\n";
                 ((ReadMail) activity).replyMail(reply);
-                Log.i("voice", "rispondi e basta");
             }
         }
         else if (myList.get(0).equals("ricordamelo") || myList.get(0).equals("ricorda")) {

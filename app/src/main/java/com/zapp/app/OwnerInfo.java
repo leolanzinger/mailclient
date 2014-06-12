@@ -18,15 +18,6 @@ public class OwnerInfo {
     // this class allows to get device information. It's done in two steps:
     // 1) get synchronization account email
     // 2) get contact data, associated with this email
-    // by https://github.com/jehy
-
-
-    //WARNING! You need to have permissions
-    //
-    //<uses-permission android:name="android.permission.READ_CONTACTS" />
-    //<uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    //
-    // in your AndroidManifest.xml for this code.
 
     public String phone = null;
     public String accountName = null;
@@ -68,7 +59,6 @@ public class OwnerInfo {
 
             while (emailCur.moveToNext()) {
                 if (!emails.contains(emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)))) {
-//                id[j] = (emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.CONTACT_ID)));
                     emails.add(emailCur.getString(emailCur.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA)));
                     // add to arraylist relative primary name
                     if (!names.contains(emailCur.getString(emailCur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME)))) {

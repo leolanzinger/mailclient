@@ -52,12 +52,9 @@ public class CheckAccountTask extends AsyncTask {
         }
 
         else if (parentActivity instanceof LoginActivity) {
-            Log.d("Check", "here");
             if (succeeded && password_checked == true) {
-                Log.d("Check", "should not go here now");
                 ((LoginActivity)parentActivity).accountSucceded();
             } else {
-                Log.d("Check", "should go here now");
                 ((LoginActivity)parentActivity).accountFailed();
             }
             progressDialog.dismiss();

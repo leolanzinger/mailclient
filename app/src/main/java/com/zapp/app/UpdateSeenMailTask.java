@@ -30,7 +30,6 @@ public class UpdateSeenMailTask extends AsyncTask {
             /*
              *  Updates INBOX status of updated seen/unseen Emails
              */
-            Log.i("UpdateSeenMailTask", "About to instantiate GMailUpdater...");
             GMailUpdater updater = new GMailUpdater(Mailbox.account_email, Mailbox.account_password);
             password_checked = updater.passwordChecked();
 
@@ -56,7 +55,6 @@ public class UpdateSeenMailTask extends AsyncTask {
         if(password_checked != true) {
             if (sendMailActivity instanceof MainActivity) ((MainActivity) sendMailActivity).passwordDialog();
             else if(sendMailActivity instanceof ReadMail) ((ReadMail) sendMailActivity).passwordDialog();
-            Log.d("Check", "UpdateSeenMailTask");
         }
     }
 

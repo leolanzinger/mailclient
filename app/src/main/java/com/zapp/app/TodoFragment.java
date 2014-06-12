@@ -132,7 +132,6 @@ public class TodoFragment extends Fragment {
                     }
                     else if (this.getAction().equals(Action.SEPARATOR)) {
                         //clicked on a separator -> do nothing
-                        Log.d("separator", "succesfully clicked on separator!");
                     }
                     else {
 
@@ -140,7 +139,6 @@ public class TodoFragment extends Fragment {
                 }
             }
         });
-        Log.i("fragment lifecycle", "onCreateView todo fragment");
         return view;
     }
 
@@ -175,7 +173,6 @@ public class TodoFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.i("adapter", "on resume todo");
         setUpTodoList();
         adapter.notifyDataSetChanged();
         super.onResume();
@@ -247,18 +244,15 @@ public class TodoFragment extends Fragment {
                         if (today == email_expire) {
                             separator.subject = "TODAY";
                             todo_list.add(i, separator);
-                            Log.d("separator", "today first");
                             i++;
                         } else if (today == email_expire - 1) {
                             separator.subject = "TOMORROW";
                             todo_list.add(i, separator);
-                            Log.d("separator", "tomorrow first");
                             i++;
                         } else {
                             if (continue_reading) {
                                 separator.subject = "UPCOMING";
                                 todo_list.add(i, separator);
-                                Log.d("separator", "upcoming first");
                                 continue_reading = false;
                                 i++;
                             }
@@ -268,7 +262,6 @@ public class TodoFragment extends Fragment {
                         if (continue_reading) {
                             separator.subject = "UPCOMING";
                             todo_list.add(i, separator);
-                            Log.d("separator", "upcoming first");
                             continue_reading = false;
                             i++;
                         }
@@ -280,7 +273,6 @@ public class TodoFragment extends Fragment {
 
                     separator.subject = "UNREAD EMAILS";
                     todo_list.add(i, separator);
-                    Log.d("separator", "today first");
                     i++;
                 }
             }

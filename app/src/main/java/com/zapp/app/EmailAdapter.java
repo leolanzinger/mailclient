@@ -63,7 +63,6 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
         Email item = getItem(position);
         int rowType = getItemViewType(position);
 
-//        if (view == null) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         switch (rowType) {
             case TYPE_ITEM:
@@ -73,7 +72,6 @@ public class EmailAdapter extends ArrayAdapter<Email> implements View.OnTouchLis
                 view = inflater.inflate(R.layout.todo_separator, null);
                 break;
         }
-//        }
 
         if (item != null && rowType == TYPE_ITEM) {
             TextView subjectView = (TextView) view.findViewById(R.id.list_subject);

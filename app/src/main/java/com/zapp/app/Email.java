@@ -44,7 +44,7 @@ public class Email implements Serializable {
 
 
     /*
-     *  Initialize variables when istantiating
+     *  Initialize variables when instantiating
      *  new Email object
      */
     public Email() {
@@ -130,7 +130,6 @@ public class Email implements Serializable {
     public void setEmptyRecipient(Address[] addr_bcc) {
         if (to == null || to.length == 0){
             if (cc == null || cc.length == 0) {
-                Log.d("to null", "set to as bcc");
                 if (addr_bcc != null) {
                     to = new Address[addr_bcc.length];
                     for (int i = 0; i < addr_bcc.length; i++) {
@@ -287,8 +286,6 @@ public class Email implements Serializable {
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(Mailbox.baseContext, ID_END.hashCode() , intent, 0);
                 Mailbox.alManager.set(AlarmManager.RTC, alarm_start_cal.getTimeInMillis(), pendingIntent);
                 Mailbox.intentArray.add(pendingIntent);
-                Log.i("alarm", "alarm set for " + "Oggi devi fare: \"" + notification_msg + "\"");
-                Log.i("alarm", "alarm set at " + alarm_start_cal.getTime());
             }
 
             /*
@@ -312,8 +309,6 @@ public class Email implements Serializable {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(Mailbox.baseContext, ID_END.hashCode() , intent, 0);
             Mailbox.alManager.set(AlarmManager.RTC, alarm_end_cal.getTimeInMillis(), pendingIntent);
             Mailbox.intentArray.add(pendingIntent);
-            Log.i("alarm", "alarm set for " + "Oggi non hai fatto: \"" + notification_msg + "\"");
-            Log.i("alarm", "alarm set at " + alarm_end_cal.getTime());
         }
     }
 }

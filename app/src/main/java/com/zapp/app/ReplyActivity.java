@@ -40,7 +40,6 @@ import java.util.List;
 *   Send and receive emails activity.
 *   Async tasks are used because Android doesn't
 *   allow Network operation in the main thread.
-*   TODO: comment code
 */
 
 public class ReplyActivity extends Activity {
@@ -227,7 +226,7 @@ public class ReplyActivity extends Activity {
             cursor.close();
             return filePath;
         } else
-            return uri.getPath();               // FOR OI/ASTRO/Dropbox etc
+            return uri.getPath();               //
     }
 
     public void sendEmail(MenuItem menu) {
@@ -250,12 +249,9 @@ public class ReplyActivity extends Activity {
                 .split("\\s*,\\s*"));
         List<String> bccEmailList = Arrays.asList(bccEmails
                 .split("\\s*,\\s*"));
-        Log.i("SendMailActivity", "To List: " + toEmailList);
         String emailSubject = subjectEmailText.getText().toString();
         String emailBody = bodyEmailText.getText().toString();
 
-
-        Log.i("Check", "stampiamo la size della lista: " + selectedImagePath.size());
         if (selectedImagePath.size() == 0) {
             new SendMailTask(ReplyActivity.this).execute(fromEmail, fromPassword, toEmailList, emailSubject, emailBody, ccEmailList, bccEmailList);
         } else {
@@ -298,7 +294,7 @@ public class ReplyActivity extends Activity {
         alert.setView(input);
 
         authPreferences = new AuthPreferences(ReplyActivity.this);
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 authPreferences.setPassword(input.getText().toString());
                 Mailbox.account_password = input.getText().toString();

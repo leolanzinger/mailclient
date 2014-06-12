@@ -153,7 +153,6 @@ public class SwipeDetector implements PullToRefreshListView.OnTouchListener {
                             separator = false;
                         }
                         else {
-                            Log.d("separator", "attempt to click on separator");
                             separator = true;
                         }
                         break;

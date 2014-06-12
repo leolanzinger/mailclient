@@ -106,8 +106,6 @@ public class ReceiveSentMailTask extends AsyncTask<Object, Object, ArrayList<Ema
     public void onPostExecute(ArrayList<Email> result) {
 
         if(password_checked != true) {
-            Log.d("Check", "Here bitch");
-
             if (receiveMailActivity instanceof MainActivity)     ((MainActivity)receiveMailActivity).passwordDialog();
             else if (receiveMailActivity instanceof SendMailActivity)     ((SendMailActivity)receiveMailActivity).passwordDialog();
         }

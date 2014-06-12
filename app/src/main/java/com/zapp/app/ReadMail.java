@@ -53,7 +53,6 @@ import javax.mail.internet.InternetAddress;
 /*
  *  Activity that displays a single email
  *  - is triggered from main activity
- *  TODO: comment code
  */
 
 public class ReadMail extends FragmentActivity {
@@ -273,10 +272,6 @@ public class ReadMail extends FragmentActivity {
     private class myWebViewClient extends WebViewClient {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             if (url.startsWith("mailto:")) {
-    //                MailTo mt = MailTo.parse(url);
-    //                TODO: handle mailto aprendo una SendMailActivity compilata
-    //                Intent i = newEmailIntent(MyActivity.this, mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
-    //                startActivity(i);
                 view.reload();
                 return true;
             } else if (url.startsWith("http:") ||  (url.startsWith("https:"))) {
@@ -420,7 +415,6 @@ public class ReadMail extends FragmentActivity {
                 todoButton.setBackgroundResource(R.drawable.action_bar_not_pinned);
                 if (call_from_todo) {
                     TodoFragment.todo_list.remove(email);
-                    Log.d("todo", "rimosso dai todo");
                 }
             } else {
                 initiatePopupWindow();
@@ -443,7 +437,6 @@ public class ReadMail extends FragmentActivity {
                     // find out which fragment is being displayed and remove from its list
                     if (call_from_todo) {
                         TodoFragment.todo_list.remove(email);
-                        Log.d("todo", "deleted da todo");
                     }
                     else if (call_from_inbox) {
                         InboxFragment.inbox_email_list.remove(email);

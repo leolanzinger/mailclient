@@ -42,7 +42,7 @@ public class GMailReceiver extends javax.mail.Authenticator {
             store = session.getStore("imaps");
             store.connect(mailhost, user, password);
             /*
-             * Call this method to list all the avaiable folders:
+             * Call this method to list all the available folders:
              *
              *   Folder[] folderList = store.getFolder("[Gmail]").list();
              *   for (int i = 0; i < folderList.length; i++) {

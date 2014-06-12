@@ -62,7 +62,6 @@ public class UpdateDeletedMailTask extends AsyncTask {
         if(password_checked != true) {
             if (sendMailActivity instanceof MainActivity) ((MainActivity)sendMailActivity).passwordDialog();
             else if (sendMailActivity instanceof ReadMail) ((ReadMail)sendMailActivity).passwordDialog();
-            Log.d("Check", "UpdateDeletedMailTask");
         } else {
             if (sendMailActivity instanceof ReadMail) sendMailActivity.finish();
         }

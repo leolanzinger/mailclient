@@ -26,7 +26,6 @@ import javax.mail.internet.MimeMultipart;
 /*
 *  GMailSender Java class to send emails using smtp
 *  protocol over gmail servers
-*  TODO: comment code
 */
 
 public class GMailSender {
@@ -62,7 +61,6 @@ public class GMailSender {
         emailProperties.put("mail.smtp.port", emailPort);
         emailProperties.put("mail.smtp.auth", smtpAuth);
         emailProperties.put("mail.smtp.starttls.enable", starttls);
-        Log.i("GMailSender", "Mail server properties set.");
 
         isPasswordCorrect = true;
 
@@ -83,31 +81,27 @@ public class GMailSender {
         emailProperties.put("mail.smtp.port", emailPort);
         emailProperties.put("mail.smtp.auth", smtpAuth);
         emailProperties.put("mail.smtp.starttls.enable", starttls);
-        Log.i("GMailSender", "Mail server properties set.");
 
         isPasswordCorrect = true;
 
     }
 
-    public MimeMessage createEmailMessage() throws AddressException, MessagingException, IOException {
+    public MimeMessage createEmailMessage() throws MessagingException, IOException {
 
         mailSession = Session.getDefaultInstance(emailProperties, null);
         emailMessage = new MimeMessage(mailSession);
 
         emailMessage.setFrom(new InternetAddress(fromEmail, fromEmail));
         for (String toEmail : toEmailList) {
-            Log.i("GMailSender","toEmail: "+toEmail);
             emailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
         }
         if (ccEmailList.get(0)!="") {
             for (String toEmail : ccEmailList) {
-                Log.i("GMailSender","ccEmail: "+toEmail);
                 emailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(toEmail));
             }
         }
         if (bccEmailList.get(0)!=""){
             for (String toEmail : bccEmailList) {
-                Log.i("GMailSender","bccEmail: "+toEmail);
                 emailMessage.addRecipient(Message.RecipientType.BCC, new InternetAddress(toEmail));
             }
         }
@@ -128,7 +122,6 @@ public class GMailSender {
         else{
             for (int i = 0; i < fileName.size(); i++) {
                 messageBodyPart = new MimeBodyPart();
-                Log.i("ImageSent","Immagini in invio: "+ fileName.get(i));
                 DataSource source = new FileDataSource(fileName.get(i));
                 messageBodyPart.setDataHandler(new DataHandler(source));
                 String name = new File(fileName.get(i)).getName();
@@ -139,27 +132,22 @@ public class GMailSender {
 
         // Put parts in message
         emailMessage.setContent(multipart);
-        Log.i("GMailSender", "Email Message created.");
         return emailMessage;
     }
 
-    public void sendEmail() throws AddressException, MessagingException {
+    public void sendEmail() throws MessagingException {
 
         Transport transport = mailSession.getTransport("smtp");
 
         try {
             transport.connect(emailHost, fromEmail, fromPassword);
-            Log.i("GMailSender","allrecipients: "+emailMessage.getAllRecipients());
             transport.sendMessage(emailMessage, emailMessage.getAllRecipients());
         } catch (AuthenticationFailedException e){
             transport.close();
             isPasswordCorrect = false;
             e.printStackTrace();
         }
-
-
         transport.close();
-        Log.i("GMailSender", "Email sent successfully.");
     }
 
     public boolean passwordChecked() {

@@ -117,9 +117,6 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
                         login_button.setClickable(false);
                         login_button.setBackgroundResource(R.drawable.login_button_not_active);
                         passwordView.setTextColor(R.color.grey);
-//                    else if ("Add new account".equals(usernameSpinner.getItemAtPosition(i).toString())) {
-//                        Intent addAccountIntent = new Intent(android.provider.Settings.ACTION_ADD_ACCOUNT);
-//                        startActivity(addAccountIntent);
 //                    }
                     } else {
                         login_button.setClickable(true);
@@ -161,9 +158,6 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
     }
 
     public void accountSucceded(){
-        Log.d("Check", "Account Succeded!");
-        Log.d("Check", username);
-        Log.d("Check", passwordText.getText().toString());
 
         new AlertDialog.Builder(this)
                 .setTitle("Change account?")
