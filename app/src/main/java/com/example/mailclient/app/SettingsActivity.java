@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.text.format.DateFormat;
@@ -44,6 +45,7 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
     Button login_button;
     String username, name;
     Context context;
+    String[] accounts_email;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,7 +79,7 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
 
         // ownerInfo per sapere tutti gli account disponibili sul telefono
         OwnerInfo ownerInfo = new OwnerInfo(this);
-        String[] accounts_email = ownerInfo.retrieveEmailList();
+        accounts_email = ownerInfo.retrieveEmailList();
         final String[] accounts_name = ownerInfo.retrieveNameList();
 
         Button set_start = (Button) this.findViewById(R.id.start_button);
@@ -88,48 +90,43 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
 
         ArrayAdapter<CharSequence> adapter;
 
-        if (accounts_email == null || accounts_email.length == 0) {
-            String[] empty_array = new String[1];
-            empty_array[0] = "Aggiungi un account";
-            adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, empty_array);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            usernameSpinner.setAdapter(adapter);
-        }
-        else {
-            adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, accounts_email);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            usernameSpinner.setAdapter(adapter);
+        adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, accounts_email);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        usernameSpinner.setAdapter(adapter);
 
-            // display current email in the spinner
-            for (int i = 0; i < accounts_email.length; i++) {
-                if (accounts_email[i].equals(Mailbox.account_email)) {
-                    usernameSpinner.setSelection(i);
-                }
+        // display current email in the spinner
+        for (int i = 0; i < accounts_email.length; i++) {
+            if (accounts_email[i].equals(Mailbox.account_email)) {
+                usernameSpinner.setSelection(i);
             }
+        }
 
-            // set spinner action listener and use it to change the layout of the account editor's textboxes
-            usernameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        // set spinner action listener and use it to change the layout of the account editor's textboxes
+        usernameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == (accounts_email.length - 1)) {
+                    startAddGoogleAccountIntent(getBaseContext());
+                }
+                else {
                     name = accounts_name[i];
                     if (Mailbox.account_email.equals(usernameSpinner.getItemAtPosition(i).toString())) {
                         login_button.setClickable(false);
                         login_button.setBackgroundResource(R.drawable.login_button_not_active);
                         passwordView.setTextColor(R.color.grey);
-                    }
-                    else {
+                    } else {
                         login_button.setClickable(true);
                         login_button.setBackgroundResource(R.drawable.login_button);
                         passwordView.setTextColor(R.color.black);
                     }
                 }
+            }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
-                }
-            });
-        }
+            }
+        });
 
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -259,4 +256,13 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
         authPreferences.setEnd(i, i2);
         Mailbox.scheduler_end = authPreferences.getEnd();
     }
+
+    public static void startAddGoogleAccountIntent(Context context)
+    {
+        Intent addAccountIntent = new Intent(android.provider.Settings.ACTION_ADD_ACCOUNT)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        addAccountIntent.putExtra(Settings.EXTRA_ACCOUNT_TYPES, new String[] {"com.google"});
+        context.startActivity(addAccountIntent);
+    }
+
 }

@@ -2,11 +2,14 @@ package com.example.mailclient.app;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,8 +28,6 @@ public class LoginActivity extends Activity{
     String username;
     String[] account_names, account_ids;
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -44,25 +45,28 @@ public class LoginActivity extends Activity{
 
         // ownerInfo per sapere tutti gli account disponibili sul telefono
         OwnerInfo ownerInfo = new OwnerInfo(this);
-        String[] accounts_email = ownerInfo.retrieveEmailList();
+        final String[] accounts_email = ownerInfo.retrieveEmailList();
         account_names = ownerInfo.retrieveNameList();
         account_ids = ownerInfo.retrieveIdList();
 
         ArrayAdapter<CharSequence> adapter;
 
-        if (accounts_email == null || accounts_email.length == 0) {
-            String[] empty_array = new String[1];
-            empty_array[0] = "Aggiungi un account";
-            adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, empty_array);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            usernameSpinner.setAdapter(adapter);
-        }
-        else {
-            adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, accounts_email);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            usernameSpinner.setAdapter(adapter);
-        }
-//        Log.d("spinner", usernameSpinner.getSelectedItem().toString());
+        adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, accounts_email);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        usernameSpinner.setAdapter(adapter);
+
+        usernameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == (accounts_email.length - 1)) {
+                    startAddGoogleAccountIntent(getBaseContext());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
     }
 
@@ -135,5 +139,13 @@ public class LoginActivity extends Activity{
         Intent resultIntent = new Intent();
         setResult(Activity.RESULT_CANCELED, resultIntent);
         finish();
+    }
+
+    public static void startAddGoogleAccountIntent(Context context)
+    {
+        Intent addAccountIntent = new Intent(android.provider.Settings.ACTION_ADD_ACCOUNT)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        addAccountIntent.putExtra(Settings.EXTRA_ACCOUNT_TYPES, new String[] {"com.google"});
+        context.startActivity(addAccountIntent);
     }
 }
