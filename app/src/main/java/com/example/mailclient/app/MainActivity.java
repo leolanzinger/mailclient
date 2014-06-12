@@ -145,6 +145,9 @@ public class MainActivity extends Activity {
             if (resultCode == Activity.RESULT_FIRST_USER) {
                 Log.d("result code", "reset user");
                 receiveMail();
+                nameTextView.setText("");
+                surnameTextView.setText("");
+                profileImageView.setImageResource(R.drawable.avatar);
                 setCredentialsToDrawer();
                 mDrawerLayout.closeDrawers();
             }

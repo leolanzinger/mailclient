@@ -110,7 +110,6 @@ public class LoginActivity extends Activity{
         // put everything to Mailbox
         Mailbox.scheduler_start = authPreferences.getStart();
         Mailbox.scheduler_end = authPreferences.getEnd();
-
         Mailbox.account_email = authPreferences.getUser();
         Mailbox.account_password = authPreferences.getPassword();
         Mailbox.account_name = authPreferences.getName();

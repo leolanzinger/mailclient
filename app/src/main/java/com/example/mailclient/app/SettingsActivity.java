@@ -3,19 +3,14 @@ package com.example.mailclient.app;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,13 +20,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.doomonafireball.betterpickers.datepicker.DatePickerBuilder;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 
 public class SettingsActivity extends FragmentActivity implements RadialTimePickerDialog.OnTimeSetListener {
@@ -44,9 +37,9 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
     TextView passwordView, usernameView, start_time_label, end_time_label;
     Spinner usernameSpinner;
     Button login_button;
-    String username, name;
+    String username, name, id;
     Context context;
-    String[] accounts_email;
+    String[] accounts_name, account_ids;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,8 +71,9 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
 
         // ownerInfo per sapere tutti gli account disponibili sul telefono
         OwnerInfo ownerInfo = new OwnerInfo(this);
-        accounts_email = ownerInfo.retrieveEmailList();
-        final String[] accounts_name = ownerInfo.retrieveNameList();
+        final String[] accounts_email = ownerInfo.retrieveEmailList();
+        accounts_name = ownerInfo.retrieveNameList();
+        account_ids = ownerInfo.retrieveIdList();
 
         Button set_start = (Button) this.findViewById(R.id.start_button);
         Button set_end = (Button) this.findViewById(R.id.end_button);
@@ -89,14 +83,23 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
 
         ArrayAdapter<CharSequence> adapter;
 
-        adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, accounts_email);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        usernameSpinner.setAdapter(adapter);
+        if (accounts_email == null || accounts_email.length == 0) {
+            String[] empty_array = new String[1];
+            empty_array[0] = "Add new account";
+            adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, empty_array);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            usernameSpinner.setAdapter(adapter);
+        }
+        else {
+            adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, accounts_email);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            usernameSpinner.setAdapter(adapter);
 
-        // display current email in the spinner
-        for (int i = 0; i < accounts_email.length; i++) {
-            if (accounts_email[i].equals(Mailbox.account_email)) {
-                usernameSpinner.setSelection(i);
+            // display current email in the spinner
+            for (int i = 0; i < accounts_email.length; i++) {
+                if (accounts_email[i].equals(Mailbox.account_email)) {
+                    usernameSpinner.setSelection(i);
+                }
             }
         }
 
@@ -113,6 +116,10 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
                         login_button.setClickable(false);
                         login_button.setBackgroundResource(R.drawable.login_button_not_active);
                         passwordView.setTextColor(R.color.grey);
+//                    else if ("Add new account".equals(usernameSpinner.getItemAtPosition(i).toString())) {
+//                        Intent addAccountIntent = new Intent(android.provider.Settings.ACTION_ADD_ACCOUNT);
+//                        startActivity(addAccountIntent);
+//                    }
                     } else {
                         login_button.setClickable(true);
                         login_button.setBackgroundResource(R.drawable.login_button);
@@ -165,10 +172,13 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
                         AuthPreferences authPreferences = new AuthPreferences(MainActivity.baseContext);
                         authPreferences.setUser(username);
                         authPreferences.setPassword(passwordText.getText().toString());
-                        authPreferences.setName(name);
+                        authPreferences.setName(accounts_name[usernameSpinner.getSelectedItemPosition()]);
+                        authPreferences.setId(account_ids[usernameSpinner.getSelectedItemPosition()]);
+
                         Mailbox.account_email = authPreferences.getUser();
                         Mailbox.account_password = authPreferences.getPassword();
                         Mailbox.account_name = authPreferences.getName();
+                        Mailbox.account_id =  authPreferences.getId();
                         Mailbox.emailList.clear();
                         Intent finish_intent = new Intent();
                         setResult(Activity.RESULT_FIRST_USER, finish_intent);
