@@ -42,6 +42,7 @@ public class MainActivity extends Activity {
     public static Context baseContext;
     public static int current_fragment;
     public static String TAG;
+    static boolean first_open = true;
 
     /*
      *  Drawer menu variables
@@ -120,8 +121,10 @@ public class MainActivity extends Activity {
             Mailbox.scheduler_end = authPreferences.getEnd();
             Mailbox.account_id = authPreferences.getId();
             setCredentialsToDrawer();
+            first_open = false;
         } else {
             //Facciamo partire un intent che te lo fa aggiungere
+            first_open = true;
             Intent intentAccount = new Intent(this, LoginActivity.class);
             startActivityForResult(intentAccount, LOGIN_SUCCEDED);
         }

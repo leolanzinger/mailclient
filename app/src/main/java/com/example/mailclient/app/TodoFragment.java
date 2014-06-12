@@ -71,7 +71,9 @@ public class TodoFragment extends Fragment {
             }
         };
         listView.setAdapter(adapter);
-        //listView.setEmptyView(view.findViewById(R.id.empty_todo));
+        if (!MainActivity.first_open) {
+            listView.setEmptyView(view.findViewById(R.id.empty_todo));
+        }
 
         /*
          *  Istantiate progress bar and hide it

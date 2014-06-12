@@ -156,6 +156,10 @@ public class ReceiveInboxTask extends AsyncTask<Object, Object, ArrayList<Email>
             TodoFragment.mPocketBar.progressiveStop();
             TodoFragment.listView.onRefreshComplete();
             TodoFragment.mPocketBar.setVisibility(View.GONE);
+
+            MainActivity.first_open = false;
+            TodoFragment.listView.refreshDrawableState();
+
         }
         else if (inbox_fragment != null && inbox_fragment.isVisible()) {
             for (Email em : result) {
