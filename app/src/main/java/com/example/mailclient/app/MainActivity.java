@@ -333,8 +333,7 @@ public class MainActivity extends Activity {
             surnameTextView.setText(theRest);
         }
         nameTextView.setText(firstWord);
-
-
+        openPhoto(Long.valueOf(Mailbox.account_id));
 
     }
 
@@ -353,7 +352,7 @@ public class MainActivity extends Activity {
                 byte[] data = cursor.getBlob(0);
                 if (data != null) {
                     bitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(data), null, bmOptions);
-                    profileImageView.setImageBitmap(bitmap);
+                    profileImageView.setImageDrawable(new RoundedAvatarDrawable(bitmap));
                 }
             }
         } finally {

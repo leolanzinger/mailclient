@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,6 +25,8 @@ public class LoginActivity extends Activity{
     Button login_button;
     String username;
     String[] account_names, account_ids;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,6 +127,4 @@ public class LoginActivity extends Activity{
         setResult(Activity.RESULT_CANCELED, resultIntent);
         finish();
     }
-
-
 }
