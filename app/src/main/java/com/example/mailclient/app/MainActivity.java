@@ -137,6 +137,9 @@ public class MainActivity extends Activity {
             }
             else if (resultCode == Activity.RESULT_OK) {
                 Log.d("Check", "Receive mail? Yes!");
+                nameTextView.setText("");
+                surnameTextView.setText("");
+                profileImageView.setImageResource(R.drawable.avatar);
                 receiveMail();
                 setCredentialsToDrawer();
             }
@@ -336,6 +339,10 @@ public class MainActivity extends Activity {
         if (arr.length == 2) {
             String theRest = arr[1];
             surnameTextView.setText(theRest);
+        } else {
+            if (firstWord.contains("@")) {
+                firstWord = firstWord.split("@", 2)[0];
+            }
         }
         nameTextView.setText(firstWord);
         openPhoto(Long.valueOf(Mailbox.account_id));
