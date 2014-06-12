@@ -105,6 +105,8 @@ public class MainActivity extends Activity {
             Mailbox.account_email = authPreferences.getUser();
             Mailbox.account_password = authPreferences.getPassword();
             Mailbox.account_name = authPreferences.getName();
+            Mailbox.scheduler_start = authPreferences.getStart();
+            Mailbox.scheduler_end = authPreferences.getEnd();
             setCredentialsToDrawer();
         } else {
             //Facciamo partire un intent che te lo fa aggiungere

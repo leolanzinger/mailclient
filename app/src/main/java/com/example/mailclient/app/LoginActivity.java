@@ -14,6 +14,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by teo on 10/06/14.
@@ -91,10 +93,20 @@ public class LoginActivity extends Activity{
         Log.d("Check", username);
         Log.d("Check", passwordText.getText().toString());
 
+        // save shared prefernces
         AuthPreferences authPreferences = new AuthPreferences(this);
         authPreferences.setUser(username);
         authPreferences.setPassword(passwordText.getText().toString());
         authPreferences.setName(account_names[usernameSpinner.getSelectedItemPosition()]);
+
+        // save default starting time
+
+        authPreferences.setStart(8, 0);
+        authPreferences.setEnd(18, 0);
+
+        // put everything to Mailbox
+        Mailbox.scheduler_start = authPreferences.getStart();
+        Mailbox.scheduler_end = authPreferences.getEnd();
         Mailbox.account_email = authPreferences.getUser();
         Mailbox.account_password = authPreferences.getPassword();
         Mailbox.account_name = authPreferences.getName();
