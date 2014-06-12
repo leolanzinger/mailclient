@@ -141,23 +141,7 @@ public class Email implements Serializable {
                     }
                 }
                 else {
-                    to = new Address[1];
-                    to[0] = new Address() {
-                        @Override
-                        public String getType() {
-                            return null;
-                        }
-
-                        @Override
-                        public String toString() {
-                            return null;
-                        }
-
-                        @Override
-                        public boolean equals(Object o) {
-                            return false;
-                        }
-                    };
+                    to = new Address[0];
                 }
             }
         }

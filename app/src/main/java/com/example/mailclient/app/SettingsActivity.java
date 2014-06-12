@@ -29,6 +29,7 @@ import com.doomonafireball.betterpickers.datepicker.DatePickerBuilder;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
 import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -63,15 +64,13 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
         start_time_label = (TextView) this.findViewById(R.id.start_time_label);
         end_time_label = (TextView) this.findViewById(R.id.end_time_label);
 
-        start_time_label.setText(Mailbox.scheduler_start.get(Calendar.HOUR_OF_DAY)
-           + ":" +
-           Mailbox.scheduler_start.get(Calendar.MINUTE)
-        );
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+        String formattedDate = df.format(Mailbox.scheduler_start.getTime());
+        start_time_label.setText(formattedDate);
 
-        end_time_label.setText(Mailbox.scheduler_end.get(Calendar.HOUR_OF_DAY)
-                        + ":" +
-                        Mailbox.scheduler_end.get(Calendar.MINUTE)
-        );
+        SimpleDateFormat df2 = new SimpleDateFormat("HH:mm");
+        String formattedDate2 = df2.format(Mailbox.scheduler_end.getTime());
+        end_time_label.setText(formattedDate2);
 
         login_button = (Button) this.findViewById(R.id.confirm_button);
         login_button.setBackgroundResource(R.drawable.login_button);
@@ -235,13 +234,51 @@ public class SettingsActivity extends FragmentActivity implements RadialTimePick
     public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i2) {
         // set start time
         if (current_dialog == 0) {
-            start_time_label.setText(i + ":" + i2 );
-            saveStartTime(i, i2);
+            if (i < Mailbox.scheduler_end.get(Calendar.HOUR_OF_DAY) ||
+                    i == Mailbox.scheduler_end.get(Calendar.HOUR_OF_DAY) && i2 < Mailbox.scheduler_end.get(Calendar.MINUTE)) {
+
+                saveStartTime(i, i2);
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+                String formattedDate = df.format(Mailbox.scheduler_start.getTime());
+                start_time_label.setText(formattedDate);
+
+            }
+            else {
+                new AlertDialog.Builder(this)
+                        .setTitle("Invalid time")
+                        .setMessage("Start time is later than end time")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
         }
         // set end time
         else if (current_dialog == 1) {
-            end_time_label.setText(i + ":" + i2 );
-            saveEndTime(i, i2);
+            if (i > Mailbox.scheduler_start.get(Calendar.HOUR_OF_DAY) ||
+                    i == Mailbox.scheduler_start.get(Calendar.HOUR_OF_DAY) && i2 > Mailbox.scheduler_start.get(Calendar.MINUTE)) {
+
+
+                saveEndTime(i, i2);
+                SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+                String formattedDate = df.format(Mailbox.scheduler_end.getTime());
+                end_time_label.setText(formattedDate);
+            }
+            else {
+                new AlertDialog.Builder(this)
+                        .setTitle("Invalid time")
+                        .setMessage("End time is earlier than start time")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // continue with delete
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
         }
     }
 

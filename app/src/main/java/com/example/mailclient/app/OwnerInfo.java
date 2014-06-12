@@ -85,6 +85,9 @@ public class OwnerInfo {
 
             emails.add("Add new account");
         }
+        else {
+            emails.add("Add new account");
+        }
     }
 
     public String[] retrieveEmailList() {

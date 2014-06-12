@@ -144,18 +144,23 @@ public class ReadMail extends FragmentActivity {
         /*
          *  Fill up to address fields
          */
-        for (int i = 0; i < email.to.length; i++) {
-            if (i == 0) {
-                String s = email.to == null ? null : ((InternetAddress) email.to[i]).getAddress();
-                to_addresses = to_addresses.concat(s);
+        if (email.to.length > 0) {
+            for (int i = 0; i < email.to.length; i++) {
+                if (i == 0) {
+                    String s = email.to == null ? null : ((InternetAddress) email.to[i]).getAddress();
+                    to_addresses = to_addresses.concat(s);
 
-            } else {
-                to_addresses = to_addresses.concat(", ");
-                String s = email.from == null ? null : ((InternetAddress) email.to[i]).getAddress();
-                to_addresses = to_addresses.concat(s);
+                } else {
+                    to_addresses = to_addresses.concat(", ");
+                    String s = email.from == null ? null : ((InternetAddress) email.to[i]).getAddress();
+                    to_addresses = to_addresses.concat(s);
+                }
             }
+            to.setText(to_addresses);
         }
-        to.setText(to_addresses);
+        else {
+            to.setText("");
+        }
 
          /*
          *  Fill up cc address fields
