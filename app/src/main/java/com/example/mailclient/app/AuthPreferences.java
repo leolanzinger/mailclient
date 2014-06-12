@@ -19,6 +19,7 @@ public class AuthPreferences {
     private static final String KEY_START_MINUTE = "minute_start";
     private static final String KEY_END_HOUR = "hour_end";
     private static final String KEY_END_MINUTE = "minute_end";
+    private static final String KEY_ID = "id";
 
     private SharedPreferences preferences;
 
@@ -55,6 +56,10 @@ public class AuthPreferences {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(KEY_END_HOUR, hour);
         editor.putInt(KEY_END_MINUTE, min);
+    }
+    public void setId(String id) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(KEY_ID, id);
         editor.commit();
     }
 
@@ -81,5 +86,7 @@ public class AuthPreferences {
         cal.set(Calendar.MINUTE, preferences.getInt(KEY_END_MINUTE, 0));
         return cal;
     }
+    public String getId() { return preferences.getString(KEY_ID,null);}
+
 
 }

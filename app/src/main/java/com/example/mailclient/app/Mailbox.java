@@ -27,6 +27,7 @@ public class Mailbox {
     public static String account_email;
     public static String account_password;
     public static String account_name;
+    public static String account_id;
     // internal storage keys
     static String KEY = "mailClient";
     static String SENT_KEY = "mailClient_sent";

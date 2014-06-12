@@ -13,10 +13,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 /**
  * Created by teo on 10/06/14.
  */
@@ -27,7 +23,9 @@ public class LoginActivity extends Activity{
     Spinner usernameSpinner;
     Button login_button;
     String username;
-    String[] account_names;
+    String[] account_names, account_ids;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +46,7 @@ public class LoginActivity extends Activity{
         OwnerInfo ownerInfo = new OwnerInfo(this);
         String[] accounts_email = ownerInfo.retrieveEmailList();
         account_names = ownerInfo.retrieveNameList();
+        account_ids = ownerInfo.retrieveIdList();
 
         ArrayAdapter<CharSequence> adapter;
 
@@ -98,18 +97,20 @@ public class LoginActivity extends Activity{
         authPreferences.setUser(username);
         authPreferences.setPassword(passwordText.getText().toString());
         authPreferences.setName(account_names[usernameSpinner.getSelectedItemPosition()]);
+        authPreferences.setId(account_ids[usernameSpinner.getSelectedItemPosition()]);
 
         // save default starting time
-
         authPreferences.setStart(8, 0);
         authPreferences.setEnd(18, 0);
 
         // put everything to Mailbox
         Mailbox.scheduler_start = authPreferences.getStart();
         Mailbox.scheduler_end = authPreferences.getEnd();
+
         Mailbox.account_email = authPreferences.getUser();
         Mailbox.account_password = authPreferences.getPassword();
         Mailbox.account_name = authPreferences.getName();
+        Mailbox.account_id = authPreferences.getId();
 
         Intent resultIntent = new Intent();
         setResult(Activity.RESULT_OK, resultIntent);
@@ -135,6 +136,4 @@ public class LoginActivity extends Activity{
         setResult(Activity.RESULT_CANCELED, resultIntent);
         finish();
     }
-
-
 }
