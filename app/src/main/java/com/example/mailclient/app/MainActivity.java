@@ -4,10 +4,16 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -16,8 +22,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.io.ByteArrayInputStream;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
@@ -42,6 +51,7 @@ public class MainActivity extends Activity {
     ListView mDrawerList;
     ActionBarDrawerToggle mDrawerToggle;
     TextView surnameTextView, nameTextView;
+    ImageView profileImageView;
 
 
     @Override
@@ -72,6 +82,7 @@ public class MainActivity extends Activity {
         //put user info on the drawer
         nameTextView = (TextView)findViewById(R.id.nome);
         surnameTextView = (TextView)findViewById(R.id.cognome);
+        profileImageView = (ImageView) findViewById(R.id.imageView);
 
          /*
          *  Drawer adapter and list
@@ -105,6 +116,7 @@ public class MainActivity extends Activity {
             Mailbox.account_email = authPreferences.getUser();
             Mailbox.account_password = authPreferences.getPassword();
             Mailbox.account_name = authPreferences.getName();
+            Mailbox.account_id = authPreferences.getId();
             setCredentialsToDrawer();
         } else {
             //Facciamo partire un intent che te lo fa aggiungere
@@ -321,5 +333,31 @@ public class MainActivity extends Activity {
             surnameTextView.setText(theRest);
         }
         nameTextView.setText(firstWord);
+
+
+
+    }
+
+    public void openPhoto(long contactId) {
+        Bitmap bitmap = null;
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
+        Uri photoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+        Cursor cursor = getContentResolver().query(photoUri,
+                new String[] {ContactsContract.Contacts.Photo.PHOTO}, null, null, null);
+        if (cursor == null) {
+            profileImageView.setImageResource(R.drawable.avatar);
+        }
+        try {
+            if (cursor.moveToFirst()) {
+                byte[] data = cursor.getBlob(0);
+                if (data != null) {
+                    bitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(data), null, bmOptions);
+                    profileImageView.setImageBitmap(bitmap);
+                }
+            }
+        } finally {
+            cursor.close();
+        }
     }
 }
