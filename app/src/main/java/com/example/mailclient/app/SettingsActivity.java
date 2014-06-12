@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,27 +19,51 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.doomonafireball.betterpickers.radialtimepicker.RadialPickerLayout;
+import com.doomonafireball.betterpickers.radialtimepicker.RadialTimePickerDialog;
 
-public class SettingsActivity extends Activity {
+import java.util.Calendar;
+
+
+public class SettingsActivity extends FragmentActivity implements RadialTimePickerDialog.OnTimeSetListener {
+
+    private static final String START_TIME_PICKER = "startPicker";
+    private static final String END_TIME_PICKER = "endPicker";
+    private int current_dialog;
 
     EditText passwordText;
-    TextView passwordView, usernameView;
+    TextView passwordView, usernameView, start_time_label, end_time_label;
     Spinner usernameSpinner;
     Button login_button;
     String username, name, id;
     Context context;
+    String[] accounts_name, account_ids;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_settings);
 
         usernameView = (TextView) this.findViewById(R.id.usernameView);
         passwordView = (TextView) this.findViewById(R.id.passwordView);
 
         usernameSpinner = (Spinner) this.findViewById(R.id.usernameSpinner);
         passwordText = (EditText) this.findViewById(R.id.passwordText);
+
+        // set current end and start time
+        start_time_label = (TextView) this.findViewById(R.id.start_time_label);
+        end_time_label = (TextView) this.findViewById(R.id.end_time_label);
+
+        start_time_label.setText(Mailbox.scheduler_start.get(Calendar.HOUR_OF_DAY)
+           + ":" +
+           Mailbox.scheduler_start.get(Calendar.MINUTE)
+        );
+
+        end_time_label.setText(Mailbox.scheduler_end.get(Calendar.HOUR_OF_DAY)
+                        + ":" +
+                        Mailbox.scheduler_end.get(Calendar.MINUTE)
+        );
 
         login_button = (Button) this.findViewById(R.id.confirm_button);
         login_button.setBackgroundResource(R.drawable.login_button);
@@ -46,8 +72,14 @@ public class SettingsActivity extends Activity {
         // ownerInfo per sapere tutti gli account disponibili sul telefono
         OwnerInfo ownerInfo = new OwnerInfo(this);
         String[] accounts_email = ownerInfo.retrieveEmailList();
-        final String[] accounts_name = ownerInfo.retrieveNameList();
-        final String[] account_ids = ownerInfo.retrieveIdList();
+        accounts_name = ownerInfo.retrieveNameList();
+        account_ids = ownerInfo.retrieveIdList();
+
+        Button set_start = (Button) this.findViewById(R.id.start_button);
+        Button set_end = (Button) this.findViewById(R.id.end_button);
+
+        set_start.setBackgroundResource(R.drawable.login_button);
+        set_end.setBackgroundResource(R.drawable.login_button);
 
         ArrayAdapter<CharSequence> adapter;
 
@@ -74,8 +106,6 @@ public class SettingsActivity extends Activity {
             usernameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    name = accounts_name[i];
-                    id = account_ids[i];
                     if (Mailbox.account_email.equals(usernameSpinner.getItemAtPosition(i).toString())) {
                         login_button.setClickable(false);
                         login_button.setBackgroundResource(R.drawable.login_button_not_active);
@@ -137,8 +167,9 @@ public class SettingsActivity extends Activity {
                         AuthPreferences authPreferences = new AuthPreferences(MainActivity.baseContext);
                         authPreferences.setUser(username);
                         authPreferences.setPassword(passwordText.getText().toString());
-                        authPreferences.setName(name);
-                        authPreferences.setId(id);
+                        authPreferences.setName(accounts_name[usernameSpinner.getSelectedItemPosition()]);
+                        authPreferences.setId(account_ids[usernameSpinner.getSelectedItemPosition()]);
+
                         Mailbox.account_email = authPreferences.getUser();
                         Mailbox.account_password = authPreferences.getPassword();
                         Mailbox.account_name = authPreferences.getName();
@@ -186,5 +217,47 @@ public class SettingsActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void setStartTime(View v) {
+        RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
+                .newInstance(SettingsActivity.this, Mailbox.scheduler_start.get(Calendar.HOUR_OF_DAY), Mailbox.scheduler_start.get(Calendar.MINUTE),
+                        DateFormat.is24HourFormat(this));
 
+        current_dialog = 0;
+        timePickerDialog.show(getSupportFragmentManager(),START_TIME_PICKER);
+    }
+
+    public void setEndTime(View v) {
+        RadialTimePickerDialog timePickerDialog = RadialTimePickerDialog
+                .newInstance(SettingsActivity.this, Mailbox.scheduler_end.get(Calendar.HOUR_OF_DAY), Mailbox.scheduler_end.get(Calendar.MINUTE),
+                        DateFormat.is24HourFormat(this));
+
+        current_dialog = 1;
+        timePickerDialog.show(getSupportFragmentManager(), END_TIME_PICKER);
+    }
+
+    @Override
+    public void onTimeSet(RadialPickerLayout radialPickerLayout, int i, int i2) {
+        // set start time
+        if (current_dialog == 0) {
+            start_time_label.setText(i + ":" + i2 );
+            saveStartTime(i, i2);
+        }
+        // set end time
+        else if (current_dialog == 1) {
+            end_time_label.setText(i + ":" + i2 );
+            saveEndTime(i, i2);
+        }
+    }
+
+    public void saveStartTime(int i, int i2) {
+        AuthPreferences authPreferences = new AuthPreferences(MainActivity.baseContext);
+        authPreferences.setStart(i, i2);
+        Mailbox.scheduler_start = authPreferences.getStart();
+    }
+
+    public void saveEndTime(int i, int i2) {
+        AuthPreferences authPreferences = new AuthPreferences(MainActivity.baseContext);
+        authPreferences.setEnd(i, i2);
+        Mailbox.scheduler_end = authPreferences.getEnd();
+    }
 }

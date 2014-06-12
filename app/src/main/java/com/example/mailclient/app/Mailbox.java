@@ -63,10 +63,6 @@ public class Mailbox {
          */
         scheduler_start = new GregorianCalendar();
         scheduler_end = new GregorianCalendar();
-        scheduler_start.set(Calendar.HOUR_OF_DAY, 8);
-        scheduler_start.set(Calendar.MINUTE, 0);
-        scheduler_end.set(Calendar.HOUR_OF_DAY, 18);
-        scheduler_end.set(Calendar.MINUTE, 0);
 
         /*
          *  Istantiate alarm manager

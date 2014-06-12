@@ -116,6 +116,8 @@ public class MainActivity extends Activity {
             Mailbox.account_email = authPreferences.getUser();
             Mailbox.account_password = authPreferences.getPassword();
             Mailbox.account_name = authPreferences.getName();
+            Mailbox.scheduler_start = authPreferences.getStart();
+            Mailbox.scheduler_end = authPreferences.getEnd();
             Mailbox.account_id = authPreferences.getId();
             setCredentialsToDrawer();
         } else {
@@ -143,6 +145,9 @@ public class MainActivity extends Activity {
             if (resultCode == Activity.RESULT_FIRST_USER) {
                 Log.d("result code", "reset user");
                 receiveMail();
+                nameTextView.setText("");
+                surnameTextView.setText("");
+                profileImageView.setImageResource(R.drawable.avatar);
                 setCredentialsToDrawer();
                 mDrawerLayout.closeDrawers();
             }
