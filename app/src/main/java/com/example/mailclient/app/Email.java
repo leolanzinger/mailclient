@@ -134,9 +134,30 @@ public class Email implements Serializable {
         if (to == null || to.length == 0){
             if (cc == null || cc.length == 0) {
                 Log.d("to null", "set to as bcc");
-                to = new Address[addr_bcc.length];
-                for (int i = 0; i < addr_bcc.length; i++) {
-                    to[i] = addr_bcc[i];
+                if (addr_bcc != null) {
+                    to = new Address[addr_bcc.length];
+                    for (int i = 0; i < addr_bcc.length; i++) {
+                        to[i] = addr_bcc[i];
+                    }
+                }
+                else {
+                    to = new Address[1];
+                    to[0] = new Address() {
+                        @Override
+                        public String getType() {
+                            return null;
+                        }
+
+                        @Override
+                        public String toString() {
+                            return null;
+                        }
+
+                        @Override
+                        public boolean equals(Object o) {
+                            return false;
+                        }
+                    };
                 }
             }
         }

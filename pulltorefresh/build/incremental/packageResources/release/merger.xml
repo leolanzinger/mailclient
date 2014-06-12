@@ -2,29 +2,29 @@
 <merger>
 
     <dataSet config="main" >
-        <source path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res" >
+        <source path="/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/src/main/res" >
             <file
                 name="ptr_pulltorefresh_arrow"
-                path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res/drawable-hdpi/ptr_pulltorefresh_arrow.png"
+                path="/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/src/main/res/drawable-hdpi/ptr_pulltorefresh_arrow.png"
                 qualifiers="hdpi"
                 type="drawable" />
             <file
                 name="ptr_pulltorefresh_arrow"
-                path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res/drawable-ldpi/ptr_pulltorefresh_arrow.png"
+                path="/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/src/main/res/drawable-ldpi/ptr_pulltorefresh_arrow.png"
                 qualifiers="ldpi"
                 type="drawable" />
             <file
                 name="ptr_pulltorefresh_arrow"
-                path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res/drawable-mdpi/ptr_pulltorefresh_arrow.png"
+                path="/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/src/main/res/drawable-mdpi/ptr_pulltorefresh_arrow.png"
                 qualifiers="mdpi"
                 type="drawable" />
             <file
                 name="ptr_header"
-                path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res/layout/ptr_header.xml"
+                path="/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/src/main/res/layout/ptr_header.xml"
                 qualifiers=""
                 type="layout" />
             <file
-                path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res/values/ptr_default_style.xml"
+                path="/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/src/main/res/values/ptr_default_style.xml"
                 qualifiers="" >
 
                 <style name="ptr_header" >
@@ -155,7 +155,7 @@ true
                 </style>
             </file>
             <file
-                path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/main/res/values/strings.xml"
+                path="/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/src/main/res/values/strings.xml"
                 qualifiers="" >
                 <string name="ptr_pull_to_refresh" >Pull to refresh
                 </string>
@@ -167,11 +167,11 @@ true
                 </string>
             </file>
         </source>
-        <source path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/build/res/rs/release" />
-        <source path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/build/res/generated/release" />
+        <source path="/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/build/res/rs/release" />
+        <source path="/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/build/res/generated/release" />
     </dataSet>
     <dataSet config="release" >
-        <source path="/Users/Giulio/Android/projects/mailclient/pulltorefresh/src/release/res" />
+        <source path="/Users/Leo/AndroidStudioProjects/mailclient/pulltorefresh/src/release/res" />
     </dataSet>
 
 </merger>
