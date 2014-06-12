@@ -12,6 +12,7 @@
     <color name="red">#E74C3C</color>
     <color name="green">#27AE60</color>
     <color name="yellow">#F1C40F</color>
+    <color name="abestos">#95a5a6</color>
 
     <integer-array name="pocket_background_colors">
         <item>@color/pocket_color_1</item>

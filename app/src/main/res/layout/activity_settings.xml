@@ -67,13 +67,10 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"/>
 
 
     <LinearLayout
+        android:layout_marginTop="15dp"
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
@@ -84,7 +81,6 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Set up your daily schedule:"
             android:id="@+id/time_picker_title"
-            android:paddingTop="5dp"
             android:paddingBottom="5dp"
             />
 
@@ -96,14 +92,16 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                android:layout_marginRight="15dp"
+                android:layout_gravity="left">
 
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="30dip"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/abestos"
                     android:layout_gravity="center_horizontal"
                     android:id="@+id/start_time_label" />
 
@@ -121,14 +119,13 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_gravity="right">
+                android:layout_height="fill_parent">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="30dip"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/abestos"
                     android:layout_gravity="center_horizontal"
                     android:id="@+id/end_time_label" />
 
@@ -138,8 +135,7 @@
                     android:id="@+id/end_button"
                     android:text="end time"
                     android:onClick="setEndTime"
-                    android:textColor="@color/white"
-                    android:layout_gravity="center_horizontal" />
+                    android:textColor="@color/white" />
 
             </LinearLayout>
 
